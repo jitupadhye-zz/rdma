@@ -1,54 +1,46 @@
 function dx = fluid2_test(t,x,lag_matrix)
+    global Kmax;
+    global Kmin;
 
-%{
-global target_t;
-global last_time;
-if t > target_t
-    %disp(sprintf('t = %g', target_t))
-    target_t = target_t + 0.001
+    dx = zeros(7,1);
+   
+    % 1: rc1
+    % 2: rt1
+    % 3: alpha1
+    % 4: rc2
+    % 5: rt2
+    % 6: alpha2
+    % 7: queue
+    
+    %
+    % marking probability
+    %
+    p = CalculateP(t,lag_matrix(7,1),Kmin,Kmax);
+    
+    
+    %
+    % Queue
+    %
+    dx(7) = QueueDelta(x(7), [x(4), x(1)]);
+
+    %
+    % alpha
+    %
+    dx(3) = AlphaDelta(x(3), lag_matrix(1,1),p);
+    dx(6) = AlphaDelta(x(6), lag_matrix(4,1),p);
+
+    %
+    % Transmission rate (RC)
+    %
+    dx(1) = RCDelta(x(1), x(2), x(3), lag_matrix(1, 1), p);
+    dx(4) = RCDelta(x(4), x(5), x(6), lag_matrix(4, 1), p);
+
+    %
+    % Target rate (RT)
+    %
+    dx(2) = RTDelta(x(1), x(2), lag_matrix(1, 1), p);
+    dx(5) = RTDelta(x(4), x(5), lag_matrix(4, 1), p);
 end
-last_time = t;
-%}
-
-global t0;
-global t1;
-global Rai;
-global C;
-global B;
-global F;
-global g;
-global Kmax;
-global Kmin;
-global timer;
-%global timer2;
-
-%ts = d+x(4)/C;
-
-lag = lag_matrix(:,1);
-
-dx = zeros(7,1);
-
-p = h_mark_test(t,lag(7),Kmin,Kmax);
-%{
-p = 0;
-for i=1:2
-    if floor(t/t0)==floor((t-t0/2*i)/t0)
-        continue
-    else
-        if h_mark(lag_matrix(7,i),Kmin,Kmax)
-           p=1;
-        end
-    end
-end
-%}
-
-
-
-%p = h_mark(lag(7),Kmin,Kmax);
-%p2 = h_mark(lag_matrix(7,2),Kmin,Kmax);
-%p3 = h_mark(lag_matrix(7,3),Kmin,Kmax);
-%p4 = h_mark(lag_matrix(7,4),Kmin,Kmax);
-%p5 = h_mark(lag_matrix(7,5),Kmin,Kmax);
 
 % 7: queue
 % 6: alpha2
@@ -58,56 +50,103 @@ end
 % 2: rt1
 % 1: rc1
 
-if p==0
-      dx(1)=(x(2)-x(1))*lag(1)/2/B+(x(2)-x(1))/2/timer;
-      %if p2==0 && p3==0 && p4==0 && p5==0
-      dx(2)=Rai*lag(1)/B+Rai/timer;
-      %else
-      %    dx(2)=0;
-      %end
-      dx(3)=-g/t1*x(3);
-      dx(4)=(x(5)-x(4))*lag(4)/2/B+(x(5)-x(4))/2/timer;
-      %if p2==0 && p3==0 && p4==0 && p5==0
-        dx(5)=Rai*lag(4)/B+Rai/timer;
-      %else
-      %    dx(5)=0;
-      %end
-      dx(6)=-g/t1*x(6);
-else if p==1
-            dx(1)=-x(1)*x(3)/2/t0;
-            dx(2)=(x(1)-x(2))/t0;
-            dx(3)=g/t1*(1-x(3));
-            dx(4)=-x(4)*x(6)/2/t0;
-            dx(5)=(x(4)-x(5))/t0;
-            dx(6)=g/t1*(1-x(6)); 
-      else
-            a = 1-(1-p)^(t0*lag(1));
-            b = p/((1-p)^(-B)-1);
-            c = b*((1-p)^(F*B));
-            d = p/((1-p)^(-timer*lag(1))-1);
-            e = d*((1-p)^(F*timer*lag(1)));
-            dx(1) = -x(1)*x(3)/2/t0*a + (x(2)-x(1))*lag(1)/2*b + (x(2)-x(1))*lag(1)/2*d;
-            dx(2) = (x(1)-x(2))/t0*a + Rai*lag(1)*c + Rai*lag(4)*e;
-            dx(3) = g/t1*((1-(1-p)^(t1*x(1)))-x(3));
-            %dx(3) = g/t1*(p-x(3));
-            
-            a = 1-(1-p)^(t0*lag(4));
-            b = p/((1-p)^(-B)-1);
-            c = b*((1-p)^(F*B));
-            d = p/((1-p)^(-timer*lag(4))-1);
-            e = d*((1-p)^(F*timer*lag(4)));
-            dx(4) = -x(4)*x(6)/2/t0*a + (x(5)-x(4))*lag(4)/2*b  + (x(5)-x(4))*lag(4)/2*d;
-            dx(5) = (x(4)-x(5))/t0*a + Rai*lag(4)*c  + Rai*lag(4)*e;
-            dx(6) = g/t1*((1-(1-p)^(t1*x(4)))-x(6));
-            %dx(6) = g/t1*(p-x(6));
-      end
+function rcDelta = RCDelta(currRC, currRT, currAlpha, prevRC, p)
+    global tau;
+    global C;
+    %
+    % The model cannot correctly handle the case of prevRC = 0. So we stay
+    % at 0. 
+    % 
+    if (currRC == 0 && prevRC == 0)
+        rcDelta = 0;
+    else 
+        [a,b,c,d,e] = IntermediateTerms(p, prevRC);
+        rcDelta = -1*currRC*currAlpha*a/(2*tau) + (currRT-currRC)*prevRC*b/2 + (currRT-currRC)*prevRC*d/2;
+        %
+        % Also, rate cannot exceed C.
+        %
+        if (prevRC >= C && rcDelta > 0)
+            rcDelta = 0;
+        end
+    end 
 end
 
-if x(7)>0
-    dx(7)=x(4)+x(1)-C;
-else
-    dx(7)=max(x(4)+x(1)-C,0);
+function rtDelta = RTDelta(currRC, currRT, prevRC, p)
+    global tau;
+    global Rai;
+    % The model cannot correctly handle the case of prevRC = 0. So we stay
+    % at 0.
+    if (currRC == 0 && prevRC == 0)
+        rtDelta = 0;
+    else 
+        [a,b,c,d,e] = IntermediateTerms(p, prevRC);
+        rtDelta = -1*(currRT-currRC)*a/(tau) + Rai*prevRC*c + Rai*prevRC*e;
+    end
 end
 
+function alphaDelta = AlphaDelta(currentAlpha, prevRC, p)
+    global tauprime;
+    global g;
+    alphaDelta = g * ((1-(1-p)^(tauprime*prevRC))-currentAlpha) / tauprime;
+end
 
+function queueDelta = QueueDelta(currentQueue, rates)
+    global C;
+    queueDelta = sum(rates) - C;
+    if (currentQueue <= 0)
+        queueDelta = max(0, queueDelta);
+    end
+end
+
+function p = CalculateP(t, q, kmin, kmax)
+    global pmax;
+    if (t >= 0)
+        if q <= kmin
+            p = 0;
+        else if q <= kmax
+                p = (q-kmin)/(kmax-kmin)*pmax;
+            else % q > lmax
+                p = 1;
+            end
+        end
+    else 
+        p = 1;
+    end 
+end
+
+function [a, b, c, d, e] = IntermediateTerms(p, prevRC)
+    global tau;
+    global B;
+    global F;
+    global timer;   
+    if p == 0
+            a = 0;
+            b = 1/B;
+            c = b;
+            if (prevRC == 0)
+                d = 0;
+            else 
+                d = 1/(timer*prevRC);
+            end
+            e = d;
+        else if p == 1
+                a = 1;
+                b = 0;
+                c = 0;
+                d = 0;
+                e = 0;
+            else    
+                a = 1-(1-p)^(tau*prevRC);   
+                b = p/((1-p)^(-B)-1);
+                c = b*((1-p)^(F*B));
+                d = p/((1-p)^(-timer*prevRC)-1);
+                e = d*((1-p)^(F*timer*prevRC));
+            end
+    end
+    if (isnan(a) || isnan(b) || isnan(c) || isnan(d) || isinf(d) || isinf(e))
+        fprintf (' *************** ERROR ***********************\n');
+        fprintf ('%f ', [a b c d e]);
+        fprintf ('\n');
+    end
+end
 
