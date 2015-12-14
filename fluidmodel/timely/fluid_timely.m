@@ -26,8 +26,7 @@ function dx = fluid_timely(t,x,lag)
     % update RTT gradient
     dx(2) = RTTGradientDelta(x(1), x(2), lag(5,1), lag(5,2));
     dx(4) = RTTGradientDelta(x(3), x(4), lag(5,3), lag(5,4));
-
-    end
+end
 
 function deltaQueue = QueueDelta(currentQueue, flowRates)
     global C;
@@ -64,7 +63,16 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient)
             end
         end
     end
+    % do not exceed line rate.
+    if (currentRate >= C && deltaRate > 0)
+        deltaRate = 0;
+    end
+%     if (currentRate < C && deltaRate > 0 && currentRate + deltaRate > C)
+%         deltaRate = C - currentRate;
+%     end
+    
     deltaRate = deltaRate / RTTSampleInterval(currentRate);
+    
 end
 
 function deltaRTTGradient = RTTGradientDelta(currentRate, currRTTGradient, prevQueue, prevPrevQueue)   
@@ -73,12 +81,14 @@ function deltaRTTGradient = RTTGradientDelta(currentRate, currRTTGradient, prevQ
     global minRTT;
     deltaRTTGradient = alpha * (-1 * currRTTGradient + (prevQueue - prevPrevQueue)/(C*minRTT));
     deltaRTTGradient = deltaRTTGradient / RTTSampleInterval(currentRate);
+    %deltaRTTGradient = deltaRTTGradient / (Seg/currentRate);
 end
 
 function rttSampleInterval = RTTSampleInterval(currentRate)
     global Seg;
     global minRTT;
-    rttSampleInterval = max(Seg/currentRate, minRTT);
+    %rttSampleInterval = max(Seg/currentRate, minRTT);
+    rttSampleInterval = Seg/currentRate;
 end
 
 

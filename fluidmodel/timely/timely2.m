@@ -21,15 +21,15 @@ callCounter = 0;
 % Fixed Parameters
 %
 step_len = 5/1e6 ; % 5 microseconds
-sim_length = step_len * 10000 ;
-C = 10 * 1e9; % 10Gbps
-Seg = 16 * 8 * 1e3; % 16KB
-prop = 5 /1e6; % 5 microseconds - picked double the lowest one way delay we have seen. 
+sim_length = step_len * 20000 ;
+C = 10 * 1e9; % line rate.
+Seg = 64 * 8 * 1e3; % burstsize.
+prop = 4 /1e6; % propagation delay
 
 %
 % Parameters we can play with.
 %
-delta = 10 * 1e6; % 10Mbps, expressed in Kilobytes per second.
+delta = 10 * 1e6; % 10Mbps
 T_high = 500/1e6; % 500 microseconds (see section 4.4)
 T_low = 50/1e6; % 50 microseconds (see section 4.4). 
 minRTT = 20/1e6; % 20 microseconds 
@@ -40,8 +40,8 @@ maxQueue = 2 * C * T_high; % only for corner cases - queue won't grow beyond thi
 %
 % Initial conditions: 
 %
-ir1 = 19 * 1e9; % initial rate of flow 1
-ir2 = 0 * 1e9; %  initial rate of flow 2
+ir1 = 7 * 1e9; % initial rate of flow 1
+ir2 = 3 * 1e9; %  initial rate of flow 2
 q0 =  0; % initial queue length
 
 %
