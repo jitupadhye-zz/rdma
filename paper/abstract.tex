@@ -1,0 +1,12 @@
+\begin{abstract}
+Microsoft and Google respectively use DCQCN~\cite{dcqcn} and
+TIMELY~\cite{timely} for congestion control in their RDMA deployments. In this
+paper, we provide control theoretic analysis of the two protocols. Our primary
+goal is to derive the classical convergence criteria; but our analysis also
+several surprising behaviors that are not apparent from the descriptions
+in~\cite{dcqcn} and ~\cite{timely}. Specifically, we find that $(i)$ DCQCN
+becomes unstable as the number of contending flows increase, $(ii)$ TIMELY can
+converge to a stable regime where flows can exhibit arbitrary unfairness $(iii)$
+TIMELY cannot function well without the use of hardware packet pacers, despite
+assertions to the contrary in~\cite{timely}.
+\end{abstract}

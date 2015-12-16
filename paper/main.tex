@@ -1,0 +1,74 @@
+\documentclass{sig-alternate-10pt-compact}
+
+\usepackage{amsmath,amssymb}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage[usenames]{color}
+\usepackage{algorithmic,algorithm}
+\usepackage{times}
+\usepackage{balance}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage[tight,footnotesize]{subfigure}
+
+\setlength{\pdfpagewidth}{8.5in}
+\setlength{\pdfpageheight}{11in}
+
+
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+\newtheorem{cor}{Corollary}
+\newtheorem{thm}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lem}{Lemma}
+
+\newcommand\fixme[1]{{\color{red} [#1]}}
+
+\newcommand\hei{{h}}
+\newcommand\dist{{L}}
+\newcommand\beam{{\theta}}
+
+\newcommand{\para}[1]{{\vspace{4pt} \bf \noindent #1 \hspace{2pt}}}
+\newcommand\note[1]{{\color{red}#1}}
+\newcommand\bedit[1]{#1}
+\newcommand\htedit[1]{#1}
+\newcommand\newed[1]{{\color{black}#1}}
+
+
+\newenvironment{packed_itemize}{
+\begin{list}{\labelitemi}{\leftmargin=1.3em}
+  \setlength{\itemsep}{5pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+  \setlength{\headsep}{0pt}
+  \setlength{\topskip}{0pt}
+  \setlength{\topmargin}{0pt}
+  \setlength{\topsep}{0pt}
+  \setlength{\partopsep}{0pt}  
+}{\end{list}}
+
+\begin{document}
+
+\clubpenalty=10000 
+\widowpenalty = 10000
+
+\title{Control theoretic analysis of DCQCN and TIMELY}
+
+\author{Paper \# XXX. Pages XX}
+
+\maketitle
+\input{abstract}
+\input{intro}
+\input{background}
+\input{dcqcn}
+\input{timely}
+\input{discussion}
+\input{related}
+\input{conclusion}
+
+\balance
+\bibliographystyle{abbrv}
+\bibliography{lossless}
+
+\end{document}
