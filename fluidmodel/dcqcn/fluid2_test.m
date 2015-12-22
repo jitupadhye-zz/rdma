@@ -1,45 +1,49 @@
 function dx = fluid2_test(t,x,lag_matrix)
     global Kmax;
     global Kmin;
-
-    dx = zeros(7,1);
-   
+    global numFlows;
+    
+    % matrix x:
     % 1: rc1
     % 2: rt1
     % 3: alpha1
     % 4: rc2
     % 5: rt2
     % 6: alpha2
-    % 7: queue
+    % ...
+    % 3*numFlows+1: queue
+    
+    % lag matrix: 
+    % (:,1) is t-t' for flow 1
+    % (:,2) is t-t' for flow 2
+    % ....
+
+    dx = zeros(3*numFlows+1,1);
     
     %
     % marking probability
     %
-    p = CalculateP(t,lag_matrix(7,1),Kmin,Kmax);
+    p = CalculateP(t,lag_matrix(end,1),Kmin,Kmax);
     
+   
+    %
+    % rates and alpha
+    %
+    for i = 1:3:3*numFlows
+        % rc
+        dx(i) =  RCDelta(x(i), x(i+1), x(i+2), lag_matrix(i, 1), p);
+        % rt
+        dx(i+1) = RTDelta(x(i), x(i+1), lag_matrix(i, 1), p);
+        % alpha
+        dx(i+2) = AlphaDelta(x(i+2), lag_matrix(i, 1), p);
+    end
     
     %
     % Queue
     %
-    dx(7) = QueueDelta(x(7), [x(4), x(1)]);
-
-    %
-    % alpha
-    %
-    dx(3) = AlphaDelta(x(3), lag_matrix(1,1),p);
-    dx(6) = AlphaDelta(x(6), lag_matrix(4,1),p);
-
-    %
-    % Transmission rate (RC)
-    %
-    dx(1) = RCDelta(x(1), x(2), x(3), lag_matrix(1, 1), p);
-    dx(4) = RCDelta(x(4), x(5), x(6), lag_matrix(4, 1), p);
-
-    %
-    % Target rate (RT)
-    %
-    dx(2) = RTDelta(x(1), x(2), lag_matrix(1, 1), p);
-    dx(5) = RTDelta(x(4), x(5), lag_matrix(4, 1), p);
+    rates = x(1:3:3*numFlows);
+    dx(end) = QueueDelta(x(end), rates);
+    
 end
 
 % 7: queue

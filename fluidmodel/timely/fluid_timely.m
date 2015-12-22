@@ -1,31 +1,34 @@
 function dx = fluid_timely(t,x,lag)
-    global callCounter;
-    callCounter = callCounter + 1;
+    global numFlows;
     
-    dx  = zeros(5, 1);
+    dx  = zeros(2*numFlows+1, 1);
     
     % 1: rate for flow 1
     % 2: rtt gradiant for flow 1
     % 3: rate for flow 2
     % 4: rtt gradiant for flow 2
-    % 5: queue
+    % ...
+    % 2*numFlows+1: queue
     
     % lag matrix: 
     % (:,1) is t-t' for flow 1
     % (:,2) is t-t'-t* for flow 1
     % (:,3) is t-t' for flow 2
     % (:,4) is t-t'-t* for flow 2
-    
-    % update queue delta.
-    dx(5) = QueueDelta(x(5), [x(1), x(3)]);
+    % ....
+     
+    rates = x(1:2:2*numFlows);
+    dx(end) = QueueDelta(x(end), rates);
    
     % update rate delta. 
-    dx(1) = RateDelta(x(1), lag(5,1), x(2)); 
-    dx(3) = RateDelta(x(3), lag(5,3), x(4)); 
+    for i = 1:2:2*numFlows
+        dx(i) = RateDelta(x(i), lag(2*numFlows+1,i), x(i+1));
+    end  
     
     % update RTT gradient
-    dx(2) = RTTGradientDelta(x(1), x(2), lag(5,1), lag(5,2));
-    dx(4) = RTTGradientDelta(x(3), x(4), lag(5,3), lag(5,4));
+    for i = 2:2:2*numFlows
+        dx(i) = RTTGradientDelta(x(i-1), x(i), lag(2*numFlows+1,i-1), lag(2*numFlows+1,i));
+    end  
 end
 
 function deltaQueue = QueueDelta(currentQueue, flowRates)
@@ -86,7 +89,6 @@ end
 
 function rttSampleInterval = RTTSampleInterval(currentRate)
     global Seg;
-    global minRTT;
     %rttSampleInterval = max(Seg/currentRate, minRTT);
     rttSampleInterval = Seg/currentRate;
 end

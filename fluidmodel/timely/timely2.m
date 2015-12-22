@@ -1,3 +1,5 @@
+function timely2()
+
 clc;clear all;close all;
 
 global C; % bandwidth 
@@ -9,30 +11,32 @@ global prop; % propagation delay.
 global minRTT; % 20 microseconds, defined protocol parameter
 global beta; % beta, protocol parameter
 global alpha; % alpha, protocol parameter.
-global callCounter;
-global maxQueue;
+global maxQueue; % max queue. 
+global numFlows;  % number of flows. 
+global initVal; % column of initial values (rate and RTT gradient for each flow, plus initial queue length). 
 
 %
-% Just for testing purposes.
-%
-callCounter = 0;
+% Simulation control
+% 
+step_len = 5e-6 ; % 5 microseconds
+sim_length = step_len * 20000 ;
+
 
 % 
 % Fixed Parameters
 %
-step_len = 5/1e6 ; % 5 microseconds
-sim_length = step_len * 20000 ;
 C = 10 * 1e9; % line rate.
 Seg = 64 * 8 * 1e3; % burstsize.
-prop = 4 /1e6; % propagation delay
+prop = 4e-6; % propagation delay
+numFlows = 3; % number of flows. 
 
 %
 % Parameters we can play with.
 %
-delta = 10 * 1e6; % 10Mbps
-T_high = 500/1e6; % 500 microseconds (see section 4.4)
-T_low = 50/1e6; % 50 microseconds (see section 4.4). 
-minRTT = 20/1e6; % 20 microseconds 
+delta = 10e6; % 10Mbps
+T_high = 500e-6; % 500 microseconds (see section 4.4)
+T_low = 50e-6; % 50 microseconds (see section 4.4). 
+minRTT = 20e-6; % 20 microseconds 
 beta = 0.8;
 alpha = 0.875; % unsure
 maxQueue = 2 * C * T_high; % only for corner cases - queue won't grow beyond this. 
@@ -40,9 +44,18 @@ maxQueue = 2 * C * T_high; % only for corner cases - queue won't grow beyond thi
 %
 % Initial conditions: 
 %
-ir1 = 7 * 1e9; % initial rate of flow 1
-ir2 = 3 * 1e9; %  initial rate of flow 2
-q0 =  0; % initial queue length
+
+% 1: initial rate of flow 1
+% 2: RTT gradient of flow 1
+% ...
+% 2*NumFlows: RTT graident of flow numFlowss
+% 2*numFlow +1: initial queue size. 
+%
+initVal = zeros(2*numFlows + 1, 1);
+
+SetInitialRate(1, 5e9);
+SetInitialRate(2, 5e9);
+SetInitialRate(3, 5e9);
 
 %
 % Options.
@@ -52,41 +65,42 @@ options = ddeset('MaxStep', step_len);
 %
 % Solve.
 %
-sol = ddesd(@fluid_timely, @fluid_delays, [ir1; 0; ir2; 0; q0], [0, sim_length],options);
+sol = ddesd(@fluid_timely, @fluid_delays, initVal, [0, sim_length],options);
 
 %
 % Extract solution.
 %
 t = sol.x;
-r = sol.y(1,:);
-g = sol.y(2,:);
-r2 = sol.y(3,:);
-g2 = sol.y(4,:);
-q = sol.y(5,:);
+q = sol.y(2*numFlows+1,:);
+rates = sol.y(1:2:2*numFlows,:);
 
 %
 % Write solution to file.
-%
-dlmwrite('timely_fluid.txt',[t',r'./1e9, r2'./1e9, q'./(8*1e3)],'\t');
+% 
+dlmwrite('timely_fluid.txt',[t',rates'./1e9, q'./8],'\t');
 
 %
-% Plot.
+% Plot
 %
 figure
-
 subplot(1,2,1);
-plot(t,r./1e9,'b');
+plot(t,rates'/1e9);
 hold on
-plot(t,r2./1e9,'r--');
-%axis([0 sim_length 0 max(max(r./1e9), max(r2./1e9))])
-set(findobj(get(gca,'Children'),'LineWidth',0.5),'LineWidth',2);
+axis([0 sim_length 0 10])
 xlabel('Time (seconds)')
 ylabel('Throughput (Gbps)')
 
-%plot queue size
 subplot(1,2,2);
-plot(t,q./(8*1e3))
+plot(t,q./(8e3))
+hold on
+axis([0 sim_length 0 max(q)/(8e3)])
 xlabel('Time (seconds)')
 ylabel('Queue (KBytes)')
 
-set(gcf,'Units','centimeters','Position',[0 0 35 14])
+end
+
+function  SetInitialRate(flownum, rate)
+    global initVal;
+    initVal(2*(flownum-1)+1, 1) = rate;
+end
+
