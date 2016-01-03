@@ -2,9 +2,110 @@
 
 \subsection{Model}
 
+\begin{equation}
+\small
+p(t) = \left\{ \begin{array}{ll}
+{\rm{0,}} & q(t) \le {K_{\min }}\\
+\frac{{q(t) - {K_{\min }}}}{{{K_{\max }} - {K_{\min }}}}{p_{\max }}, & {K_{\min }} < q(t) \le {K_{\max }}\\
+{\rm{1,}} & q(t) > {K_{\max }}
+\end{array} \right.
+\label{eq:mark}
+\end{equation}
+\begin{equation}
+\small
+\frac{{dq}}{{dt}} = N{R_C}(t) - C
+\label{eq:q}
+\end{equation}
+\begin{equation}
+\small
+\frac{{d\alpha }}{{dt}} = \frac{g}{{\tau '}}\left( {\left( {1 - {{(1 - p(t - \tau *))}^{\tau '{R_C}(t - \tau *)}}} \right) - \alpha (t)} \right)
+\label{eq:alpha}
+\end{equation}
+\begin{equation}
+\small
+\begin{split}
+\frac{{d{R_T}}}{{dt}} = & - \frac{{{R_T}(t) - {R_C}(t)}}{\tau }\left( {1 - {{(1 - p(t - \tau *))}^{\tau {R_C}(t - \tau *)}}} \right) \\
+& + {R_{AI}}{R_C}(t - \tau *)\frac{{{{(1 - p(t - \tau *))}^{FB}}p(t - \tau *)}}{{{{(1 - p(t - \tau *))}^{ - B}} - 1}} \\
+& + {R_{AI}}{R_C}(t - \tau *)\frac{{{{(1 - p(t - \tau *))}^{FT{R_C}(t - \tau *)}}p(t - \tau *)}}{{{{(1 - p(t - \tau *))}^{ - T{R_C}(t - \tau *)}} - 1}}
+\end{split}
+\label{eq:target}
+\end{equation}
+\begin{equation}
+\small
+\begin{split}
+\frac{{d{R_C}}}{{dt}} = & - \frac{{{R_C}(t)\alpha (t)}}{{2\tau }}\left( {1 - {{(1 - p(t - \tau *))}^{\tau {R_C}(t - \tau *)}}} \right) \\
+ & + \frac{{{R_T}(t) - {R_C}(t)}}{2}\frac{{{R_C}(t - \tau *)p(t - \tau *)}}{{{{(1 - p(t - \tau *))}^{ - B}} - 1}} \\ 
+ & + \frac{{{R_T}(t) - {R_C}(t)}}{2}\frac{{{R_C}(t - \tau *)p(t - \tau *)}}{{{{(1 - p(t - \tau *))}^{ - T{R_C}(t - \tau *)}} - 1}}
+\end{split}
+\label{eq:current}
+\end{equation}
+
 \subsection{Model validation}
 
 \subsection{Stability analysis}
+
+\para{Fixed point.} We denote:
+
+\begin{equation}
+\begin{array}{l}
+a(t) = 1 - {(1 - p(t))^{\tau {R_C}(t)}},b(t) = \frac{{p(t)}}{{{{(1 - p(t))}^{ - B}} - 1}},\\
+c(t) = \frac{{{{(1 - p(t))}^{FB}}p(t)}}{{{{(1 - p(t))}^{ - B}} - 1}},d(t) = \frac{{p(t)}}{{{{(1 - p(t))}^{ - T{R_C}(t)}} - 1}},\\
+e(t) = \frac{{{{(1 - p(t))}^{FT{R_C}(t)}}p(t)}}{{{{(1 - p(t))}^{ - T{R_C}(t)}} - 1}}
+\end{array}
+\end{equation}
+
+DCQCN has a unique fixed point:
+
+\begin{equation}
+\small
+{R_C^*} = \frac{C}{N}
+\end{equation}
+\begin{equation}
+\small
+\alpha^*  = 1 - {(1 - p)^{\frac{{\tau 'C}}{N}}}
+\end{equation}
+\begin{equation}
+\small
+{R_T^*} = \frac{C}{N} + \frac{{a\alpha }}{{(b + d)\tau }}
+\end{equation}
+
+\begin{equation}
+\small
+{q^*} = \frac{{{p^*}}}{{{p_{max}}}}\left( {{K_{max}} - {K_{min}}} \right) + {K_{min}}
+\end{equation}
+
+$p^*$ is determined by:
+\begin{equation}
+\small
+\frac{{{a^2}\alpha }}{{(b + d)(c + e)}} = \frac{{{\tau ^2}{R_{AI}}C}}{N}
+\end{equation}
+
+We obtain the taylor series around $p=0$ of the left hand side:
+\begin{equation}
+\small
+\frac{{{a^2}\alpha }}{{(b + d)(c + e)}} = \frac{{{C^3}{\tau ^2}\tau '}}{{{N^3}{{\left( {\frac{1}{B} + \frac{N}{{CT}}} \right)}^2}}}{p^3} + O\left( {{p^4}} \right)
+\end{equation}
+
+\begin{equation}
+\small
+{p^*} = \sqrt[3]{{\frac{{{R_{AI}}{N^2}}}{{\tau '{C^2}}}{{\left( {\frac{1}{B} + \frac{N}{{CT}}} \right)}^2}}}
+\end{equation}
+
+\para{Stability analysis.} 
+We linearize the system by $\delta {R_C}(t) = {R_C}(t) - R_C^*$, $\delta {R_C}(t) = {R_C}(t) - R_C^*$,
+$\delta p(t) = p(t) - p^*$, $\delta \alpha (t) = \alpha (t) - \alpha^*$, and $A = \left( {\frac{1}{B} + \frac{1}{{TR_C^*}}} \right)$.
+
+\begin{equation}
+\small
+\begin{array}{l}
+s{R_C}(s) - \delta {R_C}(0) = \left( { - \frac{1}{2}{{(R_C^*)}^2}{\alpha ^*} - \left( {\frac{1}{2} + \frac{A}{4}} \right)R_C^*R_T^* + \left( {\frac{1}{2} + \frac{A}{4}} \right){{(R_C^*)}^2}} \right){e^{ - s\tau *}}p(s)\\
+ + \left( { - \frac{1}{2}{p^*}R_C^*{\alpha ^*} - \frac{A}{2}R_C^* + \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_C^*} \right){e^{ - s\tau *}}{R_C}(s)\\
+ + \left( { - \frac{1}{2}{p^*}R_C^*{\alpha ^*} - \frac{A}{2}R_C^* + \frac{A}{2}R_T^* + \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_C^* - \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_T^*} \right){R_C}(s)\\
+ - \frac{1}{2}{p^*}{(R_C^*)^2}\alpha (s)\\
+ + \left( {\frac{A}{2}R_C^* - \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_C^*} \right){R_T}(s)
+\end{array}
+\end{equation}
+
 
 \subsection{Convergence analysis}
 
