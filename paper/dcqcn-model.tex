@@ -1,0 +1,98 @@
+\subsection{Model}
+
+A fluid model of DCQCN was described in~\cite{dcqcn}. We reproduce it here in
+Tables~\ref{tab:dcqcn_var} and \ref{tab:dcqcn_param} and
+Figure~\ref{fig:dcqcn_model}.  The model considers N flows, traversing a single
+bottleneck link. The model assumes that DCQCN is triggered before PFC, and hence
+ignores the impact of PFC. Equation~\ref{eq:mark} calculates the probability of
+a packet getting marked.  Equation~\ref{eq:q} describes the queue behavior.
+Equation~\ref{eq:alpha} captures the evolution of alpha.  Equations~\ref{eq:rt}
+and \ref{eq:rc} describe the calculation of target and sending rate,
+respectively. 
+\begin{table}[t]
+\center
+{
+\footnotesize
+{
+\begin{tabular}{|c|c|} \hline
+Variable & Description \\ \hline
+$R_c$ & Current Rate \\ \hline
+$R_t$ & Target Rate \\ \hline
+$\alpha$ & See Equation (\ref{eq:rp_dec}) \\ \hline
+$q$ & Queue Size \\ \hline
+$t$ & Time \\ \hline
+\end{tabular}
+}
+}
+\caption{DCQCN Fluid model variables}
+\label{tab:dcqcn_var}
+\end{table}
+\begin{table}[t]
+\center
+{
+\footnotesize
+{
+\begin{tabular}{|c|c|} \hline
+Parameter & Description \\ \hline
+$K_{min}, K_{max}, P_{max}$ & RED marking parameters. \\ \hline
+$g$ & See Equation (\ref{eq:rp_dec}) \\ \hline
+$N$ & Number of flows at bottleneck\\ \hline
+$C$ & Bandwidth of bottleneck link\\ \hline
+$F$ & Fast recovery steps (fixed at 5) \\ \hline
+$B$ & Byte counter for rate increase\\ \hline
+$T$ & Timer for rate increase\\ \hline
+$R_{AI}$ & Rate increase step (fixed at 40Mbps)\\ \hline
+$\tau *$ & Control loop delay \\ \hline
+$\tau '$ & Interval of Equation (\ref{eq:rp_alpha_recover})\\ \hline
+\end{tabular}
+}
+}
+\caption{DCQCN Fluid model parameters}
+\label{tab:dcqcn_param}
+\end{table}
+\begin{figure}[h]
+\fbox 
+{
+\begin{minipage}{\columnwidth}
+\begin{equation}
+\small
+p(t) = \left\{ \begin{array}{ll}
+{\rm{0,}} & q(t) \le {K_{\min }}\\
+\frac{{q(t) - {K_{\min }}}}{{{K_{\max }} - {K_{\min }}}}{p_{\max }}, & {K_{\min }} < q(t) \le {K_{\max }}\\
+{\rm{1,}} & q(t) > {K_{\max }}
+\end{array} \right.
+\label{eq:mark}
+\end{equation}
+\begin{equation}
+\small
+\frac{{dq}}{{dt}} = N{R_C}(t) - C
+\label{eq:q}
+\end{equation}
+\begin{equation}
+\small
+\frac{{d\alpha }}{{dt}} = \frac{g}{{\tau '}}\left( {\left( {1 - {{(1 - p(t - \tau *))}^{\tau '{R_C}(t - \tau *)}}} \right) - \alpha (t)} \right)
+\label{eq:alpha}
+\end{equation}
+\begin{equation}
+\small
+\begin{split}
+\frac{{d{R_T}}}{{dt}} = & - \frac{{{R_T}(t) - {R_C}(t)}}{\tau }\left( {1 - {{(1 - p(t - \tau *))}^{\tau {R_C}(t - \tau *)}}} \right) \\
+& + {R_{AI}}{R_C}(t - \tau *)\frac{{{{(1 - p(t - \tau *))}^{FB}}p(t - \tau *)}}{{{{(1 - p(t - \tau *))}^{ - B}} - 1}} \\
+& + {R_{AI}}{R_C}(t - \tau *)\frac{{{{(1 - p(t - \tau *))}^{FT{R_C}(t - \tau *)}}p(t - \tau *)}}{{{{(1 - p(t - \tau *))}^{ - T{R_C}(t - \tau *)}} - 1}}
+\end{split}
+\label{eq:rt}
+\end{equation}
+\begin{equation}
+\small
+\begin{split}
+\frac{{d{R_C}}}{{dt}} = & - \frac{{{R_C}(t)\alpha (t)}}{{2\tau }}\left( {1 - {{(1 - p(t - \tau *))}^{\tau {R_C}(t - \tau *)}}} \right) \\
+ & + \frac{{{R_T}(t) - {R_C}(t)}}{2}\frac{{{R_C}(t - \tau *)p(t - \tau *)}}{{{{(1 - p(t - \tau *))}^{ - B}} - 1}} \\ 
+ & + \frac{{{R_T}(t) - {R_C}(t)}}{2}\frac{{{R_C}(t - \tau *)p(t - \tau *)}}{{{{(1 - p(t - \tau *))}^{ - T{R_C}(t - \tau *)}} - 1}}
+\end{split}
+\label{eq:rc}
+\end{equation}
+\end{minipage}
+}
+\caption{DCQCN fluid model}
+\label{fig:dcqcn_model}
+\end{figure}

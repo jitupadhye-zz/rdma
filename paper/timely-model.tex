@@ -1,0 +1,106 @@
+\subsection{Model}
+
+We have developed a fluid model of TIMELY. It is shown in
+Tables~\ref{tab:timely_var} and \ref{tab:timely_param} and
+Figure~\ref{fig:timely_model}.  The model considers N flows, traversing a single
+bottleneck link. The model assumes that TIMELY is triggered
+before\footnote{Unlike~\cite{dcqcn}, ~\cite{timely} does not specify how to set
+buffers to ensure this, but we assume that it can be done.} PFC, and hence
+ignores the impact of PFC.
+
+Equation~\ref{eq:timely_q} describes the queue behavior.
+Equation~\ref{eq:timely_r} describes rate computation. For simplicity, we ignore
+the hyperactive increase phase. When RTT is between$T_{low}$ and $T_{high}$, the
+rate computation depend on RTT gradient, which evolves according to
+Equation~\ref{eq:timely_g}.  The equation captures the EWMA filter, as well as
+normalization. Since the gradient is the difference between the current and the
+previous RTT sample, it depends on two queue lengths in past: one at time $t -
+\tau'$, and one at time $t - \tau'-\tau\*$. The value of $\tau'$ and $\tau*$
+depend on past transmission rates, but to simplify the model, we approximate
+their calculation as shown in Equations~\ref{eq:timely_taus} and
+\ref{eq:timely_taup}.
+Equation~\ref{eq:timely_taus} captures the fact that the TIMELY implementation updates
+rate at most once per $D_{minRTT}$.
+
+\begin{table}[t]
+\center
+{
+\footnotesize
+{
+\begin{tabular}{|c|c|} \hline
+Variable & Description \\ \hline
+$R$ & Rate \\ \hline
+$g$ & RTT gradient\\ \hline
+$q$ & Queue Size \\ \hline
+$t$ & Time \\ \hline
+$\tau*$ & Rate update interval \\ \hline
+$\tau'$ & Feedback delay \\ \hline
+\end{tabular}
+}
+}
+\caption{TIMELY Fluid model variables}
+\label{tab:timely_var}
+\end{table}
+
+\begin{table}[t]
+\center
+{
+\footnotesize
+{
+\begin{tabular}{|c|c|} \hline
+Parameter & Description \\ \hline
+$N$ & Number of flows at bottleneck\\ \hline
+$C$ & Bandwidth of bottleneck link\\ \hline
+$\alpha$ & EWMA smoothing factor\\ \hline
+$\delta$ & Additive increase step\\ \hline
+$\beta$ & Multiplicative decrease factor\\ \hline
+$T_{low}$ & Low threshold\\ \hline
+$T_{high}$ & High threshold\\ \hline
+$D_{minRTT}$ & Minimum RTT for normalization \\ \hline
+$D_{prop}$ & Propagation delay \\ \hline
+\end{tabular}
+}
+}
+\caption{TIMELY Fluid model parameters}
+\label{tab:timely_param}
+\end{table}
+
+\begin{figure}[h]
+\fbox
+{
+\begin{minipage}{\columnwidth}
+\begin{equation}
+\small
+\frac{{dq}}{{dt}} = NR(t) - C\\
+\label{eq:timely_q}
+\end{equation}
+\begin{equation}
+\small
+\frac{{dR}}{{dt}} = \left\{ \begin{array}{ll}
+\frac{\delta }{{\tau *}}, & q(t - \tau ') < C*{T_{low}}\\
+\frac{\delta }{{\tau *}}, & g \le 0\\
+ - \frac{{g\beta }}{{\tau *}}R(t), & g > 0\\
+ - \frac{\beta }{{\tau *}}(1 - \frac{{C*{T_{high}}}}{{q(t - \tau ')}})R(t), & q(t - \tau ') > C*{T_{high}}
+\end{array} \right.\\
+\label{eq:timely_r}
+\end{equation}
+\begin{equation}
+\small
+\frac{{dg}}{{dt}} = \frac{\alpha }{{\tau *}}( - g(t) + \frac{{q(t - \tau ') - q(t - \tau ' - \tau *)}}{{C*{D_{\min RTT}}}})\\
+\label{eq:timely_g}
+\end{equation}
+\begin{equation}
+\small
+\tau * = \max \{ \frac{{Seg}}{R},{D_{\min RTT}}\} \\
+\label{eq:timely_taus}
+\end{equation}
+\begin{equation}
+\small
+\tau ' = \frac{q}{C} + \frac{{Seg}}{R} + {D_{prop}}
+\label{eq:timely_taup}
+\end{equation}
+\end{minipage}
+}
+\caption{TIMELY fluid model}
+\label{fig:timely_model}
+\end{figure}
