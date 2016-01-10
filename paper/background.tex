@@ -1,10 +1,33 @@
-\section{Background}
-In this section, we provide a brief summary of the technologies involved, namely
-ROCEv2~\cite{xxx}, DCQCN~\cite{dcqcn}, and TIMELY~\cite{timely}. This is not
-meant to be a complete description.
+\section{RDMA and ROCEv2 Primer}
 
-\subsection{RDMA and ROCEv2}
+This section provides a brief background primer on RDMA and
+RoCEV2~\cite{rocev2}.
 
-\subsection{DCQCN}
+The Remote Direct Memory Access (RDMA) technology offers~\cite{dcqcn} high
+throughput (40Gbps or more), low latency (few $\mu$s) With RDMA, network
+interface cards (NICs) transfer data in and out of pre-registered memory buffers
+at both end hosts. The networking protocol is implemented entirely on the NICs,
+bypassing the host networking stack.  and imposes very little CPU overhead
+(1-2\%). 
 
-\subsection{TIMELY}
+RDMA was originally deployed using Infiniband (IB)~\cite{ib-spec} technology,
+which specifies a custom networking stack~\cite{ib-hw-spec}. In modern data
+center networks typically deploy RDMA using RDMA over Converged Ethernet V2
+(RoCEv2)~\cite{rocev2} standard. The standard encapsulates IB transport protocol
+packets in UDP~\cite{rcf-udp} packets.  For efficient operation, IB transport
+protocol requires a lossless (or, more accurately, drop-free) L2 layer. This is
+enabled by using Priority Flow Control PFC prevents buffer overflow on Ethernet
+switches and NICs. The switches and NICs track ingress queues. When the queue
+exceeds a certain threshold, a PAUSE message is sent to the upstream entity. The
+uplink entity then stops sending on that link till it gets an RESUME message.
+PFC specifies upto eight priority classes. PAUSE/RESUME messages specify the
+priority class they apply to. PFC is a blunt mechanism, since it does not
+operate on a per-flow basis. This leads to several well known
+problems~\cite{dcqcn,tcp-bolt} such as head-of-the-line blocking, and
+victimization. 
+
+To alleviate these problems, end-to-end congestion control is necessary.
+Recently, two protocols, DCQCN~\cite{dcqcn} and TIMELY~\cite{timely} were
+proposed for this purpose. We will describe the two protocols in subsequent
+sections.
+
