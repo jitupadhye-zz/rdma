@@ -66,16 +66,12 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient)
             end
         end
     end
+    
     % do not exceed line rate.
     if (currentRate >= C && deltaRate > 0)
         deltaRate = 0;
     end
-%     if (currentRate < C && deltaRate > 0 && currentRate + deltaRate > C)
-%         deltaRate = C - currentRate;
-%     end
-    
     deltaRate = deltaRate / RTTSampleInterval(currentRate);
-    
 end
 
 function deltaRTTGradient = RTTGradientDelta(currentRate, currRTTGradient, prevQueue, prevPrevQueue)   
@@ -84,12 +80,10 @@ function deltaRTTGradient = RTTGradientDelta(currentRate, currRTTGradient, prevQ
     global minRTT;
     deltaRTTGradient = alpha * (-1 * currRTTGradient + (prevQueue - prevPrevQueue)/(C*minRTT));
     deltaRTTGradient = deltaRTTGradient / RTTSampleInterval(currentRate);
-    %deltaRTTGradient = deltaRTTGradient / (Seg/currentRate);
 end
 
 function rttSampleInterval = RTTSampleInterval(currentRate)
     global Seg;
-    %rttSampleInterval = max(Seg/currentRate, minRTT);
     rttSampleInterval = Seg/currentRate;
 end
 
