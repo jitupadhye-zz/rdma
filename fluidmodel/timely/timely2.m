@@ -19,7 +19,7 @@ function sol = timely2()
     % Simulation control
     % 
     step_len = 5e-6 ; % 5 microseconds
-    sim_length = step_len * 10000 ;
+    sim_length = 100e-3; % 100 milliseconds 
 
     % 
     % Fixed Parameters
@@ -51,7 +51,7 @@ function sol = timely2()
     % 2*numFlow +1: initial queue size. 
     %
 
-    numFlows = 2;
+    numFlows = 20;
     while (numFlows < 128)
    
         initVal = zeros(2*numFlows + 1, 1);
@@ -63,7 +63,7 @@ function sol = timely2()
         %
         % Options.
         %
-        options = ddeset('MaxStep', step_len);
+        options = ddeset('MaxStep', step_len, 'RelTol', 1e-2, 'AbsTol', 1e-5);
 
         %
         % Solve.
@@ -87,11 +87,11 @@ function sol = timely2()
         fileId = fopen (fileName, 'w');
         fprintf(fileId, '## utilization = %f\n', utilization);
         fclose(fileId);
-        dlmwrite(fileName,[t',rates'./1e9, q'./8], '-append', 'delimiter','\t');
+        dlmwrite(fileName,[t',rates'./1e9, q'./8e3], '-append', 'delimiter','\t');
   
-        numFlows = numFlows * 2; 
+        numFlows = numFlows * 8; 
         
-        PlotSol(t, q, rates, sim_length, numFlows);
+        %PlotSol(t, q, rates, sim_length, numFlows);
         break;
     end
 end
@@ -186,7 +186,6 @@ function rttSampleInterval = RTTSampleInterval(currentRate)
 end
 
 function delays = fluid_delays(t, x)
-
     global Seg;
     global minRTT;
     global C;

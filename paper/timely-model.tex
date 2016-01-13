@@ -18,9 +18,8 @@ previous RTT sample, it depends on two queue lengths in past: one at time $t -
 \tau'$, and one at time $t - \tau'-\tau\*$. The value of $\tau'$ and $\tau*$
 depend on past transmission rates, but to simplify the model, we approximate
 their calculation as shown in Equations~\ref{eq:timely_taus} and
-\ref{eq:timely_taup}.
-Equation~\ref{eq:timely_taus} captures the fact that the TIMELY implementation updates
-rate at most once per $D_{minRTT}$.
+\ref{eq:timely_taup}.  Equation~\ref{eq:timely_taus} captures the fact that the
+TIMELY implementation updates rate at most once per $D_{minRTT}$.
 
 \begin{table}[t]
 \center
