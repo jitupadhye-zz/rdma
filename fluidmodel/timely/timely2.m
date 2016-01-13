@@ -19,7 +19,7 @@ function sol = timely2()
     % Simulation control
     % 
     step_len = 5e-6 ; % 5 microseconds
-    sim_length = step_len * 10000 ;
+    sim_length = 100e-3; % 100 milliseconds 
 
     % 
     % Fixed Parameters
@@ -51,7 +51,7 @@ function sol = timely2()
     % 2*numFlow +1: initial queue size. 
     %
 
-    numFlows = 2;
+    numFlows = 20;
     while (numFlows < 128)
    
         initVal = zeros(2*numFlows + 1, 1);
@@ -63,7 +63,7 @@ function sol = timely2()
         %
         % Options.
         %
-        options = ddeset('MaxStep', step_len);
+        options = ddeset('MaxStep', step_len, 'RelTol', 1e-2, 'AbsTol', 1e-5);
 
         %
         % Solve.
@@ -87,11 +87,132 @@ function sol = timely2()
         fileId = fopen (fileName, 'w');
         fprintf(fileId, '## utilization = %f\n', utilization);
         fclose(fileId);
-        dlmwrite(fileName,[t',rates'./1e9, q'./8], '-append', 'delimiter','\t');
+        dlmwrite(fileName,[t',rates'./1e9, q'./8e3], '-append', 'delimiter','\t');
   
-        numFlows = numFlows * 2; 
+        numFlows = numFlows * 8; 
         
-        %PlotSol(t, q, rates);
+        %PlotSol(t, q, rates, sim_length, numFlows);
+        break;
+    end
+end
+
+function dx = fluid_timely(t,x,lag)
+    global numFlows;
+    
+    dx  = zeros(2*numFlows+1, 1);
+    
+    % 1: rate for flow 1
+    % 2: rtt gradiant for flow 1
+    % 3: rate for flow 2
+    % 4: rtt gradiant for flow 2
+    % ...
+    % 2*numFlows+1: queue
+    
+    % lag matrix: 
+    % (:,1) is t-t' for flow 1
+    % (:,2) is t-t'-t* for flow 1
+    % (:,3) is t-t' for flow 2
+    % (:,4) is t-t'-t* for flow 2
+    % ....
+     
+    rates = x(1:2:2*numFlows);
+    dx(end) = QueueDelta(x(end), rates);
+   
+    % update rate delta. 
+    for i = 1:2:2*numFlows
+        dx(i) = RateDelta(x(i), lag(2*numFlows+1,i), x(i+1));
+    end  
+    
+    % update RTT gradient
+    for i = 2:2:2*numFlows
+        dx(i) = RTTGradientDelta(x(i-1), x(i), lag(2*numFlows+1,i-1), lag(2*numFlows+1,i));
+    end  
+end
+
+function deltaQueue = QueueDelta(currentQueue, flowRates)
+    global C;
+    global maxQueue;
+    if (currentQueue > 0)
+        if (currentQueue < maxQueue)
+            deltaQueue = sum(flowRates)-C;
+        else 
+            deltaQueue = min(sum(flowRates)-C, 0);
+        end
+    else
+        deltaQueue = max(sum(flowRates)-C, 0);
+    end
+end
+
+function deltaRate = RateDelta(currentRate, prevQueue, rttGradient)
+    global delta;
+    global beta;
+    global C;
+    global T_high;
+    global T_low;
+    
+    queueLow = C * T_low;
+    queueHigh = C * T_high;
+    if (prevQueue < queueLow)
+       deltaRate = delta;
+    else if (prevQueue > queueHigh)
+            deltaRate = -1 * beta * (1 - queueHigh/prevQueue) * currentRate;
+        else
+            if (rttGradient <= 0)
+                deltaRate = delta;
+            else
+                deltaRate = -1 * rttGradient * beta * currentRate;
+            end
+        end
+    end
+    
+    % do not exceed line rate.
+    if (currentRate >= C && deltaRate > 0)
+        deltaRate = 0;
+    end
+    deltaRate = deltaRate / RTTSampleInterval(currentRate);
+end
+
+function deltaRTTGradient = RTTGradientDelta(currentRate, currRTTGradient, prevQueue, prevPrevQueue)   
+    global alpha;
+    global C;
+    global minRTT;
+    deltaRTTGradient = alpha * (-1 * currRTTGradient + (prevQueue - prevPrevQueue)/(C*minRTT));
+    deltaRTTGradient = deltaRTTGradient / RTTSampleInterval(currentRate);
+end
+
+function rttSampleInterval = RTTSampleInterval(currentRate)
+    global Seg;
+    rttSampleInterval = Seg/currentRate;
+end
+
+function delays = fluid_delays(t, x)
+    global Seg;
+    global minRTT;
+    global C;
+    global prop;
+    global numFlows;
+
+    % x is as follows:
+    % 1: rate for flow 1
+    % 2: rtt gradiant for flow 1
+    % 3: rate for flow 2
+    % 4: rtt gradiant for flow 2
+    % ...
+    % 2*numFlows+1: queue
+
+    % delay array is as follows:
+    % 1: t - t' for flow 1
+    % 2: t - t' - t* for flow 1
+    % 3: t - t' for flow 2
+    % 4: t - t' - t* for flow 2
+    % ...
+
+    delays = zeros(2*numFlows, 1);
+    tprime = x(end)/C + Seg/C + prop;
+    for i=1:2:2*numFlows
+        tstar = max(Seg/x(i), minRTT);
+        delays(i) = t - tprime;
+        delays(i+1) = t - tstar - tprime;
     end
 end
 
@@ -119,7 +240,7 @@ function [u, err] = Utilization (t, rates, q, C)
     u = sent/max;
 end
 
-function PlotSol(t, q, rates, sim_length)
+function PlotSol(t, q, rates, sim_length, numFlows)
     figure
     subplot(2,1,1);
     plot(t,rates'/1e9);
