@@ -1,5 +1,25 @@
 \subsection{Analysis}
 
+\begin{figure*}[t]
+\subfigure[DCQCN stability with default parameters.]
+{
+\includegraphics[width=0.33\textwidth]{figures/dcqcn_stability.eps}
+\label{fig:dcqcn_stability_default}
+}
+\subfigure[DCQCN stability with $R_{AI}=10Mbps$.]
+{
+\includegraphics[width=0.33\textwidth]{figures/dcqcn_stability_rai.eps}
+\label{fig:dcqcn_stability_rai}
+}
+\subfigure[[DCQCN stability with $R_{AI}=10Mbps$ and $K_{max}=1000KB$.]
+{
+\includegraphics[width=0.33\textwidth]{figures/dcqcn_stability_rai_kmax.eps}
+\label{fig:dcqcn_stability_rai_kmax}
+}
+\caption{DCQCN stability}
+\label{fig:dcqcn_stability}
+\end{figure*}
+
 Below we show that DCQCN has a unique fixed point. We analyze DCQCN's stability around the 
 fixed point, how stability varies under different conditions, and conclude with a 
 parameter setting guideline.
