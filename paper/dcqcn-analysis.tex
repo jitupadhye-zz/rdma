@@ -1,17 +1,17 @@
 \subsection{Analysis}
 
 \begin{figure*}[t]
-\subfigure[DCQCN stability with default parameters.]
+\subfigure[Default parameters ($R_{AI}=40Mbps$, $K_{max}=200KB$).]
 {
 \includegraphics[width=0.33\textwidth]{figures/dcqcn_stability.eps}
 \label{fig:dcqcn_stability_default}
 }
-\subfigure[DCQCN stability with $R_{AI}=10Mbps$.]
+\subfigure[$R_{AI}=10Mbps$.]
 {
 \includegraphics[width=0.33\textwidth]{figures/dcqcn_stability_rai.eps}
 \label{fig:dcqcn_stability_rai}
 }
-\subfigure[[DCQCN stability with $R_{AI}=10Mbps$ and $K_{max}=1000KB$.]
+\subfigure[$R_{AI}=10Mbps$ and $K_{max}=1000KB$.]
 {
 \includegraphics[width=0.33\textwidth]{figures/dcqcn_stability_rai_kmax.eps}
 \label{fig:dcqcn_stability_rai_kmax}
@@ -102,7 +102,8 @@ Because the equations are very complicated, here we just show an example of $R_C
 \frac{{d\delta {R_C}}}{{dt}} =  - \frac{1}{2}{(R_C^*)^2}{\alpha ^*}\delta p - \frac{1}{2}{p^*}R_C^*{\alpha ^*}\delta R_C \\
  - \frac{1}{2}{p^*}R_C^*{\alpha ^*}\delta {R_C} - \frac{1}{2}{p^*}{(R_C^*)^2}\delta \alpha \\
  + \frac{A}{2}\left( {R_C^*\delta {R_T} - R_C^*\delta {R_C} + R_T^*\delta {R_C} - R_C^*\delta R_C} \right)\\
- - \left( {\frac{1}{2} + \frac{A}{4}} \right)\left( {{p^*}R_C^*\delta {R_T} - {p^*}R_C^*\delta {R_C} + {p^*}R_T^*\delta {R_C} - {p^*}R_C^*\delta R_C + R_C^*R_T^*\delta p - {{(R_C^*)}^2}\delta p} \right)
+ - \left( {\frac{1}{2} + \frac{A}{4}} \right)\left( {{p^*}R_C^*\delta {R_T} - {p^*}R_C^*\delta {R_C} + {p^*}R_T^*\delta {R_C}} \right)\\ 
+ - \left( {\frac{1}{2} + \frac{A}{4}} \right)\left( {{p^*}R_C^*\delta R_C - R_C^*R_T^*\delta p + {{(R_C^*)}^2}\delta p} \right)
 \end{array}
 \end{equation}
 
@@ -111,7 +112,8 @@ We can then perform Laplace transform and get:
 \begin{equation}
 \small
 \begin{array}{l}
-s{R_C}(s) - \delta {R_C}(0) = \left( { - \frac{1}{2}{{(R_C^*)}^2}{\alpha ^*} - \left( {\frac{1}{2} + \frac{A}{4}} \right)R_C^*R_T^* + \left( {\frac{1}{2} + \frac{A}{4}} \right){{(R_C^*)}^2}} \right){e^{ - s\tau *}}p(s)\\
+s{R_C}(s) - \delta {R_C}(0) = \\
+\left( { - \frac{1}{2}{{(R_C^*)}^2}{\alpha ^*} - \left( {\frac{1}{2} + \frac{A}{4}} \right)R_C^*R_T^* + \left( {\frac{1}{2} + \frac{A}{4}} \right){{(R_C^*)}^2}} \right){e^{ - s\tau *}}p(s)\\
  + \left( { - \frac{1}{2}{p^*}R_C^*{\alpha ^*} - \frac{A}{2}R_C^* + \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_C^*} \right){e^{ - s\tau *}}{R_C}(s)\\
  + \left( { - \frac{1}{2}{p^*}R_C^*{\alpha ^*} - \frac{A}{2}R_C^* + \frac{A}{2}R_T^* + \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_C^* - \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_T^*} \right){R_C}(s)\\
  - \frac{1}{2}{p^*}{(R_C^*)^2}\alpha (s)\\
@@ -121,11 +123,15 @@ s{R_C}(s) - \delta {R_C}(0) = \left( { - \frac{1}{2}{{(R_C^*)}^2}{\alpha ^*} - \
 
 With Laplace tranform of the other equations, we can use ${R_C}(s)$ to express ${R_T}(s)$, $p(s)$ and $\alpha (s)$.
 Then we can get the characteristic equation of ${R_C}(s)$. We test the characteristic equation against {\em Bode Stability
-Criteria}. 
+Criteria}. We show the analysis results in Figure~\ref{fig:dcqcn_stability}.
 
 \begin{itemize}
-\item DCQCN stability falls as the number of flow increases.
+\item DCQCN is generally stable, but the stability falls as the delay increases.
+\item The worst stability occurs around 10 flows. Default parameters may be even more 
+		unstable when the delay is large. DCQCN is scalable for larger number of flows. 
 \item Smaller $R_{AI}$ leads to better stability.
+\item Larger $K_{max}$ leads to better stability.
+
 \end{itemize}
 
 \subsection{Convergence}
