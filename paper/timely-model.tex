@@ -70,16 +70,16 @@ $D_{prop}$ & Propagation delay \\ \hline
 \begin{minipage}{\columnwidth}
 \begin{equation}
 \small
-\frac{{dq}}{{dt}} = NR(t) - C\\
+\frac{{dq}}{{dt}} = \sum_{i} R(t) - C\\
 \label{eq:timely_q}
 \end{equation}
 \begin{equation}
 \small
-\frac{{dR}}{{dt}} = \left\{ \begin{array}{ll}
+\frac{{dR_i}}{{dt}} = \left\{ \begin{array}{ll}
 \frac{\delta }{{\tau *}}, & q(t - \tau ') < C*{T_{low}}\\
 \frac{\delta }{{\tau *}}, & g \le 0\\
- - \frac{{g\beta }}{{\tau *}}R(t), & g > 0\\
- - \frac{\beta }{{\tau *}}(1 - \frac{{C*{T_{high}}}}{{q(t - \tau ')}})R(t), & q(t - \tau ') > C*{T_{high}}
+ - \frac{{g\beta }}{{\tau *}}R_i(t), & g > 0\\
+ - \frac{\beta }{{\tau *}}(1 - \frac{{C*{T_{high}}}}{{q(t - \tau ')}})R_i(t), & q(t - \tau ') > C*{T_{high}}
 \end{array} \right.\\
 \label{eq:timely_r}
 \end{equation}
