@@ -100,11 +100,25 @@ p(t) = \left\{ \begin{array}{ll}
 \para{Model Validation:}
 In~\cite{dcqcn} it was shown that the fluid model shown in
 Figure~\ref{fig:dcqcn_model} matches actual hardware implementation. Here we
-only show our NS3 packet-level simulations are in agreement with the model. This
-is illustrated in Figure~\ref{fig:dcqcn_validation}. We model a simple topology,
-in which N senders, connected to a switch, send to a single receiver, also
-connected to that switch. DCQCN parameters are set to the values proposed
-in~\cite{dcqcn}.  We see the fluid model and the simulator are in good
-agreement.
+only show our NS3 packet-level simulations are in agreement with the model.We
+model a simple topology, in which N senders, connected to a switch, send to a
+single receiver, also connected to that switch. DCQCN parameters are set to the
+values proposed in~\cite{dcqcn}. Note that as per DCQCN specification, all flows
+start at line rate. In Figure~\ref{fig:dcqcn_validation} we compare rate of one
+of the N flows, for both fluid model and the NS3 simulations. We see the fluid
+model and the simulator are in good agreement, and unsurprisingly, the agreement
+gets better as N increases.
 
-
+\begin{figure*}[t]
+\center
+\subfigure[N=2] { 
+\includegraphics[width=0.3\textwidth]{figures/dcqcn_validation_2_rate.pdf}
+}
+\subfigure[N=10] { 
+\includegraphics[width=0.3\textwidth]{figures/dcqcn_validation_10_rate.pdf}
+}
+\subfigure[N=20] { 
+\includegraphics[width=0.3\textwidth]{figures/dcqcn_validation_20_rate.pdf}
+}
+\caption{Comparison of DCQCN fluid model and NS3 simulations}
+\end{figure*}
