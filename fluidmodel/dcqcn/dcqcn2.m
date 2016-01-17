@@ -25,7 +25,7 @@ function sol = dcqcn2()
     %
     sim_step = 5e-6; % 5 microseconds.
     options = ddeset('MaxStep', sim_step);
-    sim_length = 100e-3;
+    sim_length = 50e-3;
     numCalls = 0;
     
     % !!!!!!
@@ -43,7 +43,7 @@ function sol = dcqcn2()
     % DCQCN fixed parameters.
     %
     tau = 50e-6;  % 50 microseconds. This is the time 
-    taustar = 50e-6; %1 microsoecond. This is the feedback loop delay.
+    taustar = 4e-6; %1 microsoecond. This is the feedback loop delay.
     tauprime = 55e-6; % 55 microseconds. This is the interval of equation 2.
     F = 5; % Fast recovery steps.
     B = 10e6*8/packetSize;   %10MB.Byte counter.
@@ -58,7 +58,7 @@ function sol = dcqcn2()
     pmax = 1e-2; % 1 percent.
     g = 1/256;
 
-    utilFileId = fopen('dcqcn.util.50.dat', 'w');
+    utilFileId = fopen('dcqcn.util.4.dat', 'w');
     for numFlows = [2 4 8 16 32 64]
         % Initial conditions: (single column matrix)
         %
