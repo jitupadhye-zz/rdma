@@ -41,6 +41,21 @@ following:
 \label{eq:timely_r_modified}
 \end{equation}
 
+\begin{figure*}[t]
+\center
+\subfigure[Both flows start at time 0 at 5Gbps] { 
+\includegraphics[width=0.3\textwidth]{figures/timely_stability_2f55.pdf}
+}
+\subfigure[Both start at 10Gbps, one starts 10ms late] { 
+\includegraphics[width=0.3\textwidth]{figures/timely_stability_2ftime.pdf}
+}
+\subfigure[Both start at time 0, one at 7Gbps, other at 3Gbps] { 
+\includegraphics[width=0.3\textwidth]{figures/timely_stability_2f73.pdf}
+}
+\caption{Performance of two TIMELY flows under different starting conditions}
+\label{fig:timely_unstable}
+\end{figure*}
+
 \para{Infinite fixed points for modified model:}
 Practically, this change does not make much of a difference. With this
 modification, we can now obtain the condition that with $g =0$, $\tfrac{dq}{dt}
@@ -60,9 +75,9 @@ point. There is no requirement that at the fixed point $R_i = \tfrac{C}{N}$. In
 fact, $\tfrac{R_{i}}{R_{j}}, i \ne j$ is not even bounded, so we cannot make any
 claims on the fairness of TIMELY. Thus the fixed point of TIMELY is entirely
 unpredictable and this is a fundamental flaw of the protocol. This is borne out
-by the simulation results below where we only change the start time and initial
-rates of two flows, keeping everything else constant, and we end up in
-completely different operating regimes.
+by the simulation results shown in Figure~\ref{fig:timely_unstable}, where we
+only change the start time and initial rates of two flows, keeping everything
+else constant, and we end up in completely different operating regimes.
 
 
 %%% Local Variables:
