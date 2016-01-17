@@ -65,29 +65,29 @@ p(t) = \left\{ \begin{array}{ll}
 \end{equation}
 \begin{equation}
 \small
-\frac{{dq}}{{dt}} = N{R_C}(t) - C
+\frac{{dq}}{{dt}} = \sum\limits_{i = 1}^N {R_C^{(i)}(t)}  - C
 \label{eq:q}
 \end{equation}
 \begin{equation}
 \small
-\frac{{d\alpha }}{{dt}} = \frac{g}{{\tau '}}\left( {\left( {1 - {{(1 - p(t - \tau *))}^{\tau '{R_C}(t - \tau *)}}} \right) - \alpha (t)} \right)
+\frac{{d\alpha^{(i)} }}{{dt}} = \frac{g}{{\tau '}}\left( {\left( {1 - {{(1 - p(t - \tau *))}^{\tau '{R_C}(t - \tau *)}}} \right) - \alpha^{(i)} (t)} \right)
 \label{eq:alpha}
 \end{equation}
 \begin{equation}
 \small
 \begin{split}
-\frac{{d{R_T}}}{{dt}} = & - \frac{{{R_T}(t) - {R_C}(t)}}{\tau }\left( {1 - {{(1 - p(t - \tau *))}^{\tau {R_C}(t - \tau *)}}} \right) \\
-& + {R_{AI}}{R_C}(t - \tau *)\frac{{{{(1 - p(t - \tau *))}^{FB}}p(t - \tau *)}}{{{{(1 - p(t - \tau *))}^{ - B}} - 1}} \\
-& + {R_{AI}}{R_C}(t - \tau *)\frac{{{{(1 - p(t - \tau *))}^{FT{R_C}(t - \tau *)}}p(t - \tau *)}}{{{{(1 - p(t - \tau *))}^{ - T{R_C}(t - \tau *)}} - 1}}
+\frac{{d{R_T^{(i)}}}}{{dt}} = & - \frac{{{R_T^{(i)}}(t) - {R_C^{(i)}}(t)}}{\tau }\left( {1 - {{(1 - p(t - \tau *))}^{\tau {R_C^{(i)}}(t - \tau *)}}} \right) \\
+& + {R_{AI}}{R_C^{(i)}}(t - \tau *)\frac{{{{(1 - p(t - \tau *))}^{FB}}p(t - \tau *)}}{{{{(1 - p(t - \tau *))}^{ - B}} - 1}} \\
+& + {R_{AI}}{R_C^{(i)}}(t - \tau *)\frac{{{{(1 - p(t - \tau *))}^{FT{R_C^{(i)}}(t - \tau *)}}p(t - \tau *)}}{{{{(1 - p(t - \tau *))}^{ - T{R_C^{(i)}}(t - \tau *)}} - 1}}
 \end{split}
 \label{eq:rt}
 \end{equation}
 \begin{equation}
 \small
 \begin{split}
-\frac{{d{R_C}}}{{dt}} = & - \frac{{{R_C}(t)\alpha (t)}}{{2\tau }}\left( {1 - {{(1 - p(t - \tau *))}^{\tau {R_C}(t - \tau *)}}} \right) \\
- & + \frac{{{R_T}(t) - {R_C}(t)}}{2}\frac{{{R_C}(t - \tau *)p(t - \tau *)}}{{{{(1 - p(t - \tau *))}^{ - B}} - 1}} \\ 
- & + \frac{{{R_T}(t) - {R_C}(t)}}{2}\frac{{{R_C}(t - \tau *)p(t - \tau *)}}{{{{(1 - p(t - \tau *))}^{ - T{R_C}(t - \tau *)}} - 1}}
+\frac{{d{R_C^{(i)}}}}{{dt}} = & - \frac{{{R_C^{(i)}}(t)\alpha^{(i)} (t)}}{{2\tau }}\left( {1 - {{(1 - p(t - \tau *))}^{\tau {R_C^{(i)}}(t - \tau *)}}} \right) \\
+ & + \frac{{{R_T^{(i)}}(t) - {R_C^{(i)}}(t)}}{2}\frac{{{R_C^{(i)}}(t - \tau *)p(t - \tau *)}}{{{{(1 - p(t - \tau *))}^{ - B}} - 1}} \\ 
+ & + \frac{{{R_T^{(i)}}(t) - {R_C^{(i)}}(t)}}{2}\frac{{{R_C^{(i)}}(t - \tau *)p(t - \tau *)}}{{{{(1 - p(t - \tau *))}^{ - T{R_C^{(i)}}(t - \tau *)}} - 1}}
 \end{split}
 \label{eq:rc}
 \end{equation}

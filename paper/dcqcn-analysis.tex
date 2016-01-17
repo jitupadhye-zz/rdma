@@ -20,7 +20,8 @@
 \label{fig:dcqcn_stability}
 \end{figure*}
 
-Below we show that DCQCN has a unique fixed point. We analyze DCQCN's stability around the 
+Below we show that DCQCN has a unique fixed point at which all flows converged to the 
+same rate. We analyze DCQCN's stability around the 
 fixed point, how stability varies under different conditions, and conclude with a 
 parameter setting guideline.
 
@@ -30,11 +31,13 @@ be 0, it is easy to see that any of the fixed points (if exist) of DCQCN must sa
 
 \begin{equation}
 \small
-{R_C^*} = \frac{C}{N}
+\sum\limits_{i = 1}^N {R_C^{(i)}(t)} = C
+\label{eq:fixedrc}
 \end{equation}
 
-At any of the fixed points, we assume the value of $p$ is $p^*$, then the queue length and
-$\alpha$ at the fixed points are determined by Equation~\ref{eq:mark} and \ref{eq:alpha}:
+At any of the fixed points, we assume the value of $p$ is $p^*$, which is shared by all
+flows. The queue length and per-flow
+$\alpha^{(i)}$ at the fixed points are determined by Equation~\ref{eq:mark} and \ref{eq:alpha}:
 
 \begin{equation}
 \small
@@ -42,34 +45,33 @@ $\alpha$ at the fixed points are determined by Equation~\ref{eq:mark} and \ref{e
 \end{equation}
 \begin{equation}
 \small
-\alpha^*  = 1 - {(1 - p^*)^{\frac{{\tau 'C}}{N}}}
+\alpha^{(i)*}  = 1 - {(1 - p^*)^{{\tau '}R_C^{(i)*}}}
 \end{equation}
 
-Next, we show that $p^*$ exists and is unique in the DCQCN model. 
-From Equation~\ref{eq:rt} and \ref{eq:rc}, $R_T^*$ has two forms:
+Next, we show that $p^*$ exists and is uniquely determined by $R_C^{(i)*}$ in the DCQCN model. 
+From Equation~\ref{eq:rt} and \ref{eq:rc}, at the fixed point, we get the two forms of $R_T^{(i)*}$, respectively:
 
 \begin{equation}
 \small
-{R_T^*} = \frac{C}{N} + \frac{{a\alpha }}{{(b + d)\tau }}
+{R_T^{(i)*}} = R_C^{(i)*} + \frac{{a\alpha^{(i)*} }}{{(b + d)\tau }}
 \end{equation}
 \begin{equation}
-{R_T^*} = \frac{C}{N}\left( {1 + \frac{{(c + e)\tau {R_{AI}}}}{a}} \right)
+\small
+{R_T^{(i)*}} = R_C^{(i)*}\left( {1 + \frac{{(c + e)\tau {R_{AI}}}}{a}} \right)
 \end{equation}
 
-Where we have the annotations of $a, b, c, d, e$, which have the value of following expressions
-with $p(t) = p^*$.
+Where we denote $a, b, c, d, e$ as follows:
 \begin{equation}
 \begin{array}{l}
-a(t) = 1 - {(1 - p(t))^{\tau {R_C}(t)}},b(t) = \frac{{p(t)}}{{{{(1 - p(t))}^{ - B}} - 1}},\\
-c(t) = \frac{{{{(1 - p(t))}^{FB}}p(t)}}{{{{(1 - p(t))}^{ - B}} - 1}},d(t) = \frac{{p(t)}}{{{{(1 - p(t))}^{ - T{R_C}(t)}} - 1}},\\
-e(t) = \frac{{{{(1 - p(t))}^{FT{R_C}(t)}}p(t)}}{{{{(1 - p(t))}^{ - T{R_C}(t)}} - 1}}
+a = 1 - {(1 - p^*)^{\tau {R_C^{(i)*}}}},b = \frac{{p^*}}{{{{(1 - p^*)}^{ - B}} - 1}},c = \frac{{{{(1 - p^*)}^{FB}}p^*}}{{{{(1 - p^*)}^{ - B}} - 1}},\\
+d = \frac{{p^*}}{{{{(1 - p^*)}^{ - T{R_C^{(i)*}}}} - 1}},e = \frac{{{{(1 - p^*)}^{FT{R_C^{(i)*}}}}p^*}}{{{{(1 - p^*)}^{ - T{R_C^{(i)*}}}} - 1}}
 \end{array}
 \end{equation}
 
-Combining the two forms of $R_T^*$, we see that the value of $p^*$ is determined by:
+Combining the two forms of $R_T^{(i)*}$, we see that the value of $p^*$ is determined by:
 \begin{equation}
 \small
-\frac{{{a^2}\alpha }}{{(b + d)(c + e)}} = \frac{{{\tau ^2}{R_{AI}}C}}{N}
+\frac{{{a^2}\alpha^{(i)*} }}{{(b + d)(c + e)}} = {\tau ^2}{R_{AI}}R_C^{(i)*}
 \label{eq:p_fixed}
 \end{equation}
 
@@ -81,15 +83,28 @@ close to 0 using numerical approaches. Therefore, we can obtain the taylor serie
 
 \begin{equation}
 \small
-\frac{{{a^2}\alpha }}{{(b + d)(c + e)}} = \frac{{{C^3}{\tau ^2}\tau '}}{{{N^3}{{\left( {\frac{1}{B} + \frac{N}{{CT}}} \right)}^2}}}{p^3} + O\left( {{p^4}} \right)
+\frac{{{a^2}\alpha }}{{(b + d)(c + e)}} = \frac{{(R_C^{(i)*})^3{\tau ^2}\tau '}}{{{{\left( {\frac{1}{B} + \frac{1}{{TR_C^{(i)*}}}} \right)}^2}}}{p^3} + O\left( {{p^4}} \right)
 \end{equation}
 
 Omitting the $O(p^4)$ term, combining Equation~\ref{eq:p_fixed}, we have the fixed point of $p$:
 
 \begin{equation}
 \small
-{p^*} = \sqrt[3]{{\frac{{{R_{AI}}{N^2}}}{{\tau '{C^2}}}{{\left( {\frac{1}{B} + \frac{N}{{CT}}} \right)}^2}}}
+{p^*} = \sqrt[3]{{\frac{{{R_{AI}}}}{{{\tau '}(R_C^{(i)*})^2}}{{\left( {\frac{1}{B} + \frac{1}{TR_C^{(i)*}}} \right)}^2}}}
+\label{eq:fixedp}
 \end{equation}
+
+From the equation above, we see that $p^*$ and $R_C^{(i)*}$ uniquely determine each other. 
+Since $p^*$ is shared by any flow $i$, $i = 1, 2, ..., N$, we have:
+
+\begin{equation}
+\small
+R_C^{(1)*} = R_C^{(2)*} = ... = R_C^{(N)*}
+\end{equation}
+
+Combining equation~\ref{eq:fixedrc}, we know that there is only one unique fixed point, at which
+$R_C^{(i)*} = \frac{C}{N}$, $i = 1, 2, ..., N$ and $p^*$ is given by equation~\ref{eq:fixedp}.
+
 
 \para{Stability analysis.} 
 We linearize the system by denoting $\delta {R_C}(t) = {R_C}(t) - R_C^*$, $\delta {R_C}(t) = {R_C}(t) - R_C^*$,
@@ -98,6 +113,7 @@ We further use Taylor series to simplify the expressions of $a, b, c, d, e$ to h
 Because the equations are very complicated, here we just show an example of $R_C$. The linearized equation of $R_C$ is as follows:
 
 \begin{equation}
+\small
 \begin{array}{l}
 \frac{{d\delta {R_C}}}{{dt}} =  - \frac{1}{2}{(R_C^*)^2}{\alpha ^*}\delta p - \frac{1}{2}{p^*}R_C^*{\alpha ^*}\delta R_C \\
  - \frac{1}{2}{p^*}R_C^*{\alpha ^*}\delta {R_C} - \frac{1}{2}{p^*}{(R_C^*)^2}\delta \alpha \\
@@ -115,7 +131,8 @@ We can then perform Laplace transform and get:
 s{R_C}(s) - \delta {R_C}(0) = \\
 \left( { - \frac{1}{2}{{(R_C^*)}^2}{\alpha ^*} - \left( {\frac{1}{2} + \frac{A}{4}} \right)R_C^*R_T^* + \left( {\frac{1}{2} + \frac{A}{4}} \right){{(R_C^*)}^2}} \right){e^{ - s\tau *}}p(s)\\
  + \left( { - \frac{1}{2}{p^*}R_C^*{\alpha ^*} - \frac{A}{2}R_C^* + \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_C^*} \right){e^{ - s\tau *}}{R_C}(s)\\
- + \left( { - \frac{1}{2}{p^*}R_C^*{\alpha ^*} - \frac{A}{2}R_C^* + \frac{A}{2}R_T^* + \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_C^* - \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_T^*} \right){R_C}(s)\\
+ + \left( { - \frac{1}{2}{p^*}R_C^*{\alpha ^*} - \frac{A}{2}R_C^* + \frac{A}{2}R_T^* }\right){R_C}(s)\\
+ + \left( { \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_C^* - \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_T^*} \right){R_C}(s)\\
  - \frac{1}{2}{p^*}{(R_C^*)^2}\alpha (s)\\
  + \left( {\frac{A}{2}R_C^* - \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_C^*} \right){R_T}(s)
 \end{array}
