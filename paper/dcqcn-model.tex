@@ -96,3 +96,14 @@ p(t) = \left\{ \begin{array}{ll}
 \caption{DCQCN fluid model}
 \label{fig:dcqcn_model}
 \end{figure}
+
+\para{Model Validation:}
+In~\cite{dcqcn} it was shown that the fluid model shown in
+Figure~\ref{fig:dcqcn_model} matches actual hardware implementation. Here we
+only show our NS3 packet-level simulations are in agreement with the model. This
+is illustrated in Figure~\ref{fig:dcqcn_validation}. We model a simple topology,
+in which N senders, connected to a switch, send to a single receiver, also
+connected to that switch. DCQCN parameters are set to the values proposed
+in~\cite{dcqcn}.  We see the fluid model and the simulator are in good
+agreement.
+

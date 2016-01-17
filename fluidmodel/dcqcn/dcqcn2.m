@@ -36,14 +36,14 @@ function sol = dcqcn2()
     %
     % Fixed parameters.
     %
-    packetSize = 1; %8e3;
+    packetSize = 8e3;
     C = 40e9/packetSize;   % 40Gbps. Link speed.
     
     %
     % DCQCN fixed parameters.
     %
     tau = 50e-6;  % 50 microseconds. This is the time 
-    taustar = 100e-6; %1 microsoecond. This is the feedback loop delay.
+    taustar = 50e-6; %1 microsoecond. This is the feedback loop delay.
     tauprime = 55e-6; % 55 microseconds. This is the interval of equation 2.
     F = 5; % Fast recovery steps.
     B = 10e6*8/packetSize;   %10MB.Byte counter.
@@ -58,7 +58,7 @@ function sol = dcqcn2()
     pmax = 1e-2; % 1 percent.
     g = 1/256;
 
-    utilFileId = fopen('dcqcn.util.dat', 'w');
+    utilFileId = fopen('dcqcn.util.50.dat', 'w');
     for numFlows = [2 4 8 16 32 64]
         % Initial conditions: (single column matrix)
         %
