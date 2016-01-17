@@ -13,13 +13,13 @@ function sol = timely2()
     global maxQueue; % max queue. 
     global numFlows;  % number of flows. 
     global initVal; % column of initial values (rate and RTT gradient for each flow, plus initial queue length). 
-    global totrate;
+    global sim_length;
     
     %
     % Simulation control
     % 
     step_len = 5e-6 ; % 5 microseconds
-    sim_length = 100e-3; % 100 milliseconds 
+    sim_length = 5e-3; % 100 milliseconds 
 
     % 
     % Fixed Parameters
@@ -51,15 +51,16 @@ function sol = timely2()
     % 2*numFlow +1: initial queue size. 
     %
 
-    numFlows = 20;
-    while (numFlows < 128)
-   
+    for numFlows = 3
         initVal = zeros(2*numFlows + 1, 1);
         for i=1:numFlows
             %SetInitialRate(i, (1+rand*0.2-0.1)* 1e9);
-            SetInitialRate(i, C/numFlows);
+            %SetInitialRate(i, C/numFlows);
         end
 
+        SetInitialRate(1, 5e9);
+        SetInitialRate(2, 3e9);
+        SetInitialRate(3, 2e9);
         %
         % Options.
         %
@@ -68,7 +69,7 @@ function sol = timely2()
         %
         % Solve.
         %
-        sol = ddesd(@fluid_timely, @fluid_delays, initVal, [0, sim_length],options);
+        sol = ddesd(@TimelyModel, @DelayModel, initVal, [0, sim_length],options);
 
         %
         % Extract solution.
@@ -89,14 +90,13 @@ function sol = timely2()
         fclose(fileId);
         dlmwrite(fileName,[t',rates'./1e9, q'./8e3], '-append', 'delimiter','\t');
   
-        numFlows = numFlows * 8; 
-        
-        %PlotSol(t, q, rates, sim_length, numFlows);
-        break;
+       
+        PlotSol(t, q, rates);
+        %break;
     end
 end
 
-function dx = fluid_timely(t,x,lag)
+function dx = TimelyModel(t,x,lag)
     global numFlows;
     
     dx  = zeros(2*numFlows+1, 1);
@@ -157,7 +157,7 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient)
     else if (prevQueue > queueHigh)
             deltaRate = -1 * beta * (1 - queueHigh/prevQueue) * currentRate;
         else
-            if (rttGradient <= 0)
+            if (rttGradient < 0)
                 deltaRate = delta;
             else
                 deltaRate = -1 * rttGradient * beta * currentRate;
@@ -185,7 +185,7 @@ function rttSampleInterval = RTTSampleInterval(currentRate)
     rttSampleInterval = Seg/currentRate;
 end
 
-function delays = fluid_delays(t, x)
+function delays = DelayModel(t, x)
     global Seg;
     global minRTT;
     global C;
@@ -240,12 +240,15 @@ function [u, err] = Utilization (t, rates, q, C)
     u = sent/max;
 end
 
-function PlotSol(t, q, rates, sim_length, numFlows)
+function PlotSol(t, q, rates)
+    global C;
+    global sim_length;
+    
     figure
     subplot(2,1,1);
     plot(t,rates'/1e9);
     hold on
-    axis([0 sim_length 0 80/numFlows])
+    axis([0 sim_length 0 C/1e9])
     xlabel('Time (seconds)')
     ylabel('Throughput (Gbps)')
     
