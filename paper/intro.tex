@@ -76,7 +76,9 @@ analytically show that DCQCN has a unique fixed point, where all flows get their
 fair share. $(ii)$ We show that while DCQCN is generally stable around this
 fixed point, stability gets worse as the feedback latency (i.e. RTT) goes up.
 Curiously, we find that the stability is worst when around 10 flows are
-competing on a single bottleneck. DCQCN appears to be stable for very small, as
+competing on a single bottleneck. \textbf{IMPORTANT: ``10'' is a
+  function of the current parameter choices. We should rephrase it to
+  say the behavior is non-monotonic} DCQCN appears to be stable for very small, as
 well as very large number of flows, even at higher latencies. $(iii)$ We propose
 new parameter values to enhance DCQCN's stability, and we derive new parameter values
 for higher bandwidth (100Gbps) links. $(iv)$ Using simulations, we explore the
