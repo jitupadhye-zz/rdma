@@ -1,9 +1,13 @@
 \subsection{Model}
 
-A fluid model of DCQCN was described in~\cite{dcqcn}. We reproduce it here in
-Tables~\ref{tab:dcqcn_var} and \ref{tab:dcqcn_param} and
-Figure~\ref{fig:dcqcn_model}.  The model considers N flows, traversing a single
-bottleneck link. The model assumes that DCQCN is triggered before PFC, and hence
+A fluid model of DCQCN was described in~\cite{dcqcn}. The original model considers N flows 
+with exactly same rates and states, traversing a single bottleneck link. 
+In this paper, we extend it to account for flows with different rates and states.
+Instead of having variables that are shared by all flows, we model each flow individually,
+as shown in Tables~\ref{tab:dcqcn_var} and \ref{tab:dcqcn_param} and
+Figure~\ref{fig:dcqcn_model}.
+
+The model assumes that DCQCN is triggered before PFC, and hence
 ignores the impact of PFC. Equation~\ref{eq:mark} calculates the probability of
 a packet getting marked.  Equation~\ref{eq:q} describes the queue behavior.
 Equation~\ref{eq:alpha} captures the evolution of alpha.  Equations~\ref{eq:rt}

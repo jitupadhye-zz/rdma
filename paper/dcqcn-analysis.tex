@@ -140,15 +140,26 @@ s{R_C}(s) - \delta {R_C}(0) = \\
 
 With Laplace tranform of the other equations, we can use ${R_C}(s)$ to express ${R_T}(s)$, $p(s)$ and $\alpha (s)$.
 Then we can get the characteristic equation of ${R_C}(s)$. We test the characteristic equation against {\em Bode Stability
-Criteria}. We show the analysis results in Figure~\ref{fig:dcqcn_stability}.
+Criteria}, which is a common methodology in control theory. We show the analysis results in Figure~\ref{fig:dcqcn_stability}. 
+The degree of stability is shown as {\em Phase Margin}. The system is stable when its {\em Phase Margin} is larger than 0, 
+and the larger {\em Phase Margin} means the system is more stable.
 
-\begin{itemize}
-\item DCQCN is generally stable, but the stability falls as the delay increases.
-\item The worst stability occurs around 10 flows. Default parameters may be even more 
-		unstable when the delay is large. DCQCN is scalable for larger number of flows. 
-\item Smaller $R_{AI}$ leads to better stability.
-\item Larger $K_{max}$ leads to better stability.
+We analyze DCQCN stability in different conditions, particularly with different control signal delays (propagation delay
+plus queuing delay in practice), and different number of flows. An ideal protocol should be tolerant with large delay and
+scalable to any number of flows. As Figure~\ref{fig:dcqcn_stability} shows, DCQCN, with default parameters, is mostly 
+stable. In most cases, the phase margin is larger than 0, while when the delay is large, {\em e.g.,} and with certain 
+number of flows, DCQCN may become unstable. The worst stability occurs at around 10 flows. DCQCN is increasingly stable 
+with larger number of flows, which means good scalability.
 
-\end{itemize}
+The network operators may tune parameters to make DCQCN more stable. The two most direct parameters are $R_{AI}$ and $K_{max}$.
+Smaller $R_{AI}$ means flows increase their rate more gentle, and stabilizes the system. Similarly, larger $K_{max} - K_{min}$
+makes rate decreasing more fine grained, because the perturbation of queue length leads to smaller marking probability 
+perturbation. We show these trends in Figure~\ref{fig:dcqcn_stability}(b) and (c). With small $R_{AI}$ and large $K_{max}$,
+DCQCN can be always stable even when the control signal delay reaches 100$\mu s$, which equals to the propagation delay of a 
+$30KM$ cable, or $500KB$ queuing delay. Such large delay is rarely seen in today's datacenter networks.
+
+Here we want to point out that tuning $R_{AI}$ and $K_{max}$ is a trade-off between stability and latency. Smaller $R_{AI}$
+makes flows ramp up their rates slower, and larger $K_{max}$ leads to larger queue length. In most cases, the default parameters
+strike a good enough balance between stability and latency.
 
 \subsection{Convergence}
