@@ -14,7 +14,7 @@ RDMA was originally deployed using Infiniband (IB)~\cite{ib-spec} technology,
 which specifies a custom networking stack~\cite{ib-hw-spec}. In modern data
 center networks typically deploy RDMA using RDMA over Converged Ethernet V2
 (RoCEv2)~\cite{rocev2} standard. The standard encapsulates IB transport protocol
-packets in UDP~\cite{rcf-udp} packets.  For efficient operation, IB transport
+packets in UDP~\cite{rfc-udp} packets.  For efficient operation, IB transport
 protocol requires a lossless (or, more accurately, drop-free) L2 layer. This is
 enabled by using Priority Flow Control PFC prevents buffer overflow on Ethernet
 switches and NICs. The switches and NICs track ingress queues. When the queue

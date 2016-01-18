@@ -1,49 +1,98 @@
 \section{Introduction}
 
-%  Basic motivation.
+% background rdma etc.
 
-Motivation: rdma being deployed. needs congestion control. dcqcn was proposed by Microsoft and Mellanox,
-ships in Mellanox cards. uses ecn markings. timely was proposed by google. uses
-delay difference. as rdma becomes more widely deployed, which protocol should
-people adopt? requires careful, control theoretic analysis of the two
-protocols, which was not done
-by either. 
+Large cloud service providers like IBM, Microsoft and Google are increasingly
+turning to remote DMA (RDMA) technology, to support applications such as cloud
+storage~\cite{erasure-storage}, and distributed memory caches~\cite{farm} that
+require high bandwidth and low latency, while minimizing CPU
+overhead~\cite{tcp-bolt,dcqcn,timely}.
 
+While there are many ways~\cite{ib-spec, rfc-iwarp,chelsio,rocve2} to enable
+RDMA in a data center network, most large cloud service providers enable RDMA
+over converged Ethernet (ROCEv2)~\cite{rocev2}, to ensure compatibility with
+commodity Ethernet/IP hardware. 
 
-% What we do.
-control theoretic analysis via fluid models, backed by simulations.
-our primary goal is to derive stability criteria
-like~\cite{dctcp-analysis}, but we also discover interesting behaviors. 
+For efficient operation, ROCEv2 needs to eliminate packet drops due to buffer
+overflow in switches and routers. This is achieved by enabling Priority Flow
+Control (PFC)~\cite{pfc}, and by using a suitable end-to-end congestion control
+protocol for individual flows. Recently, a number of congestion control
+protocols have been proposed for RDMA networks~\cite{tcp-bolt,dcqcn,timely}.  
 
+% what we do.
 
-% primary contributions
+In this paper, we analyze the two most recent proposals, namely
+DCQCN~\cite{dcqcn}, and TIMELY~\cite{timely} focusing on their stability, rate
+of convergence and fairness.
 
-\begin{itemize}
+% why we do it.
 
-\item TIMELY
-\begin{itemize}
-\item Fluid model, and its validation
-\item Steady state analysis.
-\item Convergence (will we be able to do this?)
-\item Shortcomings and discussion of how to overcome some of them.
-\end{itemize}
+One of our motivations for analyzing these protocols is their potential for
+widespread deployment; given the rising interest in RDMA for high-throughput,
+low-delay data center applications. DCQCN is implemented entirely in Mellanox
+NICs, and drivers both Windows and Linux operating system are available from
+Mellanox. Thus, anyone can deploy DCQCN in their data centers. While Google's
+implementation of TIMELY is not publically available, the core timing
+functionality it relies on is supported by most Mellanox NICs and their drivers. 
 
-\item DCQCN
-\begin{itemize}
-\item
-Detailed steady state analysis, expanding on what was done in~\cite{xx}. 
-\item Convergence (will be able to do this?
-\item Shortcomings and discussion of how to overcome some of them.
-\end{itemize}
+However, apart from this practical consideration, we are also driven by
+scientific curiosity. DCQCN relies on ECN marking by switches to detect
+congestion, while TIMELY uses changes in RTT as a congestion signal. This
+naturally raises the question of how the performance of these two mechanisms
+compares under high-speed, low-latency, drop-free data center networks.
 
-\item Comparison of DCQCN and TIMELY using fluid models and simulations. 
+% summary of difference from prior work.
 
-\end{itemize}
+While there has been a lot of prior work on design and analysis of ECN and
+delay-based congestion control~\cite{ecn, tcp-vegas, misra, xxx}, with few
+recent exceptions~\cite{dctcp-analysis, qcn-analysis} it was primarily done in
+the context of wide area networks, and for TCP-like window-based congestion
+control algorithms.  We also note that neither ECN-based, nor delay-based
+congestion control has seen widespread deployment in the wide area Internet, due
+a host of reasons. We are now seeing the first large-scale deployment of these
+mechanisms, in a very different kind of environment - namely, the high-speed,
+low-latency, drop-free (due to PFC~\cite{pfc}) data center networks, so this is
+a ripe time for analytical exploration of these protocols.
 
-% summary of findings.
-we find that ...
+% Methodology.
 
+As in~\cite{dctcp-analysis, qcn-analysis}, we analyze DCQCN and TIMELY using
+detailed fluid models and NS3 simulations. Fluid models are useful for analyzing
+properties such as stability, and for rapid exploration of parameter space.
+Simulations are useful when fluid models become intractable, or for studying
+packet-level dynamics. The fluid model for DCQCN is known to be a good fit for
+actual hardware implementation~\cite{dcqcn}. Since we do not have access to
+TIMELY implementation, we relied on extensive discussion with authors
+of~\cite{timely} to ensure that our fluid and simulation models are good
+representations of the protocol. We plan to make available publically our NS3
+simulation code, as well as Matlab code used to solve the fluid models.
 
-The paper is organized as follows.  
+% summary of contributions and findings.
 
+The key contributions, and findings of this paper are as follows.
 
+\para{DCQCN:} $(i)$ We extend the fluid model proposed in~\cite{dcqcn}. We
+analytically show that DCQCN has a unique fixed point, where all flows get their
+fair share. $(ii)$ We show that while DCQCN is generally stable around this
+fixed point, stability gets worse as the feedback latency (i.e. RTT) goes up.
+Curiously, we find that the stability is worst when around 10 flows are
+competing on a single bottleneck. DCQCN appears to be stable for very small, as
+well as very large number of flows, even at higher latencies. $(iii)$ We propose
+new parameter values to enhance DCQCN's stability, and we derive new parameter values
+for higher bandwidth (100Gbps) links. $(iv)$ Using simulations, we explore the
+convergence properties of DCQCN, and find that \fixme{fill in}.
+
+\para{TIMELY:} $(i)$ We develop a fluid model for TIMELY. Using NS3 simulations,
+we show that the fluid model is accurate. $(ii)$ simple analysis of the fluid model
+reveals that TIMELY can have infinite fixed points -- and thus can have
+arbitrary unfairness. We show that this behavior springs from the fact that
+TIMELY uses changes in RTT gradient as a congestion signal.
+Our simulations confirm the analysis. $(iii)$ Using NS3
+simulations, we analyze TIMELY's behavior in further detail, revealing that
+TIMELY's decision to not use hardware rate limiters is a double-edged sword that
+can either help or hurt the performance, depending on the scenario. $(iv)$ We
+propose a small fix to TIMELY that alleviates the stability problem. We verify
+our fix via simulations.
+
+Leveraging the insights from analysis of each protocol, we finally provide a
+general comparison of the two approaches to the congestion control.
