@@ -96,3 +96,16 @@ our fix via simulations.
 
 Leveraging the insights from analysis of each protocol, we finally provide a
 general comparison of the two approaches to the congestion control.
+
+\fixme{todo(monia)}
+General impression is that DCQCN is largely presented positive while noting some drawbacks about its instability. While TIMELY Sections/text pretty much start of with the things that don't work, including the section headings. nothing positive is said about TIMELY...
+
+propose solid contributions such as improving the design of TIMELY to make it fair and stable. Big question is that if TIMELY can exhibit unfairness, what would be the change in the algorithm (or for that matter a completely new algorithm) that would make it fair? we should prescribe a well working RTT based congestion control, while noting the defficiencies of timely.
+
+Timely paper is emphasizing on high precision delay as an excellen congestion signal, we should emphasize that that RTT, when precisely measured, is an excellent indicator of network congestion and that a congestion control mechanism can be designed using RTT. we should downplay the exact algorithmic contributions of timely but there are other algorithms that have been studied very well in literature based on RTT such as FAST, Vegas, and NV. .
+
+also mention that from a pragmatic view point, generally in experiments the rates in gradient timely settle at fair shares and are stable. The reason is probably because there's always some disturbance/noise in experiments, so the gradient is never perfectly zero. For any non-zero gradient value the AIMD nature of timely should push the system towards fairness. I don't know how to show this with stability analysis, but it is certainly something to consider given that timely is working so well in practice.
+
+
+
+
