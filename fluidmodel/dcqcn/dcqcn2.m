@@ -24,8 +24,8 @@ function sol = dcqcn2()
     % simulation control.
     %
     sim_step = 5e-6; % 5 microseconds.
-    options = ddeset('MaxStep', sim_step);
-    sim_length = 50e-3;
+    options = ddeset('MaxStep', sim_step, 'RelTol', 1e-2, 'AbsTol', 1e-4);
+    sim_length = 100e-3;
     numCalls = 0;
     
     % !!!!!!
@@ -43,7 +43,7 @@ function sol = dcqcn2()
     % DCQCN fixed parameters.
     %
     tau = 50e-6;  % 50 microseconds. This is the time 
-    taustar = 4e-6; %1 microsoecond. This is the feedback loop delay.
+    taustar = 100e-6; %1 microsoecond. This is the feedback loop delay.
     tauprime = 55e-6; % 55 microseconds. This is the interval of equation 2.
     F = 5; % Fast recovery steps.
     B = 10e6*8/packetSize;   %10MB.Byte counter.
@@ -53,13 +53,13 @@ function sol = dcqcn2()
     % Tunable parameters.
     %
     timer = 55e-6; % 55 microseconds. This is rate increase timer.
-    Kmax = 200e3*8/ packetSize; % 200KB
+    Kmax = 2000e3*8/ packetSize; % 200KB
     Kmin = 5e3*8/ packetSize; % 5KB
-    pmax = 1e-2; % 1 percent.
+    pmax = 1e-1; % 1 percent.
     g = 1/256;
 
-    utilFileId = fopen('dcqcn.util.4.dat', 'w');
-    for numFlows = [2 4 8 16 32 64]
+    %utilFileId = fopen('dcqcn.util.4.dat', 'w');
+    for numFlows = [2, 10, 64]
         % Initial conditions: (single column matrix)
         %
         % 1: rc1
@@ -85,14 +85,14 @@ function sol = dcqcn2()
         q = sol.y(end,:);
         rates = sol.y(1:3:end-1,:);
         
-        [utilization, err] = Utilization(t, rates, q, C);  
-        fprintf('%d %f %d\n', numFlows, utilization, err);              
-        fprintf(utilFileId, '%d %f %d\n', numFlows, utilization, err);
+        %[utilization, err] = Utilization(t, rates, q, C);  
+        %fprintf('%d %f %d\n', numFlows, utilization, err);              
+        %fprintf(utilFileId, '%d %f %d\n', numFlows, utilization, err);
         
-        %fileName =  sprintf('dcqcn.%d.dat', numFlows);
+        fileName =  sprintf('unstable.%d.%d.dat', numFlows, taustar*1e6);
         % when writing to file, we want to write rate in Gbps, 
         % and queue in KB.
-        %dlmwrite(fileName,[t',rates'.*packetSize/1e9, q'.*packetSize/8e3], '\t');
+        dlmwrite(fileName,[t',rates'.*packetSize/1e9, q'.*packetSize/8e3], '\t');
       
         %PlotSol(t, q, rates, sim_length, numFlows);
         %break;
@@ -153,10 +153,10 @@ function dx = DCQCNModel(t,x,lag_matrix)
     rates = x(1:3:3*numFlows);
     dx(end) = QueueDelta(x(end), rates);
     
-%     numCalls = numCalls +1;
-%     if (mod(numCalls, 10000) == 0)
-%         fprintf ('%g %d\n', t, numCalls);
-%     end
+     numCalls = numCalls +1;
+     if (mod(numCalls, 10000) == 0)
+         fprintf ('%g %d\n', t, numCalls);
+     end
     
 end
 
@@ -306,7 +306,7 @@ function PlotSol(t, q, rates, sim_length, numFlows)
     subplot(2,1,2);
     plot(t,q.*packetSize/8e3)
     hold on
-    axis([0 sim_length 0 max(q)*packetSize/8e3])
+    axis([0 sim_length 0 2*median(q)*packetSize/8e3])
     xlabel('Time (seconds)')
     ylabel('Queue (KBytes)')
 end

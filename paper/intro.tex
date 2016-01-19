@@ -59,13 +59,13 @@ a ripe time for analytical exploration of these protocols.
 As in~\cite{dctcp-analysis, qcn-analysis}, we analyze DCQCN and TIMELY using
 detailed fluid models and NS3 simulations. Fluid models are useful for analyzing
 properties such as stability, and for rapid exploration of parameter space.
-Simulations are useful when fluid models become intractable, or for studying
+Simulations are useful when fluid models become intractable, and for studying
 packet-level dynamics. The fluid model for DCQCN is known to be a good fit for
 actual hardware implementation~\cite{dcqcn}. Since we do not have access to
 TIMELY implementation, we relied on extensive discussion with authors
 of~\cite{timely} to ensure that our fluid and simulation models are good
-representations of the protocol. We plan to make available publically our NS3
-simulation code, as well as Matlab code used to solve the fluid models.
+representations of the protocol. Our NS3 simulation code, as well as Matlab code
+used to solve the fluid models will be publically avaiable.
 
 % summary of contributions and findings.
 
@@ -74,15 +74,14 @@ The key contributions, and findings of this paper are as follows.
 \para{DCQCN:} $(i)$ We extend the fluid model proposed in~\cite{dcqcn}. We
 analytically show that DCQCN has a unique fixed point, where all flows get their
 fair share. $(ii)$ We show that while DCQCN is generally stable around this
-fixed point, stability gets worse as the feedback latency (i.e. RTT) goes up.
-Curiously, we find that the stability is worst when around 10 flows are
-competing on a single bottleneck. \textbf{IMPORTANT: ``10'' is a
-  function of the current parameter choices. We should rephrase it to
-  say the behavior is non-monotonic} DCQCN appears to be stable for very small, as
-well as very large number of flows, even at higher latencies. $(iii)$ We propose
-new parameter values to enhance DCQCN's stability, and we derive new parameter values
-for higher bandwidth (100Gbps) links. $(iv)$ Using simulations, we explore the
-convergence properties of DCQCN, and find that \fixme{fill in}.
+fixed point, as long as the feedback latency is low. The relationship between
+stability and the number of competing flows is non-monotonic, which is very
+different from TCP's behavior~\cite{Hollot:PIController}. DCQCN is stable for
+both very small, and very large number of flows, and tends to be unstable
+inbetween; especially if the feedback latecny is high.  $(iii)$ We propose new
+parameter values to enhance DCQCN's stability, and we derive new parameter
+values for higher bandwidth (100Gbps) links. $(iv)$ Using simulations, we
+explore the convergence properties of DCQCN, and find that \fixme{fill in}.
 
 \para{TIMELY:} $(i)$ We develop a fluid model for TIMELY. Using NS3 simulations,
 we show that the fluid model is accurate. $(ii)$ simple analysis of the fluid model
@@ -100,13 +99,31 @@ Leveraging the insights from analysis of each protocol, we finally provide a
 general comparison of the two approaches to the congestion control.
 
 \fixme{todo(monia)}
-General impression is that DCQCN is largely presented positive while noting some drawbacks about its instability. While TIMELY Sections/text pretty much start of with the things that don't work, including the section headings. nothing positive is said about TIMELY...
+General impression is that DCQCN is largely presented positive while noting some
+drawbacks about its instability. While TIMELY Sections/text pretty much start of
+with the things that don't work, including the section headings. nothing
+positive is said about TIMELY...
 
-propose solid contributions such as improving the design of TIMELY to make it fair and stable. Big question is that if TIMELY can exhibit unfairness, what would be the change in the algorithm (or for that matter a completely new algorithm) that would make it fair? we should prescribe a well working RTT based congestion control, while noting the defficiencies of timely.
+propose solid contributions such as improving the design of TIMELY to make it
+fair and stable. Big question is that if TIMELY can exhibit unfairness, what
+would be the change in the algorithm (or for that matter a completely new
+algorithm) that would make it fair? we should prescribe a well working RTT based
+congestion control, while noting the defficiencies of timely.
 
-Timely paper is emphasizing on high precision delay as an excellen congestion signal, we should emphasize that that RTT, when precisely measured, is an excellent indicator of network congestion and that a congestion control mechanism can be designed using RTT. we should downplay the exact algorithmic contributions of timely but there are other algorithms that have been studied very well in literature based on RTT such as FAST, Vegas, and NV. .
+Timely paper is emphasizing on high precision delay as an excellen congestion
+signal, we should emphasize that that RTT, when precisely measured, is an
+excellent indicator of network congestion and that a congestion control
+mechanism can be designed using RTT. we should downplay the exact algorithmic
+contributions of timely but there are other algorithms that have been studied
+very well in literature based on RTT such as FAST, Vegas, and NV. .
 
-also mention that from a pragmatic view point, generally in experiments the rates in gradient timely settle at fair shares and are stable. The reason is probably because there's always some disturbance/noise in experiments, so the gradient is never perfectly zero. For any non-zero gradient value the AIMD nature of timely should push the system towards fairness. I don't know how to show this with stability analysis, but it is certainly something to consider given that timely is working so well in practice.
+also mention that from a pragmatic view point, generally in experiments the
+rates in gradient timely settle at fair shares and are stable. The reason is
+probably because there's always some disturbance/noise in experiments, so the
+gradient is never perfectly zero. For any non-zero gradient value the AIMD
+nature of timely should push the system towards fairness. I don't know how to
+show this with stability analysis, but it is certainly something to consider
+given that timely is working so well in practice.
 
 
 
