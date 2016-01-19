@@ -17,6 +17,14 @@ function sol = dcqcn2()
     global initVal; % column of initial values (rate and RTT gradient for each flow, plus initial queue length).
     global packetSize; 
     
+    % PI parameters
+    global usePI;
+    global pold;
+    global qold;
+    global qref;
+    global a;
+    global b;
+    
     % for debugging purposes.
     global numCalls;
     
@@ -39,11 +47,19 @@ function sol = dcqcn2()
     packetSize = 8e3;
     C = 40e9/packetSize;   % 40Gbps. Link speed.
     
+    % PI parameters
+    usePI = 1;
+    qold = 0;
+    pold = 0;
+    qref = 200e3*8/packetSize;
+    a = 1.822e-5;
+    b = 1.816e-5;
+    
     %
     % DCQCN fixed parameters.
     %
     tau = 50e-6;  % 50 microseconds. This is the time 
-    taustar = 100e-6; %1 microsoecond. This is the feedback loop delay.
+    %taustar = 4e-6; %1 microsoecond. This is the feedback loop delay.
     tauprime = 55e-6; % 55 microseconds. This is the interval of equation 2.
     F = 5; % Fast recovery steps.
     B = 10e6*8/packetSize;   %10MB.Byte counter.
@@ -58,53 +74,57 @@ function sol = dcqcn2()
     pmax = 1e-1; % 1 percent.
     g = 1/256;
 
-    %utilFileId = fopen('dcqcn.util.4.dat', 'w');
-    for numFlows = [2, 10, 64]
-        % Initial conditions: (single column matrix)
-        %
-        % 1: rc1
-        % 2: rt1
-        % 3: alpha1
-        % 4: rc2
-        % 5: rt2
-        % 6: alpha2
-        % 7: ...
-        % 3*numFlows+1: queue
+    for taustar = [4e-6]  % vary the feedback delay
+        for numFlows = [10]
+            % Initial conditions: (single column matrix)
+            %
+            % 1: rc1
+            % 2: rt1
+            % 3: alpha1
+            % 4: rc2
+            % 5: rt2
+            % 6: alpha2
+            % 7: ...
+            % 3*numFlows+1: queue
 
-        % set initial and traget rate of all flows to C/N, and alpha to 1
-        initVal = zeros(3*numFlows + 1, 1);
-        initVal(1:3:3*numFlows,1) = C;
-        initVal(2:3:3*numFlows,1) = C;
-        initVal(3:3:3*numFlows,1) = 1;
+            % set initial and traget rate of all flows to C/N, and alpha to 1
+            initVal = zeros(3*numFlows + 1, 1);
+            initVal(1:3:3*numFlows,1) = C;
+            initVal(2:3:3*numFlows,1) = C;
+            initVal(3:3:3*numFlows,1) = 1;
+        
+            % solve.
+            sol = dde23(@DCQCNModel, taustar, initVal, [0, sim_length], options);
+        
+            % Extract solution and write to file.
+            t = sol.x;
+            q = sol.y(end,:);
+            rates = sol.y(1:3:end-1,:);
 
-        % solve.
-        sol = dde23(@DCQCNModel, taustar, initVal, [0, sim_length], options);
-       
-        % Extract solution and write to file.
-        t = sol.x;
-        q = sol.y(end,:);
-        rates = sol.y(1:3:end-1,:);
-        
-        %[utilization, err] = Utilization(t, rates, q, C);  
-        %fprintf('%d %f %d\n', numFlows, utilization, err);              
-        %fprintf(utilFileId, '%d %f %d\n', numFlows, utilization, err);
-        
-        fileName =  sprintf('unstable.%d.%d.dat', numFlows, taustar*1e6);
-        % when writing to file, we want to write rate in Gbps, 
-        % and queue in KB.
-        dlmwrite(fileName,[t',rates'.*packetSize/1e9, q'.*packetSize/8e3], '\t');
-      
-        %PlotSol(t, q, rates, sim_length, numFlows);
-        %break;
+            [utilization, err] = Utilization(t, rates, q, C);  
+            fprintf('utilization: PI=%d flows=%d util=%f err=%d\n', usePI, numFlows, utilization, err);              
+
+            prefix = 'unstable';
+            if (usePI == 1)
+                prefix = 'unstable.pi';
+            end
+            fileName = sprintf('%s.%d.%d.dat', prefix, numFlows, taustar*1e6);
+            
+            % when writing to file, rate is in Gbps, and queue is in KB.
+            dlmwrite(fileName,[t',rates'.*packetSize/1e9, q'.*packetSize/8e3], '\t');
+
+            PlotSol(t, q, rates, sim_length, numFlows);
+        end
+        fclose('all');
     end
-    fclose('all');
 end
-
+    
 function dx = DCQCNModel(t,x,lag_matrix)
     global Kmax;
     global Kmin;
     global numFlows;
     global numCalls;
+    global usePI;
     
     % matrix x:
     % 1: rc1
@@ -126,7 +146,12 @@ function dx = DCQCNModel(t,x,lag_matrix)
     %
     % marking probability
     %
-    p = CalculateP(t,lag_matrix(end,1),Kmin,Kmax);
+    if (usePI == 1)
+        p = CalculatePUsingPI(t, lag_matrix(end,1));
+    else
+        p = CalculateP(t,lag_matrix(end,1),Kmin,Kmax);
+    end
+    %
     
     %
     % rates and alpha
@@ -155,7 +180,7 @@ function dx = DCQCNModel(t,x,lag_matrix)
     
      numCalls = numCalls +1;
      if (mod(numCalls, 10000) == 0)
-         fprintf ('%g %d\n', t, numCalls);
+         fprintf ('%g %d %f\n', t, numCalls, p);
      end
     
 end
@@ -217,6 +242,23 @@ function p = CalculateP(t, q, kmin, kmax)
     else 
         p = 1;
     end 
+end
+
+function p = CalculatePUsingPI(t, q)
+    global pold;
+    global qold;
+    global qref;
+    global a;
+    global b;
+    
+    if (t >= 0)
+        p = a*(q - qref) - b*(qold - qref) + pold;
+        p = min(max(p, 0), 1);
+    else 
+        p = 1;
+    end 
+    qold  = q;
+    pold = p;
 end
 
 function [a, b, c, d, e] = IntermediateTerms(p, prevRC, currRC, t, i)
