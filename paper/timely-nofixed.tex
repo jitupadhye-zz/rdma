@@ -1,19 +1,16 @@
 \subsubsection{TIMELY has no fixed point, is inherently unstable with
-unpredictable fairness} 
-A primary application of fluid models is to perform control theoretic analysis
-on them. Similar to the analysis we performed for DCQCN in the previous section,
-we attempted to perform the same analysis for TIMELY. The first step in
-performing the analysis is to obtain the fixed point of the system, so we can
-linearize the model about the fixed point and perform classical frequency domain
-analysis. However, the way the TIMELY algorithm is implemented, it has \emph{no
-fixed point}. The implication is that the queue length never converges, nor do
-the sending rates of the flows. The system operates in limit cycles, always
-oscillating. Moreover, while the system is oscillating, there are
-\emph{infinite} solutions for the sending rates of the flows that satisfy the
-fluid equations at any point. So, even if we can limit the magnitude of the
-limit cycles by choosing parameters carefully, we can make no claims on the
-fairness of the protocol since the system could be operating at any of those
-infinite solutions. We first show that it has no fixed point.
+unpredictable fairness}
+We attempted to perform the same analysis for TIMELY that we performed for DCQCN
+in the previous section.  The first step in performing the analysis is to obtain
+the fixed point of the system.  However, the way the TIMELY algorithm is
+implemented, it has \emph{no fixed point}. The implication is that the queue
+length never converges, nor do the sending rates of the flows. The system
+operates in limit cycles, always oscillating. Moreover, while the system is
+oscillating, there are \emph{infinite} solutions for the sending rates of the
+flows that satisfy the fluid equations at any point. So, even if we can limit
+the magnitude of the limit cycles by choosing parameters carefully, we can make
+no claims on the fairness of the protocol since the system could be operating at
+any of those infinite solutions. We first show that it has no fixed point.
 
 \para{No fixed point for TIMELY:} 
 In fixed point analysis, we identify the point at which the derivatives of the

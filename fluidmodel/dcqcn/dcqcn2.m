@@ -33,7 +33,7 @@ function sol = dcqcn2()
     %
     sim_step = 5e-6; % 5 microseconds.
     options = ddeset('MaxStep', sim_step, 'RelTol', 1e-2, 'AbsTol', 1e-4);
-    sim_length = 100e-3;
+    sim_length = 50e-3;
     numCalls = 0;
     
     % !!!!!!
@@ -52,8 +52,8 @@ function sol = dcqcn2()
     qold = 0;
     pold = 0;
     qref = 200e3*8/packetSize;
-    a = 1.822e-5;
-    b = 1.816e-5;
+    a = 1.822e-5/1.1;
+    b = 1.816e-5/1.1;
     
     %
     % DCQCN fixed parameters.
@@ -112,7 +112,7 @@ function sol = dcqcn2()
             
             % when writing to file, rate is in Gbps, and queue is in KB.
             dlmwrite(fileName,[t',rates'.*packetSize/1e9, q'.*packetSize/8e3], '\t');
-
+            fprintf ('median queue=%f\n', median(q));
             PlotSol(t, q, rates, sim_length, numFlows);
         end
         fclose('all');
@@ -251,14 +251,11 @@ function p = CalculatePUsingPI(t, q)
     global a;
     global b;
     
-    if (t >= 0)
-        p = a*(q - qref) - b*(qold - qref) + pold;
-        p = min(max(p, 0), 1);
-    else 
-        p = 1;
-    end 
+    p = a*(q - qref) - b*(qold - qref) + pold;
+    p = min(max(p, 0), 1);
     qold  = q;
     pold = p;
+    
 end
 
 function [a, b, c, d, e] = IntermediateTerms(p, prevRC, currRC, t, i)
