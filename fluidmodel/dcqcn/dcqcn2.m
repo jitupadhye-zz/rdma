@@ -52,8 +52,8 @@ function sol = dcqcn2()
     qold = 0;
     pold = 0;
     qref = 200e3*8/packetSize;
-    a = 1.822e-5/1.1;
-    b = 1.816e-5/1.1;
+    a = 1.822e-3/1.1;
+    b = 1.816e-3/1.1;
     
     %
     % DCQCN fixed parameters.
@@ -75,7 +75,7 @@ function sol = dcqcn2()
     g = 1/256;
 
     for taustar = [4e-6]  % vary the feedback delay
-        for numFlows = [10]
+        for numFlows = [20]
             % Initial conditions: (single column matrix)
             %
             % 1: rc1

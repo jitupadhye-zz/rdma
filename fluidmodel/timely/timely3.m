@@ -19,9 +19,11 @@ function sol = timely3()
     global prevprevQueue %hack
     global pold;
     global p;
+    global qold;
     pold=0;
     p=0;
     prevprevQueue = 0;
+    qold = 0;
 
     %
     % Simulation control
@@ -37,13 +39,13 @@ function sol = timely3()
     prop = 4e-6; % propagation delay
     
     % Setting PI parameters
-    a = (1.822e-6);
-    b = (1.816e-6);
+    a = (1.822e-9);
+    b = (1.82199998e-9);
 
     %
     % Parameters we can play with.
     %
-    delta = 10e7; % 10Mbps
+    delta = 10e8; % 10Mbps
     T_high = 500e-6; % 500 microseconds (see section 4.4)
     T_low = 50e-6; % 50 microseconds (see section 4.4). 
     minRTT = 20e-6; % 20 microseconds 
@@ -166,16 +168,17 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient, ...
     global b;
     global pold;
     global p;
+    global qold;
     queueLow = C * T_low;
     %queueLow = 0;
     queueHigh = C * T_high;
     qref = (queueHigh+queueLow)/2;
     error = prevQueue-prevprevQueue;
-    p = a*(prevQueue - qref) - b*(prevprevQueue - qref) + pold
+    p = a*(prevQueue - qref) - b*(qold - qref) + pold
     p = min(max(p, 0), 1);
     qold  = prevQueue;
     pold = p;
-    deltaRate = delta - p*currentRate
+    deltaRate = delta - p*beta*currentRate
     
     %   if (prevQueue < queueLow)
         %deltaRate = delta;

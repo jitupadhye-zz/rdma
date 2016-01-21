@@ -14,7 +14,8 @@ function sol = timely2()
     global numFlows;  % number of flows. 
     global initVal; % column of initial values (rate and RTT gradient for each flow, plus initial queue length). 
     global sim_length;
-    
+    global a;
+    global b;
     %
     % Simulation control
     % 
@@ -28,6 +29,9 @@ function sol = timely2()
     Seg = 64 * 8 * 1e3; % burstsize.
     prop = 4e-6; % propagation delay
     
+    % PI parameters
+    a = 1.822e-3/1.1;
+    b = 1.816e-3/1.1;
 
     %
     % Parameters we can play with.
@@ -149,9 +153,13 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient)
     global C;
     global T_high;
     global T_low;
+    global a;
+    global b;
     
     queueLow = C * T_low;
     queueHigh = C * T_high;
+    targetQueue = (queueLow+queueHigh)/2;
+    error = prevQueue-targetQueue;
     if (prevQueue < queueLow)
        deltaRate = delta;
     else if (prevQueue > queueHigh)
@@ -160,7 +168,9 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient)
             if (rttGradient < 0)
                 deltaRate = delta;
             else
-                deltaRate = -1 * rttGradient * beta * currentRate;
+                %     deltaRate = -1 * rttGradient * beta *
+                %     currentRate;
+                deltaRate = -1*rttGradient *a*1000*currentRate -1*b/1000*error*currentRate
             end
         end
     end
