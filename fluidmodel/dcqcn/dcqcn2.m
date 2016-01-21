@@ -52,8 +52,8 @@ function sol = dcqcn2()
     qold = 0;
     pold = 0;
     qref = 200e3*8/packetSize;
-    a = 1.822e-5/1.1;
-    b = 1.816e-5/1.1;
+    a = 1.822e-4;
+    b = 1.816e-4;
     
     %
     % DCQCN fixed parameters.
@@ -74,7 +74,7 @@ function sol = dcqcn2()
     pmax = 1e-1; % 1 percent.
     g = 1/256;
 
-    for taustar = [4e-6]  % vary the feedback delay
+    for taustar = [80e-6]  % vary the feedback delay
         for numFlows = [10]
             % Initial conditions: (single column matrix)
             %
@@ -251,11 +251,13 @@ function p = CalculatePUsingPI(t, q)
     global a;
     global b;
     
-    p = a*(q - qref) - b*(qold - qref) + pold;
+    xq = max(q, 0);
+    xqold = max(qold, 0);
+    p = a*(xq - qref) - b*(xqold - qref) + pold;
+    %fprintf ('qold=%f pold=%f q=%f p=%f\n', qold, pold, q, p);
     p = min(max(p, 0), 1);
-    qold  = q;
+    qold  = max(q, 0);
     pold = p;
-    
 end
 
 function [a, b, c, d, e] = IntermediateTerms(p, prevRC, currRC, t, i)
@@ -345,7 +347,7 @@ function PlotSol(t, q, rates, sim_length, numFlows)
     subplot(2,1,2);
     plot(t,q.*packetSize/8e3)
     hold on
-    axis([0 sim_length 0 2*median(q)*packetSize/8e3])
+    axis([0 sim_length 0 1000])
     xlabel('Time (seconds)')
     ylabel('Queue (KBytes)')
 end

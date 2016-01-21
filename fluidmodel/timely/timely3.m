@@ -27,7 +27,7 @@ function sol = timely3()
     % Simulation control
     % 
     step_len = 5e-6 ; % 5 microseconds
-    sim_length = 5e-2; % 100 milliseconds 
+    sim_length = 5e-2; % 50 milliseconds 
 
     % 
     % Fixed Parameters
@@ -37,8 +37,8 @@ function sol = timely3()
     prop = 4e-6; % propagation delay
     
     % Setting PI parameters
-    a = (1.822e-6);
-    b = (1.816e-6);
+    a = (1.822e-9);
+    b = (1.816e-9);
 
     %
     % Parameters we can play with.
@@ -69,9 +69,9 @@ function sol = timely3()
             %SetInitialRate(i, C/numFlows);
         end
 
-        SetInitialRate(1, 5e9);
-        SetInitialRate(2, 3e9);
-        SetInitialRate(3, 2e9);
+        SetInitialRate(1, 1e9);
+        SetInitialRate(2, 1e9);
+        SetInitialRate(3, 1e9);
         %
         % Options.
         %
@@ -171,11 +171,11 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient, ...
     queueHigh = C * T_high;
     qref = (queueHigh+queueLow)/2;
     error = prevQueue-prevprevQueue;
-    p = a*(prevQueue - qref) - b*(prevprevQueue - qref) + pold
+    p = a*(prevQueue - qref) - b*(prevprevQueue - qref) + pold;
     p = min(max(p, 0), 1);
     qold  = prevQueue;
     pold = p;
-    deltaRate = delta - p*currentRate
+    deltaRate = delta - p*currentRate;
     
     %   if (prevQueue < queueLow)
         %deltaRate = delta;
