@@ -33,7 +33,7 @@ function sol = dcqcn2()
     %
     sim_step = 5e-6; % 5 microseconds.
     options = ddeset('MaxStep', sim_step, 'RelTol', 1e-2, 'AbsTol', 1e-4);
-    sim_length = 50e-3;
+    sim_length = 100e-3;
     numCalls = 0;
     
     % !!!!!!
@@ -48,7 +48,7 @@ function sol = dcqcn2()
     C = 40e9/packetSize;   % 40Gbps. Link speed.
     
     % PI parameters
-    usePI = 1;
+    usePI = 0;
     qold = 0;
     pold = 0;
     qref = 200e3*8/packetSize;
@@ -74,8 +74,8 @@ function sol = dcqcn2()
     pmax = 1e-1; % 1 percent.
     g = 1/256;
 
-    for taustar = [4e-6]  % vary the feedback delay
-        for numFlows = [20]
+    for taustar = [85e-6]  % vary the feedback delay
+        for numFlows = [32]
             % Initial conditions: (single column matrix)
             %
             % 1: rc1
