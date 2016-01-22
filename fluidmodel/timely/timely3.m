@@ -30,7 +30,7 @@ function sol = timely3()
     % 
 
     step_len = 50e-5 ; % 5 microseconds
-    sim_length = 50e-2; % 100 milliseconds 
+    sim_length = 100e-2; % 100 milliseconds 
 
 
     % 
@@ -38,7 +38,7 @@ function sol = timely3()
     %
     C = 10 * 1e9; % line rate.
     Seg = 64 * 8 * 1e3; % burstsize.
-    prop = 85e-6; % propagation delay
+    prop = 4e-6; % propagation delay
     
     % Setting PI parameters
     %a = (1.822e-6);
@@ -54,7 +54,7 @@ function sol = timely3()
     minRTT = 20e-6; % 20 microseconds 
     beta = 0.8;
     alpha = 0.875; % unsure
-    maxQueue = 20 * C * T_high; % only for corner cases - queue won't grow beyond this. 
+    maxQueue = 5 * C * T_high; % only for corner cases - queue won't grow beyond this. 
 
     %
     % Initial conditions: 
@@ -177,7 +177,7 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient, ...
     queueLow = C * T_low;
     %queueLow = 0;
     queueHigh = C * T_high;
-    qref = queueHigh;
+    qref = (queueHigh+queueLow)/2;
 
     p = a*(prevQueue - qref)/8e3 - b*(qold - qref)/8e3 + pold;
     pold = p;
