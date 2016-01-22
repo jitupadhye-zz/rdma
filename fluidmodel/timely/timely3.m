@@ -28,30 +28,35 @@ function sol = timely3()
     %
     % Simulation control
     % 
+<<<<<<< HEAD
     step_len = 5e-6 ; % 5 microseconds
     sim_length = 5e-2; % 50 milliseconds 
+=======
+    step_len = 50e-5 ; % 5 microseconds
+    sim_length = 5e-2; % 100 milliseconds 
+>>>>>>> 041166bfedd7b082d856aa57f2f28a5cf597838c
 
     % 
     % Fixed Parameters
     %
     C = 10 * 1e9; % line rate.
     Seg = 64 * 8 * 1e3; % burstsize.
-    prop = 4e-6; % propagation delay
+    prop = 85e-6; % propagation delay
     
     % Setting PI parameters
-    a = (1.822e-9);
-    b = (1.82199998e-9);
+    a = (1.822e-6);
+    b = (1.820e-6);
 
     %
     % Parameters we can play with.
     %
-    delta = 10e8; % 10Mbps
+    delta = 10e7; % 10Mbps
     T_high = 500e-6; % 500 microseconds (see section 4.4)
     T_low = 50e-6; % 50 microseconds (see section 4.4). 
     minRTT = 20e-6; % 20 microseconds 
     beta = 0.8;
     alpha = 0.875; % unsure
-    maxQueue = 2 * C * T_high; % only for corner cases - queue won't grow beyond this. 
+    maxQueue = 20 * C * T_high; % only for corner cases - queue won't grow beyond this. 
 
     %
     % Initial conditions: 
@@ -134,7 +139,9 @@ function dx = TimelyModel(t,x,lag)
     for i = 1:2:2*numFlows
         dx(i) = RateDelta(x(i), lag(2*numFlows+1,i), x(i+1), ...
                           prevprevQueue);
-        prevprevQueue = lag(2*numFlows+1,i);
+        if(i>1)
+            prevprevQueue = lag(2*numFlows+1,i-1);
+            end
     end  
     
     % update RTT gradient
@@ -173,6 +180,7 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient, ...
     %queueLow = 0;
     queueHigh = C * T_high;
     qref = (queueHigh+queueLow)/2;
+<<<<<<< HEAD
     error = prevQueue-prevprevQueue;
 
     %p = a*(prevQueue - qref) - b*(prevprevQueue - qref) + pold;
@@ -182,10 +190,15 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient, ...
     %deltaRate = delta - p*currentRate;
 
     p = a*(prevQueue - qref) - b*(qold - qref) + pold
+=======
+    error = prevQueue - qref
+    gradient = prevQueue-prevprevQueue 
+    p = a*(prevQueue - qref) - b*(prevprevQueue - qref) + pold;
+>>>>>>> 041166bfedd7b082d856aa57f2f28a5cf597838c
     p = min(max(p, 0), 1);
     qold  = prevQueue;
     pold = p;
-    deltaRate = delta - p*beta*currentRate
+    deltaRate = delta - p*beta*currentRate;
     
     %   if (prevQueue < queueLow)
         %deltaRate = delta;

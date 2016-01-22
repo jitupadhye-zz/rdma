@@ -31,7 +31,7 @@ function sol = dcqcn2()
     %
     % simulation control.
     %
-    sim_step = 5e-6; % 5 microseconds.
+    sim_step = 50e-6; % 5 microseconds.
     options = ddeset('MaxStep', sim_step, 'RelTol', 1e-2, 'AbsTol', 1e-4);
     sim_length = 100e-3;
     numCalls = 0;
@@ -48,13 +48,13 @@ function sol = dcqcn2()
     C = 40e9/packetSize;   % 40Gbps. Link speed.
     
     % PI parameters
-    usePI = 0;
+    usePI = 1;
     qold = 0;
     pold = 0;
     qref = 200e3*8/packetSize;
-    a = 1.822e-3/1.1;
-    b = 1.816e-3/1.1;
-    
+    %    a = 1.822e-3/1.1;
+    b = 1.816e-5;
+    a = (1+.0001)*b;
     %
     % DCQCN fixed parameters.
     %
@@ -75,7 +75,7 @@ function sol = dcqcn2()
     g = 1/256;
 
     for taustar = [85e-6]  % vary the feedback delay
-        for numFlows = [32]
+        for numFlows = [10]
             % Initial conditions: (single column matrix)
             %
             % 1: rc1
@@ -251,13 +251,18 @@ function p = CalculatePUsingPI(t, q)
     global a;
     global b;
     
-    xq = max(q, 0);
-    xqold = max(qold, 0);
-    p = a*(xq - qref) - b*(xqold - qref) + pold;
+    %xq = max(q, 0);
+    %xqold = max(qold, 0);
+    %p = a*(xq - qref) - b*(xqold - qref) + pold;
     %fprintf ('qold=%f pold=%f q=%f p=%f\n', qold, pold, q, p);
+    %p = min(max(p, 0), 1);
+    %qold  = max(q, 0);
+    %pold = p;
+
+    p = a*(q - qref) - b*(qold - qref) + pold;
+    pold = p
     p = min(max(p, 0), 1);
-    qold  = max(q, 0);
-    pold = p;
+    qold  = q;
 end
 
 function [a, b, c, d, e] = IntermediateTerms(p, prevRC, currRC, t, i)
