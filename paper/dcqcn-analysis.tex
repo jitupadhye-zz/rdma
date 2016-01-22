@@ -289,6 +289,7 @@ from Equation~\ref{eq:converge_rc}, we get:
 R_C^{(i)}({T_{k + 1}}) - R_C^{(j)}({T_{k + 1}}) = \left( {1 - \frac{{\alpha ({T_k})}}{2}} \right)\left( {R_C^{(i)}({T_k}) - R_C^{(j)}({T_k})} \right)\\
  = ... = \prod\limits_{l = k'}^k {\left( {1 - \frac{{\alpha ({T_l})}}{2}} \right)} \left( {R_C^{(i)}({T_{k'}}) - R_C^{(j)}({T_{k'}})} \right)
 \end{array}
+\label{eq:converge}
 \end{equation}
 
 As long as $\alpha ({T_k})$ has a lower bound that is greater than 0, the rates $R_C$ of different flows 
@@ -377,3 +378,34 @@ converging to $\alpha ^*$:
 This concludes our proof. Combining Equation~\ref{eq:converge_rc}, we know that $R_C$ is 
 converging at the rate of at least $( {1 - \frac{{{\alpha ^{*}}}}{2}} )^k$.
 
+\begin{figure}[t]
+\center
+\includegraphics[width=0.4\textwidth]{figures/dcqcn_convergence_time.eps}
+\caption{DCQCN flow convergence time.}
+\label{fig:dcqcn_convergence_time}
+\end{figure}
+
+\para{Convergence speed.} Here we derive the upper bound of flow convergence time in DCQCN.
+In the above analysis, the convergence has two phases: 1) $\alpha ^{(i)}$ converge to the 
+same value (not necessarily at $\alpha^*$); 2) $R_C^{(i)}$ converge along with $\alpha -> \alpha^*$. 
+In practice, the flows that encounter congestion for the first time all have the same initial
+value of 1. Therefore, we mainly focus on the second phase. We define "converged" as the rate
+difference of any two flows is no more than 10\% of expected fair share.
+
+For the upper bound, we consider several worst-case assumptions. First, we assume flows start
+at extremely different rates, {\em i.e.,}, some flows at 0 and some flows at 40Gbps. Second, the value of 
+$\alpha ({T_k})$ is $\alpha ^*$. As shown above, $\alpha ({T_k}) > \alpha ^*$, the flows 
+converge faster than our estimation in practice, given the term $(1 - \alpha /2)^T$ in Equation~\ref{eq:converge}.
+Finally, the switch does not mark ECN until the queue length hits $K_{max}$, opposed to
+using RED. The convergence time can be estimated by solving the following inequality of $x$: 
+
+\begin{equation}
+\small
+{\left( {1 - \frac{{{\alpha ^*}}}{2}} \right)^{\frac{x}{{{T^*}\tau '}}}}C \le 10\% \frac{C}{N}
+\end{equation}
+
+We solve this using numeric approaches for different parameter settings, and show the results
+in Figure~\ref{fig:dcqcn_converge_time}. We see that DCQCN converge within 100ms, and the convergence
+time decreases quickly as the number of flow increases. We also test different parameters, 
+including $R_{AI}$, $K_{max}$ and $g$. We found that convergence time is mostly determined by
+$R_{AI}$, and much less affected by the other two. 
