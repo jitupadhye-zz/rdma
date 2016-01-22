@@ -74,7 +74,7 @@ function sol = dcqcn2()
     pmax = 1e-1; % 1 percent.
     g = 1/256;
 
-    for taustar = [85e-6]  % vary the feedback delay
+    for taustar = [4e-6]  % vary the feedback delay
         for numFlows = [10]
             % Initial conditions: (single column matrix)
             %
