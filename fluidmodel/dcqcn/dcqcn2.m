@@ -33,7 +33,7 @@ function sol = dcqcn2()
     %
     sim_step = 50e-6; % 5 microseconds.
     options = ddeset('MaxStep', sim_step, 'RelTol', 1e-2, 'AbsTol', 1e-4);
-    sim_length = 100e-3;
+    sim_length = 500e-3;
     numCalls = 0;
     
     % !!!!!!
@@ -106,7 +106,7 @@ function sol = dcqcn2()
 
             prefix = 'unstable';
             if (usePI == 1)
-                prefix = 'unstable.pi';
+                prefix = 'unstable.pix';
             end
             fileName = sprintf('%s.%d.%d.dat', prefix, numFlows, taustar*1e6);
             
@@ -260,7 +260,7 @@ function p = CalculatePUsingPI(t, q)
     %pold = p;
 
     p = a*(q - qref) - b*(qold - qref) + pold;
-    pold = p
+    pold = p;
     p = min(max(p, 0), 1);
     qold  = q;
 end
