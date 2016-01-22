@@ -28,13 +28,10 @@ function sol = timely3()
     %
     % Simulation control
     % 
-<<<<<<< HEAD
-    step_len = 5e-6 ; % 5 microseconds
-    sim_length = 5e-2; % 50 milliseconds 
-=======
+
     step_len = 50e-5 ; % 5 microseconds
-    sim_length = 5e-2; % 100 milliseconds 
->>>>>>> 041166bfedd7b082d856aa57f2f28a5cf597838c
+    sim_length = 50e-2; % 100 milliseconds 
+
 
     % 
     % Fixed Parameters
@@ -44,9 +41,10 @@ function sol = timely3()
     prop = 85e-6; % propagation delay
     
     % Setting PI parameters
-    a = (1.822e-6);
-    b = (1.820e-6);
-
+    %a = (1.822e-6);
+    %b = (1.820e-6);
+    b = 1.816e-5;
+    a = (1+.0001)*b;
     %
     % Parameters we can play with.
     %
@@ -179,25 +177,13 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient, ...
     queueLow = C * T_low;
     %queueLow = 0;
     queueHigh = C * T_high;
-    qref = (queueHigh+queueLow)/2;
-<<<<<<< HEAD
-    error = prevQueue-prevprevQueue;
+    qref = queueHigh;
 
-    %p = a*(prevQueue - qref) - b*(prevprevQueue - qref) + pold;
-    %p = min(max(p, 0), 1);
-    %qold  = prevQueue;
-    %pold = p;
-    %deltaRate = delta - p*currentRate;
-
-    p = a*(prevQueue - qref) - b*(qold - qref) + pold
-=======
-    error = prevQueue - qref
-    gradient = prevQueue-prevprevQueue 
-    p = a*(prevQueue - qref) - b*(prevprevQueue - qref) + pold;
->>>>>>> 041166bfedd7b082d856aa57f2f28a5cf597838c
+    p = a*(prevQueue - qref)/8e3 - b*(qold - qref)/8e3 + pold;
+    pold = p;
     p = min(max(p, 0), 1);
     qold  = prevQueue;
-    pold = p;
+
     deltaRate = delta - p*beta*currentRate;
     
     %   if (prevQueue < queueLow)
