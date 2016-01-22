@@ -6,7 +6,7 @@ set xrange [0:100]
 set yrange [0:0.4]
 
 set xlabel "Number of Flows"
-set ylabel "Convergence Time"
+set ylabel "Convergence Time (s)"
 
 set key top right
 
