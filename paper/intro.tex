@@ -59,9 +59,13 @@ a ripe time for analytical exploration of these protocols.
 As in~\cite{dctcp-analysis, qcn-analysis}, we analyze DCQCN and TIMELY using
 detailed fluid models and NS3 simulations. Fluid models are useful for analyzing
 properties such as stability, and for rapid exploration of parameter space.
-Simulations are useful when fluid models become intractable, and for studying
-packet-level dynamics. The fluid model for DCQCN is known to be a good fit for
-actual hardware implementation~\cite{dcqcn}. Since we do not have access to
+Simulations are useful for studying
+packet-level dynamics and establishing the fidelity of the fluid model
+to the real system. For DCQCN, our starting point for the analysis is
+the fluid model
+proposed by the authors and is known to be a good fit for
+actual hardware implementation~\cite{dcqcn}. For TIMELY, we develop
+our own fluid model based on the paper description and since we do not have access to
 TIMELY implementation, we relied on extensive discussion with authors
 of~\cite{timely} to ensure that our fluid and simulation models are good
 representations of the protocol. Our NS3 simulation code, as well as Matlab code
@@ -76,9 +80,9 @@ analytically show that DCQCN has a unique fixed point, where all flows get their
 fair share. $(ii)$ We show that while DCQCN is generally stable around this
 fixed point, as long as the feedback latency is low. The relationship between
 stability and the number of competing flows is non-monotonic, which is very
-different from TCP's behavior~\cite{Hollot:PIController}. DCQCN is stable for
+different from TCP's behavior~\cite{misra:TAC2002}. DCQCN is stable for
 both very small, and very large number of flows, and tends to be unstable
-inbetween; especially if the feedback latecny is high.  $(iii)$ We propose new
+inbetween; especially if the feedback latency is high.  $(iii)$ We propose new
 parameter values to enhance DCQCN's stability, and we derive new parameter
 values for higher bandwidth (100Gbps) links. $(iv)$ Using simulations, we
 explore the convergence properties of DCQCN, and find that \fixme{fill in}.
