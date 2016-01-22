@@ -33,7 +33,7 @@ function sol = dcqcn2()
     %
     sim_step = 50e-6; % 5 microseconds.
     options = ddeset('MaxStep', sim_step, 'RelTol', 1e-2, 'AbsTol', 1e-4);
-    sim_length = 50e-2;
+    sim_length = 100e-3;
     numCalls = 0;
     
     % !!!!!!
@@ -251,12 +251,18 @@ function p = CalculatePUsingPI(t, q)
     global a;
     global b;
     
+    %xq = max(q, 0);
+    %xqold = max(qold, 0);
+    %p = a*(xq - qref) - b*(xqold - qref) + pold;
+    %fprintf ('qold=%f pold=%f q=%f p=%f\n', qold, pold, q, p);
+    %p = min(max(p, 0), 1);
+    %qold  = max(q, 0);
+    %pold = p;
+
     p = a*(q - qref) - b*(qold - qref) + pold;
     pold = p
     p = min(max(p, 0), 1);
     qold  = q;
-
-    
 end
 
 function [a, b, c, d, e] = IntermediateTerms(p, prevRC, currRC, t, i)
@@ -346,7 +352,7 @@ function PlotSol(t, q, rates, sim_length, numFlows)
     subplot(2,1,2);
     plot(t,q.*packetSize/8e3)
     hold on
-    axis([0 sim_length 0 2*median(q)*packetSize/8e3])
+    axis([0 sim_length 0 1000])
     xlabel('Time (seconds)')
     ylabel('Queue (KBytes)')
 end

@@ -28,8 +28,13 @@ function sol = timely3()
     %
     % Simulation control
     % 
+<<<<<<< HEAD
+    step_len = 5e-6 ; % 5 microseconds
+    sim_length = 5e-2; % 50 milliseconds 
+=======
     step_len = 50e-5 ; % 5 microseconds
     sim_length = 5e-2; % 100 milliseconds 
+>>>>>>> 041166bfedd7b082d856aa57f2f28a5cf597838c
 
     % 
     % Fixed Parameters
@@ -71,9 +76,9 @@ function sol = timely3()
             %SetInitialRate(i, C/numFlows);
         end
 
-        SetInitialRate(1, 5e9);
-        SetInitialRate(2, 3e9);
-        SetInitialRate(3, 2e9);
+        SetInitialRate(1, 1e9);
+        SetInitialRate(2, 1e9);
+        SetInitialRate(3, 1e9);
         %
         % Options.
         %
@@ -175,9 +180,21 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient, ...
     %queueLow = 0;
     queueHigh = C * T_high;
     qref = (queueHigh+queueLow)/2;
+<<<<<<< HEAD
+    error = prevQueue-prevprevQueue;
+
+    %p = a*(prevQueue - qref) - b*(prevprevQueue - qref) + pold;
+    %p = min(max(p, 0), 1);
+    %qold  = prevQueue;
+    %pold = p;
+    %deltaRate = delta - p*currentRate;
+
+    p = a*(prevQueue - qref) - b*(qold - qref) + pold
+=======
     error = prevQueue - qref
     gradient = prevQueue-prevprevQueue 
     p = a*(prevQueue - qref) - b*(prevprevQueue - qref) + pold;
+>>>>>>> 041166bfedd7b082d856aa57f2f28a5cf597838c
     p = min(max(p, 0), 1);
     qold  = prevQueue;
     pold = p;
