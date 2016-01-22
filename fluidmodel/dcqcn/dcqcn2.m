@@ -31,9 +31,9 @@ function sol = dcqcn2()
     %
     % simulation control.
     %
-    sim_step = 5e-6; % 5 microseconds.
+    sim_step = 50e-6; % 5 microseconds.
     options = ddeset('MaxStep', sim_step, 'RelTol', 1e-2, 'AbsTol', 1e-4);
-    sim_length = 50e-3;
+    sim_length = 50e-2;
     numCalls = 0;
     
     % !!!!!!
@@ -52,9 +52,9 @@ function sol = dcqcn2()
     qold = 0;
     pold = 0;
     qref = 200e3*8/packetSize;
-    a = 1.822e-3/1.1;
-    b = 1.816e-3/1.1;
-    
+    %    a = 1.822e-3/1.1;
+    b = 1.816e-5;
+    a = (1+.0001)*b;
     %
     % DCQCN fixed parameters.
     %
@@ -74,8 +74,8 @@ function sol = dcqcn2()
     pmax = 1e-1; % 1 percent.
     g = 1/256;
 
-    for taustar = [4e-6]  % vary the feedback delay
-        for numFlows = [20]
+    for taustar = [85e-6]  % vary the feedback delay
+        for numFlows = [10]
             % Initial conditions: (single column matrix)
             %
             % 1: rc1
@@ -252,9 +252,10 @@ function p = CalculatePUsingPI(t, q)
     global b;
     
     p = a*(q - qref) - b*(qold - qref) + pold;
+    pold = p
     p = min(max(p, 0), 1);
     qold  = q;
-    pold = p;
+
     
 end
 
