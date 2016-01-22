@@ -255,8 +255,8 @@ R_T^{(i)}({T_k}) \approx R_C^{(i)}({T_k}) + {R_{AI}},\forall k = 1,2,...
 \end{equation}
 
 Back to Equation~\ref{eq:converge_rc}, we must know $\alpha ^{(i)}({T_k})$ and $\Delta T_k$ to 
-further analyze the flow rates. During $\Delta T_k$, $\alpha ^{(i)}({T_k})$ has one increase
-and $\Delta T_k - 1$ decrease, as defined by DCQCN:
+further analyze the flow rates. During $\Delta T_k$, $\alpha ^{(i)}({T_k})$ has one increase event
+and $\Delta T_k - 1$ decrease events, as defined by DCQCN:
 
 \begin{equation}
 \small
@@ -293,15 +293,15 @@ R_C^{(i)}({T_{k + 1}}) - R_C^{(j)}({T_{k + 1}}) = \left( {1 - \frac{{\alpha ({T_
 \end{equation}
 
 As long as $\alpha ({T_k})$ has a lower bound that is greater than 0, the rates $R_C$ of different flows 
-converge exponentially. Before we prove this, we need to have an estimation of $\Delta T_k$ by $\alpha$.
+converge exponentially. Before we prove this, we need to have an estimation of $\Delta T_k$ using $\alpha$.
 In the period of $\Delta T_k$, after the first time unit of rate decreasing, the aggregated flow rates
-will climb back to $R_C(T_{k+1})$ by $NR_{AI}$ every time unit. Thus we have:
+will climb back to $R_T(T_{k+1})$ by $NR_{AI}$ every time unit. Thus we have:
 
 \begin{equation}
 \small\Delta {T_k} = 1 + \frac{{\sum\limits_{i = 1}^N {\left( {R_T^{(i)}({T_{k + 1}}) - \left( {1 - {\alpha ^{(i)}}({T_k})/2} \right)R_C^{(i)}({T_k})} \right)} }}{{N{R_{AI}}}}
 \end{equation}
 
-Suppose $\alpha^{(i)}$ already converged, we can largely simplify it:
+Suppose $\alpha^{(i)}({T_k})$ already converged to the same value $\alpha ({T_k})$, we can largely simplify it:
 
 \begin{equation}
 \small
@@ -313,7 +313,7 @@ Suppose $\alpha^{(i)}$ already converged, we can largely simplify it:
 \label{eq:converge_tk}
 \end{equation}
 
-Where $t$ is the time it takes the flows build up queue and get packets ECN-marked after
+Where $t$ is the time it takes for the flows to build up queue and get packets ECN-marked, after
 the aggregated flow rates exceed link capacity $C$, as shown in Figure~\ref{fig:dcqcn_convergence}.
 We can estimate $t$ by the queue being built up:
 
@@ -359,15 +359,15 @@ settings, $f(\alpha )$ is monotonically increasing. Therefore,
 \alpha ({T_{k + 1}}) = f\left( {\alpha ({T_k})} \right) > f\left( {{\alpha ^*}} \right) = {\alpha ^*}
 \end{equation}
 
-In addition, because $\alpha ({T_k}) > {\alpha ^*}$, $\Delta {T_k} > \Delta {T^*}$. 
-Then $\alpha^{*}$ satisfies:
+In addition, because $\alpha ({T_k}) > {\alpha ^*} => \Delta {T_k} > \Delta {T^*}$, 
+$\alpha^{*}$ satisfies:
 
 \begin{equation}
 \small
 {\alpha ^*} > {(1 - g)^{\Delta {T_k}}}\left( {(1 - g){\alpha ^*} + g} \right)
 \end{equation}
 
-Subtract it from Equation~\ref{eq:converge_alpha}, we see $\alpha ({T_k})$ is exponentially 
+Subtract this from Equation~\ref{eq:converge_alpha}, we see $\alpha ({T_k})$ is exponentially 
 converging to $\alpha ^*$:
 
 \begin{equation}
@@ -401,7 +401,7 @@ using RED. The convergence time can be estimated by solving the following inequa
 
 \begin{equation}
 \small
-{\left( {1 - \frac{{{\alpha ^*}}}{2}} \right)^{\frac{x}{{{T^*}\tau '}}}}C \le 10\% \frac{C}{N}
+{\left( {1 - \frac{{{\alpha ^*}}}{2}} \right)^{\frac{x}{{\tau '`{T^*}}}}}C \le 10\% \times \frac{C}{N}
 \end{equation}
 
 We solve this using numeric approaches for different parameter settings, and show the results
