@@ -394,8 +394,8 @@ difference of any two flows is no more than 10\% of expected fair share.
 
 For the upper bound, we consider several worst-case assumptions. First, we assume flows start
 at extremely different rates, {\em i.e.,}, some flows at 0 and some flows at 40Gbps. Second, the value of 
-$\alpha ({T_k})$ is $\alpha ^*$. As shown above, $\alpha ({T_k}) > \alpha ^*$, the flows 
-converge faster than our estimation in practice, given the term $(1 - \alpha /2)^T$ in Equation~\ref{eq:converge}.
+$\alpha ({T_k})$ is $\alpha ^*$. In practice, $\alpha ({T_k}) > \alpha ^*$, the flows 
+will converge faster than our estimation, given the term $(1 - \alpha /2)^T$ in Equation~\ref{eq:converge}.
 Finally, the switch does not mark ECN until the queue length hits $K_{max}$, opposed to
 using RED. The convergence time can be estimated by solving the following inequality of $x$: 
 
@@ -408,4 +408,5 @@ We solve this using numeric approaches for different parameter settings, and sho
 in Figure~\ref{fig:dcqcn_converge_time}. We see that DCQCN converge within 100ms, and the convergence
 time decreases quickly as the number of flow increases. We also test different parameters, 
 including $R_{AI}$, $K_{max}$ and $g$. We found that convergence time is mostly determined by
-$R_{AI}$, and much less affected by the other two. 
+$R_{AI}$, and much less affected by the other two. Note that Figure~\ref{fig:dcqcn_converge_time}
+is the upper bound of convergence time with conservative assumptions. 
