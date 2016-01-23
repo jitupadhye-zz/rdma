@@ -5,15 +5,15 @@ considers N flows with exactly same rates and states, traversing a single
 bottleneck link.  In this paper, we extend it to account for flows with
 different rates and states.  Instead of having variables that are shared by all
 flows, we model each flow individually. The model is shown in
-Tables~\ref{tab:dcqcn_var} and \ref{tab:dcqcn_param} and
-Figure~\ref{fig:dcqcn_model}.
+Figure~\ref{fig:dcqcn_model} and Table~\cite{tab:dcqcn_varparm}.
 
-The model assumes that DCQCN is triggered before PFC, and hence
-ignores the impact of PFC. Equation~\ref{eq:mark} calculates the probability of
-a packet getting marked.  Equation~\ref{eq:q} describes the queue behavior.
+The model assumes that DCQCN is triggered before PFC, and hence ignores the
+impact of PFC. Equation~\ref{eq:mark} calculates the probability of a packet
+getting marked.  Equation~\ref{eq:q} describes the queue behavior.
 Equation~\ref{eq:alpha} captures the evolution of alpha.  Equations~\ref{eq:rt}
 and \ref{eq:rc} describe the calculation of target and sending rate,
 respectively. 
+
 \begin{figure}[t]
 \fbox 
 {
@@ -60,31 +60,20 @@ p(t) = \left\{ \begin{array}{ll}
 \caption{DCQCN fluid model}
 \label{fig:dcqcn_model}
 \end{figure}
-\begin{table}[t]
+\begin{table}
 \center
 {
 \footnotesize
 {
-\begin{tabular}{|c|c|} \hline
-Variable & Description \\ \hline
+\begin{tabular}{|c|c|}
+\multicolumn{2}{l}{\bf Variables} \\ \hline
 $R_c$ & Current Rate \\ \hline
 $R_t$ & Target Rate \\ \hline
 $\alpha$ & See Equation (\ref{eq:rp_dec}) \\ \hline
 $q$ & Queue Size \\ \hline
 $t$ & Time \\ \hline
-\end{tabular}
-}
-}
-\caption{DCQCN Fluid model variables}
-\label{tab:dcqcn_var}
-\end{table}
-\begin{table}[t]
-\center
-{
-\footnotesize
-{
-\begin{tabular}{|c|c|} \hline
-Parameter & Description \\ \hline
+\multicolumn{2}{c}{} \\
+\multicolumn{2}{l}{\bf Parameters} \\ \hline
 $K_{min}, K_{max}, P_{max}$ & RED marking parameters. \\ \hline
 $g$ & See Equation (\ref{eq:rp_dec}) \\ \hline
 $N$ & Number of flows at bottleneck\\ \hline
@@ -98,8 +87,8 @@ $\tau '$ & Interval of Equation (\ref{eq:rp_alpha_recover})\\ \hline
 \end{tabular}
 }
 }
-\caption{DCQCN Fluid model parameters}
-\label{tab:dcqcn_param}
+\caption{DCQCN Fluid model variables and parameters}
+\label{tab:dcqcn_varparam}
 \end{table}
 
 \para{Model Validation:}
