@@ -260,8 +260,8 @@ function p = CalculatePUsingPI(t, q)
     %pold = p;
 
     p = a*(q - qref) - b*(qold - qref) + pold;
-    pold = p;
     p = min(max(p, 0), 1);
+    pold = p;
     qold  = q;
 end
 
