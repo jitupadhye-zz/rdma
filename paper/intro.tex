@@ -17,7 +17,9 @@ For efficient operation, ROCEv2 needs to eliminate packet drops due to buffer
 overflow in switches and routers. This is achieved by enabling Priority Flow
 Control (PFC)~\cite{pfc}, and by using a suitable end-to-end congestion control
 protocol for individual flows. Recently, a number of congestion control
-protocols have been proposed for RDMA networks~\cite{tcp-bolt,dcqcn,timely}.  
+protocols have been proposed for RDMA
+networks~\cite{tcp-bolt,dcqcn,timely}.  \fixme{Do we need to say why
+  congestion control is needed on top of PFC or is that obvious to everyone?}
 
 % what we do.
 
