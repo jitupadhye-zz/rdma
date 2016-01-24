@@ -31,7 +31,7 @@ function sol = dcqcn2()
     %
     % simulation control.
     %
-    sim_step = 500e-6; % 5 microseconds.
+    sim_step = 50e-6; % 5 microseconds.
     options = ddeset('MaxStep', sim_step, 'RelTol', 1e-2, 'AbsTol', 1e-4);
     sim_length = 500e-3;
     numCalls = 0;
