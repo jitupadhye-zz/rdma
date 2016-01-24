@@ -1,12 +1,9 @@
-\subsection{Protocol}
-
-DCQCN is an end-to-end, rate-based congestion control protocol that uses
-ECN~\cite{ecn} markings as a congestion signal.  It combines elements of
-DCTCP~\cite{dctcp} and QCN~\cite{qcn}. DCQCN algorithm specifies behavior of
-three entities: the sender, which is called the reaction point (RP), the switch,
-which is called the congestion point (CP), and the receiver, which is called the
-notification point (NP). We now briefly describe the protocol; see~\cite{dcqcn}
-for more details.
+DCQCN is an end-to-end, rate-based congestion control protocol that relies on
+ECN~\cite{ecn}. It combines elements of DCTCP~\cite{dctcp} and QCN~\cite{qcn}.
+DCQCN algorithm specifies behavior of three entities: the sender (called the
+reaction point (RP)), the switch, (called the congestion point (CP)), and the
+receiver (called the notification point (NP)). We now briefly describe the
+protocol; see~\cite{dcqcn} for more details.
 
 \para{CP behavior:} At every egress queue, the arriving packet is
 ECN-marked~\cite{ecn} if the queue exceeds a threshold, using a
@@ -20,18 +17,30 @@ N microseconds, a CNP is generated immediately.
 \para{RP behavior:} Upon getting a CNP, the RP reduces its current rate ($R_C$)
 and updates the value of the rate reduction factor, $\alpha$, like DCTCP, and
 remembers current rate as target rate ($R_T$) for later recovery, as follows:
-\begin{equation} \small \begin{aligned} R_T &=& R_C,	\\ R_C &=& R_C (1 -
-\alpha/2),  \\ \alpha &=& (1-g)\alpha + g, \end{aligned} \label{eq:rp_dec}
-\end{equation} If RP gets no feedback for K time units, it updates $\alpha$, as
-shown in Equation (\ref{eq:rp_alpha_recover}). Note that $K$ must be larger than
-the CNP generation timer. Furthermore, RP increases its sending rate using a
-timer and a byte counter, in a manner identical to QCN~\cite{qcn}. The rate
-increases has two phases, five stages of so-called ``fast recovery'', where
-$R_c$ rapidly approaches $R_t$, and then a gradual additive increase.
-\begin{equation} \small \begin{aligned} \alpha &=& (1-g)\alpha, \end{aligned}
-\label{eq:rp_alpha_recover} \end{equation}
+\begin{equation} 
+\small 
+\begin{aligned} 
+R_T &=& R_C,	\\ 
+R_C &=& R_C (1 -\alpha/2),  \\ 
+\alpha &=& (1-g)\alpha + g, 
+\end{aligned} 
+\label{eq:rp_dec}
+\end{equation} 
+If RP gets no feedback for K time units, $\alpha$ is updated as:
+\begin{equation} 
+\small 
+\begin{aligned} 
+\alpha &=& (1-g)\alpha, 
+\end{aligned}
+\label{eq:rp_alpha_recover} 
+\end{equation}
 
-DCQCN is designed to maintain a low queue length, in order to avoid triggering
-PFC packets. DCQCN does not have slow start -- senders start at line rate, in
+Note that $K$ must be larger than the CNP generation timer. Furthermore, RP
+increases its sending rate using a timer and a byte counter, in a manner
+identical to QCN~\cite{qcn}. The rate increases has two phases, five stages of
+so-called ``fast recovery'', where $R_c$ rapidly approaches $R_t$, and then a
+gradual additive increase.
+
+Note that that DCQCN does not have slow start. Senders start at line rate, in
 order to optimize the common case of no congestion. DCQCN relies on hardware
 rate limiters for per-packet rate limiting. 

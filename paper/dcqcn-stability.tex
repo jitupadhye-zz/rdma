@@ -168,8 +168,8 @@ stabilizes regardless of the number of flows. However, when the delay is large
 and 64 flows. Figure~\ref{fig:dcqcn_unstable_ns} confirms that we observe the
 same instability in packet-level simulations.
 
-While this problem may not particularly serious in practice, it is relatively
-easy to fix by tuning the values of $R_{AI}$ and $K_{max}$.  Smaller $R_{AI}$
+While this problem may not be particularly serious in practice, it can be easily 
+fixed by tuning the values of $R_{AI}$ and $K_{max}$.  Smaller $R_{AI}$
 means flows increase their rate more gently, and stabilizes the system.
 Similarly, larger $K_{max} - K_{min}$ makes rate decreasing more fine grained,
 because the perturbation of queue length leads to smaller marking probability

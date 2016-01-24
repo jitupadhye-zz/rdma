@@ -8,8 +8,9 @@
 
 In Section~\ref{sec:dcqcn_stability}, we showed that for reasonable parameter
 settings,  DCQCN is stable {\em after} flows converge to the unique fixed point.
-However, two questions remain unanswered: $(i)$ do flows always converge to the
-fair share, and $(ii)$ how fast do flows converge? 
+We also showed that at the fixed point, the flows share the bandwidth equally.
+However, two questions remain unanswered: $(i)$ do flows the always converge
+to this fixed point, and $(ii)$ how fast do flows converge? 
 
 We cannot answer these questions using the fluid model, so we construct and
 analyze a discrete model of the rate adjustment at the RP. The default parameter
@@ -22,7 +23,7 @@ likely to happen because the queue peak at the bottleneck leads to high marking
 probability for all flows. When the flow gets ECN marks at $T_k$, it reduces its
 rate in one unit of time, then starts multiple consecutive additive rate
 increases on $R_T^{(i)}$:\footnote{For simplicity, we omit hyper-increase and set 
-$R_T = R_C$ upon rate decrease. This works as a simplified version of QCN.}
+$R_T = R_C$ upon rate decrease. This is a simplified version of QCN.}
 
 \begin{equation}
 \small
@@ -43,7 +44,6 @@ R_T^{(i)}(t + 1) = R_T^{(i)}(t) + {R_{AI}}
 \label{ref:discrete_rt}
 \end{equation}
 
-
 By (\ref{ref:discrete_rc})-$\frac{1}{2}\times$(\ref{ref:discrete_rt}), we get:
 
 \begin{equation}
@@ -62,25 +62,20 @@ thus omitted for brevity}.
 %Also, due to DCQCN definition, we have $R_C^{(i)}({T_k} + 1) = R_T^{(i)}({T_k} + 1)$
 %as shown in Figure~\ref{fig:dcqcn_convergence}. 
 Therefore, we can safely approximate $R_T^{(i)}$ by:
-
 \begin{equation}
 \small
 R_T^{(i)}({T_k}) \approx R_C^{(i)}({T_k}) + {R_{AI}},\forall k = 1,2,...
 \end{equation}
-
 Back to Equation~\ref{eq:converge_rc}, we must further know $\alpha ^{(i)}({T_k})$ and $\Delta T_k$ to 
 analyze $R_C(T_k)$. During $\Delta T_k$, $\alpha ^{(i)}({T_k})$ has one increase event as Equation~\ref{eq:rp_dec},
 followed by $\Delta T_k - 1$ recover events as Equation~\ref{eq:rp_alpha_recover}:
-
 \begin{equation}
 \small
 {\alpha ^{(i)}}({T_{k + 1}}) = {(1 - g)^{\Delta {T_k} - 1}}\left( {(1 - g){\alpha ^{(i)}}({T_k}) + g} \right)
 \label{eq:converge_alpha}
 \end{equation}
-
 For another flow, {\em e.g.,} the $j$th flow, we can simply rewrite above equation by replacing 
 $(i)$ with $(j)$. We subtract the equation of $j$th flow from the equation of $i$th flow, we get:
-
 \begin{equation}
 \small
 \begin{array}{l}
@@ -89,7 +84,6 @@ $(i)$ with $(j)$. We subtract the equation of $j$th flow from the equation of $i
 \end{array}
 \label{eq:converge_alphaarray}
 \end{equation}
-
 This tells us the difference of $\alpha^{(i)}$ of different flows will quickly decrease exponentially. So $\alpha^{(i)}$
 of different flows will converge to the same value, and the converging speed is determined by $g$ and
 $\Delta T_k$. 
@@ -97,7 +91,6 @@ $\Delta T_k$.
 Once the $\alpha$ of different flows converge to the same value $\alpha(T_{k'})$ at some $T_{k'}$, we can show 
 the rates $R_C$ converge afterwards. We rewrite the $j$th flow's Equation~\ref{eq:converge_rc}, and subtract it 
 from Equation~\ref{eq:converge_rc}, we get:
-
 \begin{equation}
 \small
 \begin{array}{l}
@@ -106,35 +99,45 @@ R_C^{(i)}({T_{k + 1}}) - R_C^{(j)}({T_{k + 1}}) = \left( {1 - \frac{{\alpha ({T_
 \end{array}
 \label{eq:converge}
 \end{equation}
-
 As long as $\alpha ({T_k})$ has a lower bound that is greater than 0, the rates $R_C$ of different flows 
-converge exponentially. In Appendix, we prove that:
-
+converge exponentially. In Appendix~\ref{sec:alpha_proof}, we prove that:
 \begin{equation}
 \small
 \alpha ({T_0}) > ... > \alpha ({T_k}) > \alpha ({T_{k + 1}}) > ... > {\alpha ^*} > 0
 \label{eq:converge_alphastar}
 \end{equation}
-
 where $\alpha^{*}$ is the fixed point of the $\alpha$ array (Equation~\ref{eq:converge_alpha}),
 which is the solution of the following equation\footnote{${\Delta {T^*}}$ can be described by 
 $\alpha^{*}$ and DCQCN parameters, as shown in Appendix.}:
-
 \begin{equation}
 \small
 {\alpha ^*} = {(1 - g)^{\Delta {T^*}}}\left( {(1 - g){\alpha ^*} + g} \right)
 \end{equation}
-
 Equation~\ref{eq:converge_alphastar} concludes our proof. Combining Equation~\ref{eq:converge_rc}, 
 we know that $R_C$ is converging at the rate of at least $( {1 - \frac{{{\alpha ^{*}}}}{2}} )^k$, 
 $k$ is the number of AIMD cycles.
-
 
 \begin{figure}[t]
 \center
 \includegraphics[width=0.4\textwidth]{figures/dcqcn_convergence_time.eps}
 \caption{Upper bound on DCQCN convergence time under conservative assumptions}
 \label{fig:dcqcn_convergence_time}
+\end{figure}
+
+\begin{figure}[t]
+\subfigure[2 flows, plus one at 0.1]
+{
+\includegraphics[width=0.4\textwidth]{figures/dcqcn_converge_3.pdf}
+\label{fig:dcqcn_convergence_sim_3}
+}
+\subfigure[10 flows, plus one at 0.1]
+{
+\includegraphics[width=0.4\textwidth]{figures/dcqcn_converge_11.pdf}
+\label{fig:dcqcn_convergence_sim_11}
+}
+\center
+\caption{DCQCN convergence: simulation results}
+\label{fig:dcqcn_convergence_sim}
 \end{figure}
 
 \para{Convergence time.} We now derive an upper bound of DCQCN's flow
@@ -156,10 +159,9 @@ Equation~\ref{eq:converge}.  Second, we assume that the switch does not mark ECN
 until the queue length hits $K_{max}$, opposed to using RED. 
 
 The maximum possible difference between initial rates of two flows can at most
-be $C$ (i.e. one flow starts at 0, other flow starts at line rate). So, an upper bound on the
-convergence time is the time required for this difference to fall from $C$ to
-less than $\frac{0.1 \times C}{N}$. This is simply the smallest value of $x$
-that satisfies the following inequality: 
+be $C$. So, an upper bound on the convergence time is the time required for this
+difference to fall from $C$ to less than $\frac{0.1 \times C}{N}$. This is
+simply the smallest value of $x$ that satisfies the following inequality: 
 
 \begin{equation} 
 \small 
@@ -171,89 +173,23 @@ shown Figure~\ref{fig:dcqcn_convergence_time}. With default parameter settings,
 DCQCN converges within 100ms, and the convergenced time decreases quickly as the
 number of flow increases.  We have also calculated convergence time for a range
 of different values of $R_{AI}$, $K_{max}$ and $g$. Sample results are shown in
-Figure~\ref{fig:dcqcn_converge_time}. We found that convergence time is
+Figure~\ref{fig:dcqcn_convergence_time}. We found that convergence time is
 determined primarily $R_{AI}$, which is not surprising.
+
+We have verified these results with packet simulations. Sample results are shown
+in Figure~\ref{fig:dcqcn_convergence_sim}. In
+Figure~\ref{fig:dcqcn_convergence_sim_3}, we start two flows at 40Gbps, and let
+them stabilize. They stabilize to roughly 20Gbps, as expected. Then, at time
+0.1, we start the third flow, at 40Gbps. As we see, the three flows converge to
+13Gbps in well within 100ms. Figure~\ref{fig:dcqcn_convergence_sim_11} shows
+similar results, except that we start with 10 flows, and add an 11th flow at
+time 0.1.
+
 
 %Note that Figure~\ref{fig:dcqcn_converge_time}
 %is the upper bound of convergence time with conservative assumptions. 
 
 
-\subsubsection{Move the following to Appendix}
-
-Before we prove Equation~\ref{eq:converge_alphastar}, we need to have an estimation of 
-$\Delta T_k$ using $\alpha$. In the period of $\Delta T_k$, after the first time unit of rate 
-decreasing, the aggregated flow rates will climb back to $R_T(T_{k+1})$ by $NR_{AI}$ every time unit. 
-Thus we have:
-
-\begin{equation}
-\small\Delta {T_k} = 1 + \frac{{\sum\limits_{i = 1}^N {\left( {R_T^{(i)}({T_{k + 1}}) - \left( {1 - {\alpha ^{(i)}}({T_k})/2} \right)R_C^{(i)}({T_k})} \right)} }}{{N{R_{AI}}}}
-\end{equation}
-
-Suppose $\alpha^{(i)}({T_k})$ already converged to the same value $\alpha ({T_k})$, as guaranteed by
-Equation~\ref{eq:converge_alphaarray}, we can largely simplify it:
-
-\begin{equation}
-\small
-\begin{array}{l}
-\Delta {T_k} = 1 + \frac{{\sum\limits_{i = 1}^N {R_T^{(i)}({T_{k + 1}})}  - \left( {1 - \alpha ({T_k})/2} \right)\sum\limits_{i = 1}^N {R_C^{(i)}({T_k})} }}{{N{R_{AI}}}}\\
- \approx 1 + \frac{{\left( {C + tN{R_{AI}} + N{R_{AI}}} \right) - \left( {1 - \alpha ({T_k})/2} \right)\left( {C + tN{R_{AI}}} \right)}}{{N{R_{AI}}}}\\
- = 2 + \left( {\frac{t}{2} + \frac{C}{{2N{R_{AI}}}}} \right)\alpha ({T_k})
-\end{array}
-\label{eq:converge_tk}
-\end{equation}
-
-Where $t$ is the time it takes for the flows to build up queue and get packets ECN-marked, after
-the aggregated flow rates exceed link capacity $C$, as shown in Figure~\ref{fig:dcqcn_convergence}.
-We can estimate $t$ by the queue being built up:
-
-\begin{equation}
-\small
-\begin{array}{l}
-N\tau '\left( {{R_{AI}} + 2{R_{AI}} + ... + t{R_{AI}}} \right) = {Q_{ECN}} \le {K_{\max }}\\
- \Rightarrow t \le \left( { - 1 + \sqrt {1 + \frac{{8{K_{\max }}}}{{N{R_{AI}}\tau '}}} } \right)/2
-\end{array}
-\end{equation}
-
-Next, we will prove Equation~\ref{eq:converge_alphastar}.
-Once this is proved, $\alpha ({T_k})$ has a non-zero lower bound, $R_C$ will converge exponentially.
-We prove this by mathematical induction. First of all, the initial value of $\alpha$ is 1, as defined
-by DCQCN. So, $\alpha ({T_0}) > {\alpha ^*} > 0$. Now assuming $\alpha ({T_k}) > {\alpha ^*} > 0$, we 
-prove $\alpha ({T_k}) > \alpha ({T_{k+1}}) > {\alpha ^*}$. We define $f(\alpha)$ as the RHS of 
-Equation~\ref{eq:converge_alpha}:
-
-\begin{equation}
-\small
-f(\alpha ) = {(1 - g)^{2 + \left( {\frac{t}{2} + \frac{C}{{2N{R_{AI}}}}} \right)\alpha }}\left( {(1 - g)\alpha  + g} \right)
-\end{equation}
-
-By analyzing the derivative of $f(\alpha )$, it is not hard to see that with common parameter 
-settings, $f(\alpha )$ is monotonically increasing. Therefore, 
-
-\begin{equation}
-\small
-\alpha ({T_{k + 1}}) = f\left( {\alpha ({T_k})} \right) > f\left( {{\alpha ^*}} \right) = {\alpha ^*}
-\label{eq:appendix_left}
-\end{equation}
-
-In addition, because $\alpha ({T_k}) > {\alpha ^*} => \Delta {T_k} > \Delta {T^*}$, 
-$\alpha^{*}$ satisfies:
-
-\begin{equation}
-\small
-{\alpha ^*} > {(1 - g)^{\Delta {T_k}}}\left( {(1 - g){\alpha ^*} + g} \right)
-\end{equation}
-
-Subtract this from Equation~\ref{eq:converge_alpha}, we see $\alpha ({T_k})$ is exponentially 
-converging towards $\alpha ^*$:
-
-\begin{equation}
-\small
-\alpha ({T_{k + 1}}) - {\alpha ^*} < {(1 - g)^{\Delta {T_n}}}\left( {\alpha ({T_k}) - {\alpha ^*}} \right)
-\label{eq:appendix_right}
-\end{equation}
-
-Equation~\ref{eq:appendix_left} and~\ref{eq:appendix_right} lead to 
-${\alpha ^*} < \alpha ({T_{k + 1}}) < \alpha ({T_k})$. $\qed$
 
 
 
