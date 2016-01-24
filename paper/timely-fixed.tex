@@ -1,0 +1,54 @@
+\subsection {Patched TIMELY}
+
+
+In order to ensure the protocol has a unique fixed point, and all flows get fair share and are stable at the fixed point,
+we make two minor modifications over TIMELY.
+
+First, we make the step of rate decrease rely on absolute queue length, instead of the gradient of queue length. 
+This will ensure that there is only one fixed point for the queue length. In addition, all flow will have the same rate 
+because the queue length, which is shared across flows, can uniquely determine the rate of each flow. This is 
+similar to the use of ECN in DCQCN. The side effect is that, with different number of flows, the fixed point of 
+queue will be different.
+
+Second, we use a continuous weighting function $w(g)$ to make the transition between rate increase and rate decrease
+smooth. This avoids the on-off behavior that causes oscillation, and stabilizes the protocol at the fixed point. 
+This is similar to the fact that probabilistic ECN marking stabilizes TCP, QCN and DCQCN. With $w(g)$, we combine 
+the two conditions of $g \le 0$ and $g>0$ in the $dR(t)/dt$ equation:
+
+
+\begin{equation}
+\small
+\frac{{dR_i}}{{dt}} = \left\{ \begin{array}{ll}
+\frac{\delta }{{\tau *}}, & q(t - \tau ') < C*{T_{low}}\\
+\frac{{(1 - {w_i})\delta }}{{\tau *}} - \frac{{{w_i}\beta {R_i}(t)}}{{\tau *}}\frac{{q(t - \tau ') - q'}}{{q'}}, & Otherwise\\
+ - \frac{\beta }{{\tau *}}(1 - \frac{{C*{T_{high}}}}{{q(t - \tau ')}})R_i(t), & q(t - \tau ') > C*{T_{high}}
+\end{array} \right.\\
+\label{eq:timely_fixed}
+\end{equation}
+
+where $w_i$, the weight of rate decreasing, is a function of $g_i$, and must satisfy $0 \le w_i(g_i) le 1$ for any $g$. 
+Intuitively, $w_i(g_i)$ is monotonically increasing with $g_i$, because larger RTT gradient should lead to larger 
+weight of rate decreasing. In original TIMELY protocol, $w_i(g_i)$ is an indicator function of $g_i$, {\em i.e.,} 
+$w_i(g_i)=1$ when $g \le 0$, and $w_i(g_i)=0$ when $g<0$. Here we simply use a linear function of $g_i$ for $w_i$:
+
+\begin{equation}
+\small
+{w_i} = \left\{ \begin{array}{ll}
+0, & {g_i \le  - \frac{1}{4}} \\
+2{g_i} + \frac{1}{2}, & { - \frac{1}{4} < g_i < \frac{1}{4}} \\
+1, & {g_i \ge \frac{1}{4}}
+\end{array} \right.
+\end{equation}
+
+In Equation~\ref{eq:timely_fixed}, $q'$ is a reference queue length. We simply set it as $C*T_{low}$, 
+so that we decrease the rate harsher if the queue length exceeds more than $C*T_{low}$. All the TIMELY
+parameters remain the same except we set $\beta=0.008$ and $Seg=16KB$. 
+
+With these minor modifications, it is not hard to see that TIMELY now has a unique fixed point, and all
+flows have fair share $C/N$ at the fixed point. As shown in Figure TODO, flows with different initial rates
+converge to the fixed point and are stable without oscillation. We use the same technique as analyzing
+DCQCN stability, {\em i.e.,} linearize the equations, Laplace transform and compute the phase margin 
+of its characteristic equation. This patched TIMELY is stable when the number of flows is less 
+than X (Figure TODO). It is hard to stabilize with more flows because more flows lead to large 
+queue size, thus larger feedback delay (see Equation~\ref{eq:timely_taup}). However, with proper parameter
+tuning, TIMELY can still be stable within a reasonable range of number of flows.
