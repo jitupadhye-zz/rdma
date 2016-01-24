@@ -1,0 +1,63 @@
+\section*{Appendix A: Proof of convergence}
+\label{sec:alpha_proof}
+To prove Equation~\ref{eq:converge_alphastar}, we need to estimate $\Delta T_k$
+using $\alpha$. In the period of $\Delta T_k$, after the first time unit of rate
+decrease, the aggregated flow rates will climb back to $R_T(T_{k+1})$ by
+$NR_{AI}$ every time unit.  Thus we have:
+
+\begin{equation}
+\small\Delta {T_k} = 1 + \frac{{\sum\limits_{i = 1}^N {\left( {R_T^{(i)}({T_{k + 1}}) - \left( {1 - {\alpha ^{(i)}}({T_k})/2} \right)R_C^{(i)}({T_k})} \right)} }}{{N{R_{AI}}}}
+\end{equation}
+Suppose $\alpha^{(i)}({T_k})$ already converged to the same value $\alpha ({T_k})$, as guaranteed by
+Equation~\ref{eq:converge_alphaarray}. We simplify it as:
+\begin{equation}
+\small
+\begin{array}{l}
+\Delta {T_k} = 1 + \frac{{\sum\limits_{i = 1}^N {R_T^{(i)}({T_{k + 1}})}  - \left( {1 - \alpha ({T_k})/2} \right)\sum\limits_{i = 1}^N {R_C^{(i)}({T_k})} }}{{N{R_{AI}}}}\\
+ \approx 1 + \frac{{\left( {C + tN{R_{AI}} + N{R_{AI}}} \right) - \left( {1 - \alpha ({T_k})/2} \right)\left( {C + tN{R_{AI}}} \right)}}{{N{R_{AI}}}}\\
+ = 2 + \left( {\frac{t}{2} + \frac{C}{{2N{R_{AI}}}}} \right)\alpha ({T_k})
+\end{array}
+\label{eq:converge_tk}
+\end{equation}
+Where $t$ is the time it takes for the flows to build up queue and get packets ECN-marked, after
+the aggregated flow rates exceed link capacity $C$, as shown in Figure~\ref{fig:dcqcn_convergence}.
+We can estimate $t$ by the queue being built up:
+\begin{equation}
+\small
+\begin{array}{l}
+N\tau '\left( {{R_{AI}} + 2{R_{AI}} + ... + t{R_{AI}}} \right) = {Q_{ECN}} \le {K_{\max }}\\
+ \Rightarrow t \le \left( { - 1 + \sqrt {1 + \frac{{8{K_{\max }}}}{{N{R_{AI}}\tau '}}} } \right)/2
+\end{array}
+\end{equation}
+Now, we rove Equation~\ref{eq:converge_alphastar}.
+Once this is proved, $\alpha ({T_k})$ has a non-zero lower bound, $R_C$ will converge exponentially.
+We prove this by mathematical induction. The initial value of $\alpha$ is 1, as defined
+by DCQCN. So, $\alpha ({T_0}) > {\alpha ^*} > 0$. Now assuming $\alpha ({T_k}) > {\alpha ^*} > 0$, we 
+prove $\alpha ({T_k}) > \alpha ({T_{k+1}}) > {\alpha ^*}$. We define $f(\alpha)$ as the RHS of 
+Equation~\ref{eq:converge_alpha}:
+\begin{equation}
+\small
+f(\alpha ) = {(1 - g)^{2 + \left( {\frac{t}{2} + \frac{C}{{2N{R_{AI}}}}} \right)\alpha }}\left( {(1 - g)\alpha  + g} \right)
+\end{equation}
+By analyzing the derivative of $f(\alpha )$, it is not hard to see that with common parameter 
+settings, $f(\alpha )$ is monotonically increasing. Therefore, 
+\begin{equation}
+\small
+\alpha ({T_{k + 1}}) = f\left( {\alpha ({T_k})} \right) > f\left( {{\alpha ^*}} \right) = {\alpha ^*}
+\label{eq:appendix_left}
+\end{equation}
+In addition, because $\alpha ({T_k}) > {\alpha ^*} => \Delta {T_k} > \Delta {T^*}$, 
+$\alpha^{*}$ satisfies:
+\begin{equation}
+\small
+{\alpha ^*} > {(1 - g)^{\Delta {T_k}}}\left( {(1 - g){\alpha ^*} + g} \right)
+\end{equation}
+Subtract this from Equation~\ref{eq:converge_alpha}, we see $\alpha ({T_k})$ is exponentially 
+converging towards $\alpha ^*$:
+\begin{equation}
+\small
+\alpha ({T_{k + 1}}) - {\alpha ^*} < {(1 - g)^{\Delta {T_n}}}\left( {\alpha ({T_k}) - {\alpha ^*}} \right)
+\label{eq:appendix_right}
+\end{equation}
+Equation~\ref{eq:appendix_left} and~\ref{eq:appendix_right} lead to 
+${\alpha ^*} < \alpha ({T_{k + 1}}) < \alpha ({T_k})$. $\qed$
