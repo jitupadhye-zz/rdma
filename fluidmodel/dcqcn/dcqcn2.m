@@ -33,18 +33,18 @@ function sol = dcqcn2()
     %
     sim_step = 50e-6; % 5 microseconds.
     options = ddeset('MaxStep', sim_step, 'RelTol', 1e-2, 'AbsTol', 1e-4);
-    sim_length = 500e-3;
+    sim_length = 1000e-3;
     numCalls = 0;
     
     % !!!!!!
     % All quantities (rates, buffers, queues etc.) are specified in units of packet size. The reason
-    % is that the probability calculations are per packet.b
+    % is that the probability calculations are per packet.
     % !!!!
     
     %
     % Fixed parameters.
     %
-    packetSize = 4e3;
+    packetSize = 8e3;
     C = 40e9/packetSize;   % 40Gbps. Link speed.
     
     % PI parameters
@@ -352,7 +352,7 @@ function PlotSol(t, q, rates, sim_length, numFlows)
     subplot(2,1,2);
     plot(t,q.*packetSize/8e3)
     hold on
-    axis([0 sim_length 0 1000])
+    axis([0 sim_length 0 5000])
     xlabel('Time (seconds)')
     ylabel('Queue (KBytes)')
 end
