@@ -16,23 +16,23 @@ The system described in Figure~(\ref{fig:timely_model}), has no fixed points.
 \begin{proof}
 We prove the result by contradiction. At the fixed point, all
 differential equations converge to 0. Thus:
-\begin{equation*}
+\begin{equation}
 \small
 {dq}/{dt} = 0 \; \; \mbox{and} \; \;  \sum_{i} R_i(t) =  C
-\end{equation*}  and 
+\end{equation} 
 Now, either $g > 0$ or $g  \le 0$. If $g \ne 0$, then:
-\begin{eqnarray*}
+\begin{equation}
 \small
-\frac{{dg}}{{dt}} & = & \frac{\alpha }{{\tau *}}( - g(t) + \frac{{q(t
+\frac{{dg}}{{dt}} =  \frac{\alpha }{{\tau *}}( - g(t) + \frac{{q(t
                         - \tau ') - q(t - \tau ' - \tau
                         *)}}{{C*{D_{\min RTT}}}})\\
-& = &  -\frac{\alpha }{{\tau *}} g(t)  \ne  0 
-\end{eqnarray*}
+ =   -\frac{\alpha }{{\tau *}} g(t)  \ne  0
+\end{equation}
 Thus, $g$ is zero for $dg/dt$ to be zero. But then:
-\begin{equation*}
+\begin{equation}
 \small
 {dR_i}/{dt} =  {\delta }/{{\tau *}} \ne 0
-\end{equation*}
+\end{equation}
 Thus, all derivatives cannot be simultaneously 0 and thus the system has no fixed
 point.
 \end{proof}
@@ -131,13 +131,12 @@ Instead, we propose a simple fix to the TIMELY algorithm, that solves the
 problem to a large extent.
 
 \begin{figure}[t]
-\center
 \subfigure[Two flows starting at 7 and 3Gbps, 16KB burst] { 
-\includegraphics[width=0.4\textwidth]{figures/2f73burst16.pdf}
+\includegraphics[width=0.47\columnwidth]{figures/2f73burst16.pdf}
 \label{fig:timely_burst_73_16}
 }
 \subfigure[Two flows starting at 5Gbps, 64KB burst] { 
-\includegraphics[width=0.4\textwidth]{figures/timely_bursty_64_rate.pdf}
+\includegraphics[width=0.47\columnwidth]{figures/timely_bursty_64_rate.pdf}
 \label{fig:timely_burst_55_64}
 }
 \caption{TIMELY with bursts}

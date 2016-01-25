@@ -26,7 +26,7 @@ the two conditions of $g \le 0$ and $g>0$ in the $dR(t)/dt$ equation:
 \label{eq:timely_fixed}
 \end{equation}
 
-where $w_i$, the weight of rate decreasing, is a function of $g_i$, and must satisfy $0 \le w_i(g_i) le 1$ for any $g$. 
+where $w_i$, the weight of rate decreasing, is a function of $g_i$, and must satisfy $0 \le w_i(g_i) \le 1$ for any $g$. 
 Intuitively, $w_i(g_i)$ is monotonically increasing with $g_i$, because larger RTT gradient should lead to larger 
 weight of rate decreasing. In original TIMELY protocol, $w_i(g_i)$ is an indicator function of $g_i$, {\em i.e.,} 
 $w_i(g_i)=1$ when $g \le 0$, and $w_i(g_i)=0$ when $g<0$. Here we simply use a linear function of $g_i$ for $w_i$:
@@ -44,13 +44,13 @@ In Equation~\ref{eq:timely_fixed}, $q'$ is a reference queue length. We simply s
 so that we decrease the rate harsher if the queue length exceeds more than $C*T_{low}$. All the TIMELY
 parameters remain the same except we set $\beta=0.008$ and $Seg=16KB$. 
 
-\begin{thm}[Unique fixed point.]
+\begin{thm}[Patched TIMELY's Unique fixed point.]
 The system described in Equation~\ref{eq:timely_fixed} has a unique fixed point.
 \end{thm}
 \begin{proof}
 Let the LHS of Equation~\ref{eq:timely_g} be 0, and $q(t - \tau ') - q(t - \tau ' - \tau *) = 0$ at the fixed 
 point, we know $g_i^*=0$. Thus, $w_i^*=0.5$. Let the LHS of Equation~\ref{eq:timely_fixed} be 0. Because
-all flows share the same $q(t - \tau ')$, we have:
+all flows share the same queue length $q^*$, we have:
 
 \begin{equation}
 \small
@@ -60,12 +60,20 @@ R_1^* = R_2^* = ... = R_N^*
 The sum of all flow rates must be $C$ at the fixed point, therefore each flow has fair share $C/N$. 
 \end{proof}
 
+In addition, we can easily obtain the fixed point of queue length:
+\begin{equation}
+\small
+{q^*} = \frac{{N{R_{AI}}q'}}{{\beta C}} + q'
+\label{eq:timely_fixed_q}
+\end{equation}
+
 As shown in Figure TODO, flows with different initial rates converge to the fixed point and are 
 stable without oscillation. 
 
 \para{Stability.} We use the same technique as analyzing
 DCQCN stability, {\em i.e.,} linearize the equations, Laplace transform and compute the phase margin 
-of its characteristic equation. This patched TIMELY is stable when the number of flows is less 
-than X (Figure TODO). It is hard to stabilize with more flows because more flows lead to large 
-queue size, thus larger feedback delay (see Equation~\ref{eq:timely_taup}). However, with proper parameter
-tuning, TIMELY can still be stable within a reasonable range of number of flows.
+of its characteristic equation. The phase margin result shows this system is stable when the number of 
+flows is less than 40. The phase margin falls below 0 rapidly because more flows lead to large 
+queue size (see Equation~\ref{eq:timely_fixed_q}), thus larger feedback delay (see Equation~\ref{eq:timely_taup}). 
+This leads to system instability. We conclude that with some minor tuning, TIMELY can be stable 
+within a range of number of flows.

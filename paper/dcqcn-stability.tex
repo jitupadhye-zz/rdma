@@ -2,19 +2,20 @@
 \label{sec:dcqcn_stability}
 
 \begin{figure*}[t]
+\center
 \subfigure[Default parameters ($R_{AI}=40Mbps$, $K_{max}=200KB$).]
 {
-\includegraphics[width=0.33\textwidth]{figures/dcqcn_stability.eps}
+\includegraphics[width=0.3\textwidth]{figures/dcqcn_stability.eps}
 \label{fig:dcqcn_stability_default}
 }
 \subfigure[$R_{AI}=10Mbps$.]
 {
-\includegraphics[width=0.33\textwidth]{figures/dcqcn_stability_rai.eps}
+\includegraphics[width=0.3\textwidth]{figures/dcqcn_stability_rai.eps}
 \label{fig:dcqcn_stability_rai}
 }
 \subfigure[$R_{AI}=10Mbps$ and $K_{max}=1000KB$.]
 {
-\includegraphics[width=0.33\textwidth]{figures/dcqcn_stability_rai_kmax.eps}
+\includegraphics[width=0.3\textwidth]{figures/dcqcn_stability_rai_kmax.eps}
 \label{fig:dcqcn_stability_rai_kmax}
 }
 \caption{DCQCN stability}
@@ -22,11 +23,13 @@
 \end{figure*}
 To analyze stability, we first obtain the fixed point of the system, and then
 linearize the model around the fixed point. We analyze the linearized model for
-stability using classical frequency domain techniques~\cite{controltheory}.  We
-begin by showing that DCQCN has a unique fixed point at which all flows converge
-to the same rate. 
+stability using classical frequency domain techniques~\cite{controltheory}.  
 
-\para{Fixed point:} By setting the left-hand side of Equation~\ref{eq:q} to 0,
+\begin{thm}[DCQCN's unique fixed point]
+A unique fixed point exists for DCQCN. At this fixed point, all flows converge to the same rate. 
+\end{thm}
+\begin{proof}
+By setting the left-hand side of Equation~\ref{eq:q} to 0,
 it is easy to see that any fixed points of the DCQCN (if they exist) must
 satisfy:
 \begin{equation}
@@ -94,6 +97,7 @@ R_C^{(1)*} = R_C^{(2)*} = ... = R_C^{(N)*}
 Combining this with Equation~\ref{eq:fixedrc}, proves that there is only one
 unique fixed point, at which $R_C^{(i)*} = \frac{C}{N}$, $i = 1, 2, ..., N$ and
 $p^*$ is given by Equation~\ref{eq:fixedp}.
+\end{proof}
 
 \para{Stability analysis.} 
 We linearize the system by denoting $\delta {R_C}(t) = {R_C}(t) - R_C^*$,
@@ -147,12 +151,46 @@ margin is larger than 0.
 \caption{Impact of delay and number of flows on DCQCN stability}
 \label{fig:dcqcn_unstable}
 \end{figure}
-\begin{figure}[t]
-\center
-\includegraphics[width=0.4\textwidth]{figures/stable_queue_85_ns.pdf}
+
+
+
+\begin{figure*}[t]
+\centering
+\mbox{
+\begin{minipage}{0.31\textwidth}
+\includegraphics[width=0.99\columnwidth]{figures/stable_queue_85_ns.pdf}
+\vspace{-1em}
 \caption{NS simulations confirm lack of stability}
+\vspace{-1em}
 \label{fig:dcqcn_unstable_ns}
-\end{figure}
+\end{minipage}
+\hspace{0.02in}
+
+\begin{minipage}{0.37\textwidth}
+\includegraphics[width=0.99\columnwidth]{figures/dcqcn_convergence.eps}
+\vspace{-1em}
+\caption{DCQCN flow rate update.}
+\vspace{-1em}
+\label{fig:dcqcn_convergence}
+\end{minipage}
+\hspace{0.02in}
+
+\begin{minipage}{0.31\textwidth}
+\includegraphics[width=0.99\columnwidth]{figures/dcqcn_convergence_time.eps}
+\vspace{-1em}
+\caption{Upper bound on DCQCN convergence time under conservative assumptions}
+\vspace{-1em}
+\label{fig:dcqcn_convergence_time}
+\end{minipage}
+}
+\end{figure*}
+
+%\begin{figure}[t]
+%\center
+%\includegraphics[width=0.4\textwidth]{figures/stable_queue_85_ns.pdf}
+%\caption{NS simulations confirm lack of stability}
+%\label{fig:dcqcn_unstable_ns}
+%\end{figure}
 
 Curiously, unlike TCP, the relationship between number of flows and the phase
 margin is non-monotonic. When the delay is large, {\em e.g., 100$\mu$s}, the
