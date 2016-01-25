@@ -15,41 +15,32 @@ The system described in Figure~(\ref{fig:timely_model}), has no fixed points.
 \end{thm}
 \begin{proof}
 We prove the result by contradiction. At the fixed point, all
-differential equations converge to 0. Thus
+differential equations converge to 0. Thus:
 \begin{equation*}
+\small
 {dq}/{dt} = 0 \; \; \mbox{and} \; \;  \sum_{i} R_i(t) =  C
 \end{equation*}  and 
-Now, , either $g > 0$ or $g  \le 0$. If $g \ne 0$, then since 
+Now, either $g > 0$ or $g  \le 0$. If $g \ne 0$, then:
 \begin{eqnarray*}
+\small
 \frac{{dg}}{{dt}} & = & \frac{\alpha }{{\tau *}}( - g(t) + \frac{{q(t
                         - \tau ') - q(t - \tau ' - \tau
                         *)}}{{C*{D_{\min RTT}}}})\\
-& = &  -\frac{\alpha }{{\tau *}} g(t)  \\
-& \ne & 0 
+& = &  -\frac{\alpha }{{\tau *}} g(t)  \ne  0 
 \end{eqnarray*}
-If $g$ must be zero for $dg/dt$ to be zero. But then:
+Thus, $g$ is zero for $dg/dt$ to be zero. But then:
 \begin{equation*}
+\small
 {dR_i}/{dt} =  {\delta }/{{\tau *}} \ne 0
 \end{equation*}
 Thus, all derivatives cannot be simultaneously 0 and thus the system has no fixed
 point.
 \end{proof}
 
-% In fixed point analysis, we identify the point at which the derivatives of the
-% various quantities in the fluid model become 0.  Setting $\tfrac{dq}{dt} = 0$,
-% we obtain $\sum_{i} R_i(t) = C$. Next, we have two possibilities, either $g > 0$
-% or $g  \le 0$. If $g$ takes a non-zero value, then $\tfrac{dg}{dt}$ cannot be 0,
-% as the second term in Equation~\ref{eq:timely_g} needs to be 0 for
-% $\tfrac{dq}{dt}$ to be 0. Thus, we require $g$ to be 0 at the fixed point.
-% However, from Equation~\ref{eq:timely_r}, we see that if $g = 0$,
-% $\tfrac{dR_i}{dt}$ \emph{cannot} be 0 since $\delta$ is not 0. Thus, from the
-% protocol description, the fluid model has no fixed points as the derivatives
-% cannot be simultaneously 0 and thus the (fluid) system never stabilizes to any
-% value.
 If we modify the fluid model very slightly, by moving the equality condition to
 the term involving $g$, we get:
-
 \begin{equation}
+\small
 \frac{{dR_i}}{{dt}} = \left\{ \begin{array}{ll}
 \frac{\delta }{{\tau *}}, & q(t - \tau ') < C*{T_{low}}\\
 \frac{\delta }{{\tau *}}, & g < 0\\
@@ -152,8 +143,3 @@ problem to a large extent.
 \caption{TIMELY with bursts}
 \label{fig:timely_sim_bursty}
 \end{figure}
-
-
-
-
-
