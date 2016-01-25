@@ -125,26 +125,29 @@ $k$ is the number of AIMD cycles.
 \end{figure}
 
 \begin{figure}[t]
-\subfigure[2 flows, plus one at 0.1]
+\center
+\subfigure[]
 {
-\includegraphics[width=0.4\textwidth]{figures/dcqcn_converge_3.pdf}
+\includegraphics[width=0.35\textwidth]{figures/dcqcn_converge_3.pdf}
 \label{fig:dcqcn_convergence_sim_3}
 }
-\subfigure[10 flows, plus one at 0.1]
+\subfigure[]
 {
-\includegraphics[width=0.4\textwidth]{figures/dcqcn_converge_11.pdf}
+\includegraphics[width=0.35\textwidth]{figures/dcqcn_converge_11.pdf}
 \label{fig:dcqcn_convergence_sim_11}
 }
-\center
+\subfigure[]
+{
+\includegraphics[width=0.35\textwidth]{figures/dcqcn_converge_3rai.pdf}
+\label{fig:dcqcn_convergence_sim_3rai}
+}
 \caption{DCQCN convergence: simulation results}
 \label{fig:dcqcn_convergence_sim}
 \end{figure}
 
-\para{Convergence time.} We now derive an upper bound of DCQCN's flow
-convergence time under certain conservative assumptions. 
-
-In the above analysis, the convergence has two phases: 1) $\alpha ^{(i)}$
-converge to the same value (not necessarily at $\alpha^*$); 2) $R_C^{(i)}$
+\para{Convergence time.} 
+In the above analysis, the convergence has two phases: (1) $\alpha ^{(i)}$
+converge to the same value (not necessarily at $\alpha^*$); (2) $R_C^{(i)}$
 converge along with $\alpha \to \alpha^*$.  In practice, the flows that
 encounter congestion for the first time all have the same initial value of 1.
 Therefore, we mainly focus on the second phase. We define the system as having
@@ -181,9 +184,12 @@ in Figure~\ref{fig:dcqcn_convergence_sim}. In
 Figure~\ref{fig:dcqcn_convergence_sim_3}, we start two flows at 40Gbps, and let
 them stabilize. They stabilize to roughly 20Gbps, as expected. Then, at time
 0.1, we start the third flow, at 40Gbps. As we see, the three flows converge to
-13Gbps in well within 100ms. Figure~\ref{fig:dcqcn_convergence_sim_11} shows
-similar results, except that we start with 10 flows, and add an 11th flow at
-time 0.1.
+13Gbps in well within 100ms. Figure~\ref{fig:dcqcn_convergence_sim_3rai} shows
+similar results, except that we use a lower value of $R_{AI}$. As expected, it
+takes longer for the flows to converge. In
+Figure~\ref{fig:dcqcn_convergence_sim_11} we start with 10 flows, and add an
+11th flow at time 0.1. The convergecne time is lower as the the number of flows
+is higher.
 
 
 %Note that Figure~\ref{fig:dcqcn_converge_time}
