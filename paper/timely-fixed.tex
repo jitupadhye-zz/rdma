@@ -44,9 +44,26 @@ In Equation~\ref{eq:timely_fixed}, $q'$ is a reference queue length. We simply s
 so that we decrease the rate harsher if the queue length exceeds more than $C*T_{low}$. All the TIMELY
 parameters remain the same except we set $\beta=0.008$ and $Seg=16KB$. 
 
-With these minor modifications, it is not hard to see that TIMELY now has a unique fixed point, and all
-flows have fair share $C/N$ at the fixed point. As shown in Figure TODO, flows with different initial rates
-converge to the fixed point and are stable without oscillation. We use the same technique as analyzing
+\begin{thm}[Unique fixed point.]
+The system described in Equation~\ref{eq:timely_fixed} has a unique fixed point.
+\end{thm}
+\begin{proof}
+Let the LHS of Equation~\ref{eq:timely_g} be 0, and $q(t - \tau ') - q(t - \tau ' - \tau *) = 0$ at the fixed 
+point, we know $g_i^*=0$. Thus, $w_i^*=0.5$. Let the LHS of Equation~\ref{eq:timely_fixed} be 0. Because
+all flows share the same $q(t - \tau ')$, we have:
+
+\begin{equation}
+\small
+R_1^* = R_2^* = ... = R_N^*
+\end{equation}
+
+The sum of all flow rates must be $C$ at the fixed point, therefore each flow has fair share $C/N$. 
+\end{proof}
+
+As shown in Figure TODO, flows with different initial rates converge to the fixed point and are 
+stable without oscillation. 
+
+\para{Stability.} We use the same technique as analyzing
 DCQCN stability, {\em i.e.,} linearize the equations, Laplace transform and compute the phase margin 
 of its characteristic equation. This patched TIMELY is stable when the number of flows is less 
 than X (Figure TODO). It is hard to stabilize with more flows because more flows lead to large 
