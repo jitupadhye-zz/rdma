@@ -1,0 +1,24 @@
+\section{Discussion}
+
+We next prove another result that gives a fundamental tradeoff between
+fairness and guaranteed delay for protocols that
+rely on delay measurements at the end points to implement congestion
+control.
+\begin{thm}[Fairness/Delay tradeoff]
+For congestion control mechanisms that relay purely on end to end
+delay measurements, you can either have fairness or a guaranteed delay
+bound, but not both simultaneously.
+\end{thm}
+\begin{proof}
+Suppose you have N flows sharing a link of capacity $C$. Then every flow
+should distributedly arrive at a rate $C/N$ and the flows need to know
+this $N$. If we use end to end delay as the only signal, then this delay
+has to carry information about $N$ and hence the converged delay
+depends on $N$ and cannot be guaranteed independently. Conversely, if we implement a guaranteed delay congestion
+control scheme at the end points, they
+will converge to any rate $R_i$ such that $\sum_{i=0}^{N}R_i = C$
+making the derivative of measured delay 0 and the actual delay equal
+to the guarantee. Since the guarantee is set independent of $N$, the
+actual delay contains no information on N and 
+thus such a scheme cannot ensure fairness.
+\end{proof}

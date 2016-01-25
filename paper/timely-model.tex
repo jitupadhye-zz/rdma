@@ -1,12 +1,9 @@
 \subsection{Model}
 
-We have developed a fluid model of TIMELY, as shown in
-Tables~\ref{tab:timely_var} and \ref{tab:timely_param} and
-Figure~\ref{fig:timely_model}.  The model considers N flows, traversing a single
-bottleneck link. The model assumes that TIMELY is triggered
-before\footnote{Unlike~\cite{dcqcn}, ~\cite{timely} does not specify how to set
-buffers to ensure this, but we assume that it can be done.} PFC, and hence
-ignores the impact of PFC.
+Our fluid model of TIMELY is shown in Table~\ref{tab:timely_varparam} and
+Figure~\ref{fig:timely_model}. Like the DCQCN fluid model, $(i)$ we model N
+flows, traversing a single bottleneck link, and $(ii)$ and ignore the impact of
+PFC. 
 
 Equation~\ref{eq:timely_q} describes the queue behavior.
 Equation~\ref{eq:timely_r} describes rate computation. For simplicity, we ignore
@@ -19,35 +16,33 @@ previous RTT sample, it depends on two queue lengths in past: one at time $t -
 depend on past transmission rates, but to simplify the model, we approximate
 their calculation as shown in Equations~\ref{eq:timely_taus} and
 \ref{eq:timely_taup}.  Equation~\ref{eq:timely_taus} captures the fact that the
-TIMELY implementation updates rate at most once per $D_{minRTT}$.
+TIMELY implementation gets RTT feedback once per burst, and rate updates are
+scaled by $D_{minRTT}$ to ensure that rate update frequency is limited (See
+Section 5 of ~\cite{timely}).
+
+Note that the fluid model (by its very nature) essentially assumes smooth and
+continuous transmission of data. The TIMELY implementation is more bursty, since
+rate is adjusted by modulating gaps between transmission of 16 or 64KB chunks;
+while the chunks themselves are sent at near-line rate~\cite{timely-private}.
+TIMELY designers made this decision for engineering reasons - they wanted to
+avoid taking dependence on hardware rate limiters.  We will return to this point
+later.
 
 \begin{table}[t]
 \center
 {
 \footnotesize
 {
-\begin{tabular}{|c|c|} \hline
-Variable & Description \\ \hline
+\begin{tabular}{|c|c|}
+\multicolumn{2}{l}{\bf Variables} \\ \hline
 $R$ & Rate \\ \hline
 $g$ & RTT gradient\\ \hline
 $q$ & Queue Size \\ \hline
 $t$ & Time \\ \hline
 $\tau*$ & Rate update interval \\ \hline
 $\tau'$ & Feedback delay \\ \hline
-\end{tabular}
-}
-}
-\caption{TIMELY Fluid model variables}
-\label{tab:timely_var}
-\end{table}
-
-\begin{table}[t]
-\center
-{
-\footnotesize
-{
-\begin{tabular}{|c|c|} \hline
-Parameter & Description \\ \hline
+\multicolumn{2}{c}{} \\
+\multicolumn{2}{l}{\bf Parameters} \\ \hline
 $N$ & Number of flows at bottleneck\\ \hline
 $C$ & Bandwidth of bottleneck link\\ \hline
 $\alpha$ & EWMA smoothing factor\\ \hline
@@ -57,11 +52,12 @@ $T_{low}$ & Low threshold\\ \hline
 $T_{high}$ & High threshold\\ \hline
 $D_{minRTT}$ & Minimum RTT for normalization \\ \hline
 $D_{prop}$ & Propagation delay \\ \hline
+$Seg$ & Burst size \\ \hline
 \end{tabular}
 }
 }
-\caption{TIMELY Fluid model parameters}
-\label{tab:timely_param}
+\caption{TIMELY Fluid model variables and parameters}
+\label{tab:timely_varparam}
 \end{table}
 
 \begin{figure}[h]
@@ -105,35 +101,17 @@ $D_{prop}$ & Propagation delay \\ \hline
 \end{figure}
 
 \para{Model Validation:}
-Since we do not have access to TIMELY implemenation,
+Since we do not have access to TIMELY implementation,
 Figure~\ref{fig:timely_model_validation} compares the TIMELY fluid model with
-the packet-level simulations using the NS3 simulator~\cite{ns3}. The parameters
-values are shown in Table~\ref{tab:timely_model_validation}, and are based on
-guidance provided in\cite{timely}.  We model a simple topology, in which N
-senders, connected to a switch, send to a single receiver, also connected to
-that switch. The starting rate for each flow is set to be 1/N of the link
-bandwidth. 
-
-We see the fluid model and the simulator are in good agreement, apart from some
-time shift in queue behavior. The queue peaks at roughly 70KB, which corresponds
-to 56$\mu$s at 10Gbps. As one would expect, this is close to the $T_{min}$.
-
-\begin{table}[t]
-\small
-\center
-\begin{tabular}{c|c}
-Parameter & Value \\ \hline
-C & 10Gbps \\ 
-$T_{low}$ & 50 $\mu$s \\ 
-$T_{high}$ & 500 $\mu$s \\
-$D_{minRTT}$ & 20 $\mu$s \\
-$\beta$ & 0.8 \\
-$\alpha$ & 0.875 \\
-$\delta$ & 10Mbps
-\end{tabular}
-\caption{TIMELY parameter values for model validation}
-\label{tab:timely_model_validation}
-\end{table}
+the packet-level simulations using the NS3 simulator~\cite{ns3}, using the
+parameter values recommended~\footnote{$C=10Gbps$, $\beta=0.8$, $\alpha=0.875$,
+$T_{low} = 50\mu$s, $T_{high} = 500\mu$s, $D_{minRTT}= 20 \mu$s.} in
+\cite{timely}. The simulator can model both per-packet pacing, as well as the
+bursty behavior of TIMELY implementation; here we use per-packet pacing. We
+model a simple topology, in which N senders, connected to a switch, send to a
+single receiver, also connected to that switch. The starting rate for each flow
+is set to be 1/N of the link bandwidth. We see the fluid model and the simulator
+are in good agreement.
 
 \begin{figure*}[t]
 \center
