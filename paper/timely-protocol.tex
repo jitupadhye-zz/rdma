@@ -9,14 +9,13 @@ $\delta$. If the new sample is more than ($T_{high}$), rate is decreased
 multiplicatively by $\beta$. If the new sample is between $T_{low}$ and
 $T_{high}$, the rate change depends on the RTT gradient. The gradient is defined
 as the normalized change between two successive RTT samples. If the gradident is
-positive (i.e. RTT is increasing), sending rate is reduced multiplicatively by
-$\beta \times normalized_gradient$.  Otherwise, it is increased additively by
+positive (i.e. RTT is increasing), sending rate is reduced multiplicatively, in
+proportion to the RTT gradient.  Otherwise, it is increased additively by
 $\delta$.
 
-TIMELY implemeantion does not use hardware rate limiters. Rate control is done
-by spacing chunks of data. Flows do not start at line rate. If there are N
-active flows at a sender, a new flow starts at rate C/(N+1), where C is the
-interface link bandwidth~\cite{timely:private}.
+TIMELY flows do not start at line rate. If there are N active flows at a sender,
+a new flow starts at rate C/(N+1), where C is the interface link
+bandwidth~\cite{timely-private}.
 
 \begin{algorithm}[t]
 \footnotesize
