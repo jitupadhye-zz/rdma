@@ -90,7 +90,7 @@ function sol = timely2()
         % 
         
         fprintf('%d %f %d\n', numFlows, utilization, err);       
-        fileName =  sprintf('timely.%d.dat', numFlows);
+        fileName =  sprintf('timely.fixed.%d.dat', numFlows);
         fileId = fopen (fileName, 'w');
         fprintf(fileId, '## utilization = %f\n', utilization);
         fclose(fileId);
@@ -98,7 +98,7 @@ function sol = timely2()
   
        
         PlotSol(t, q, rates);
-        %break;
+        break;
     end
 end
 

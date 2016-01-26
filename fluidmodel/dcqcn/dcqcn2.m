@@ -31,9 +31,9 @@ function sol = dcqcn2()
     %
     % simulation control.
     %
-    sim_step = 50e-5; % 5 microseconds.
+    sim_step = 10e-6; % timestep
     options = ddeset('MaxStep', sim_step, 'RelTol', 1e-2, 'AbsTol', 1e-4);
-    sim_length = 500e-2;
+    sim_length = 500e-3;
     numCalls = 0;
     
     % !!!!!!
@@ -44,7 +44,7 @@ function sol = dcqcn2()
     %
     % Fixed parameters.
     %
-    packetSize = 4e3;
+    packetSize = 8e3; % in bits!
     C = 40e9/packetSize;   % 40Gbps. Link speed.
     
     % PI parameters
@@ -54,7 +54,7 @@ function sol = dcqcn2()
     qref = 200e3*8/packetSize;
     %    a = 1.822e-3/1.1;
     b = 1.816e-5;
-    a = (1+.0001)*b;
+    a = (1+.00001)*b;
     %
     % DCQCN fixed parameters.
     %

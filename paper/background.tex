@@ -7,19 +7,20 @@ hosts. The networking protocol is implemented entirely on the NICs.
 
 Modern data center networks deploy RDMA using the RDMA over Converged Ethernet
 V2 (RoCEv2)~\cite{rocev2} standard.  RoCEv2 requires a lossless (or, more
-accurately, drop-free) L2 layer. At the Ethernet layer, this is achieved using
-Priority Flow Control (PFC). PFC prevents buffer overflow on Ethernet switches
-and NICs, as follows. The switches and NICs track ingress queues. When the queue
-exceeds a certain threshold, a PAUSE message is sent to the upstream entity. The
-uplink entity then stops sending on that link till it gets an RESUME message.
-PFC is a blunt mechanism, since it does not operate on a per-flow basis. This
-leads to several well known problems such as head-of-the-line blocking, and
+accurately, drop-free) L2 layer. Ethernet can be made drop-free using Priority
+Flow Control (PFC)~\cite{pfc}. PFC prevents buffer overflow on Ethernet switches
+and NICs. The switches and NICs track ingress queues. When the queue exceeds a
+certain threshold, a PAUSE message is sent to the upstream entity. The uplink
+entity then stops sending on that link till it gets an RESUME message.  PFC is a
+blunt mechanism, since it does not operate on a per-flow basis. This leads to
+several well known problems such as head-of-the-line blocking, and
 victimization~\cite{dcqcn,tcp-bolt}. 
 
-To alleviate these problems, per-flow, end-to-end congestion control is
-necessary.  Recently, two protocols, DCQCN~\cite{dcqcn} and TIMELY~\cite{timely}
-were proposed for this purpose. Since PFC prevents packet drops due to buffer
-overflow, either ECN or increase in RTT are the only two available congestion
-signals.  DCQCN uses ECN marking as the congestion signal, while TIMELY uses
-changes to RTT.
+PFC's problems can be mitigated using per-flow congestion control. Since PFC
+eliminates packet drops due to buffer overflow, either ECN or increase in RTT
+are the only two available ``end-to-end'' congestion signals.  DCQCN relies on
+ECN, while TIMELY relies on RTT changes.
+
+As noted earlier, neither DCQCN, nor TIMELY are RDMA-specific. Thus the analysis
+in the rest of the paper makes no reference to RoCEV2 or RDMA.
 
