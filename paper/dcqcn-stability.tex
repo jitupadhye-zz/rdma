@@ -104,39 +104,9 @@ Combining this with Equation~\ref{eq:fixedrc}, proves that at the fixed point, $
 $i = 1, 2, ..., N$.
 
 \para{Stability analysis.} 
-We linearize the system by denoting $\delta {R_C}(t) = {R_C}(t) - R_C^*$,
-$\delta {R_C}(t) = {R_C}(t) - R_C^*$, $\delta p(t) = p(t) - p^*$, $\delta \alpha
-(t) = \alpha (t) - \alpha^*$, and $A = \left( {\frac{1}{B} + \frac{1}{{TR_C^*}}}
-\right)$.  We again use Taylor series to simplify the expressions of $a, b, c,
-d, e$ to handle the exponential forms like $(1-p)^x$.  Due to lack of space,
-here we only just show the linearized expression for $\frac{{d\delta {R_C}}}{{dt}}$:
-\begin{equation}
-\small
-\begin{array}{l}
-\frac{{d\delta {R_C}}}{{dt}} =  - \frac{1}{2}{(R_C^*)^2}{\alpha ^*}\delta p - \frac{1}{2}{p^*}R_C^*{\alpha ^*}\delta R_C \\
- - \frac{1}{2}{p^*}R_C^*{\alpha ^*}\delta {R_C} - \frac{1}{2}{p^*}{(R_C^*)^2}\delta \alpha \\
- + \frac{A}{2}\left( {R_C^*\delta {R_T} - R_C^*\delta {R_C} + R_T^*\delta {R_C} - R_C^*\delta R_C} \right)\\
- - \left( {\frac{1}{2} + \frac{A}{4}} \right)\left( {{p^*}R_C^*\delta {R_T} - {p^*}R_C^*\delta {R_C} + {p^*}R_T^*\delta {R_C}} \right)\\ 
- - \left( {\frac{1}{2} + \frac{A}{4}} \right)\left( {{p^*}R_C^*\delta R_C - R_C^*R_T^*\delta p + {{(R_C^*)}^2}\delta p} \right)
-\end{array}
-\end{equation}
-Using Laplace transform, we get:
-\begin{equation}
-\small
-\begin{array}{l}
-s{R_C}(s) - \delta {R_C}(0) = \\
-\left( { - \frac{1}{2}{{(R_C^*)}^2}{\alpha ^*} - \left( {\frac{1}{2} + \frac{A}{4}} \right)R_C^*R_T^* + \left( {\frac{1}{2} + \frac{A}{4}} \right){{(R_C^*)}^2}} \right){e^{ - s\tau *}}p(s)\\
- + \left( { - \frac{1}{2}{p^*}R_C^*{\alpha ^*} - \frac{A}{2}R_C^* + \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_C^*} \right){e^{ - s\tau *}}{R_C}(s)\\
- + \left( { - \frac{1}{2}{p^*}R_C^*{\alpha ^*} - \frac{A}{2}R_C^* + \frac{A}{2}R_T^* }\right){R_C}(s)\\
- + \left( { \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_C^* - \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_T^*} \right){R_C}(s)\\
- - \frac{1}{2}{p^*}{(R_C^*)^2}\alpha (s)\\
- + \left( {\frac{A}{2}R_C^* - \left( {\frac{1}{2} + \frac{A}{4}} \right){p^*}R_C^*} \right){R_T}(s)
-\end{array}
-\end{equation}
-With Laplace transform of the other equations, we can use ${R_C}(s)$ to express
-${R_T}(s)$, $p(s)$ and $\alpha (s)$.  We then derive the characteristic equation
-of ${R_C}(s)$. We test the characteristic equation against {\em Bode Stability
-Criteria}~\cite{controltheory}. The results are shown in
+We test the system against {\em Bode Stability Criteria}~\cite{controltheory}. 
+More details can be found in Appendix~\ref{sec:dcqcn_stability_analysis},
+while the final results are shown in
 Figure~\ref{fig:dcqcn_stability}.  The degree of stability is shown as {\em
 Phase Margin}. The system is stable when its {\em Phase Margin} is larger than
 0, and the larger {\em Phase Margin} means the system is more stable.
