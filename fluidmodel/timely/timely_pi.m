@@ -29,7 +29,7 @@ function sol = timely_pi()
     %
     % Simulation control
     % 
-    step_len = 50e-5 ; % 5 microseconds
+    step_len = 50e-4 ; % 5 microseconds
     sim_length = 10e-2; % 100 milliseconds 
 
     % 
@@ -42,20 +42,20 @@ function sol = timely_pi()
     % Setting PI parameters
     %    a = (5.822e-7);
     %b = (5.8219996e-7);
-    b = 1.816e-6;
-    a = (1+.000001)*b;
+    b = 1.816e-5;
+    a = (1+.00001)*b;
     %b = 0;
 
     %
     % Parameters we can play with.
     %
-    delta = 10e7; % 10Mbps
+    delta = 10e76; % 10Mbps
     T_high = 500e-6; % 500 microseconds (see section 4.4)
     T_low = 50e-6; % 50 microseconds (see section 4.4). 
     minRTT = 20e-6; % 20 microseconds 
     beta = 0.8;
     alpha = 0.875; % unsure
-    maxQueue = 2 * C * T_high; % only for corner cases - queue won't grow beyond this. 
+    maxQueue = 20 * C * T_high; % only for corner cases - queue won't grow beyond this. 
 
     queueLow = C * T_low;
     %queueLow = 0;
@@ -202,7 +202,7 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient, ...
     p = a*(prevQueue - qref) - b*(qold - qref) + pold
     qold  = prevQueue;
 
-    p = min(max(p, 0), 1);
+    % p = min(max(p, 0), 1);
     pold = p;
     deltaRate = delta - p*.5*currentRate;
     

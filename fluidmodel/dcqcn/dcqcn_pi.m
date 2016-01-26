@@ -1,4 +1,4 @@
-function sol = dcqcn2()
+function sol = dcqcn_pi()
     clc;clear all;close all;
 
     global Rai;
@@ -31,9 +31,9 @@ function sol = dcqcn2()
     %
     % simulation control.
     %
-    sim_step = 10e-6; % timestep
+    sim_step = 10e-4; % timestep
     options = ddeset('MaxStep', sim_step, 'RelTol', 1e-2, 'AbsTol', 1e-4);
-    sim_length = 500e-3;
+    sim_length = 500e-2;
     numCalls = 0;
     
     % !!!!!!
@@ -53,8 +53,15 @@ function sol = dcqcn2()
     pold = 0;
     qref = 200e3*8/packetSize;
     %    a = 1.822e-3/1.1;
-    b = 1.816e-5;
-    a = (1+.00001)*b;
+    %%%%%%%%%%%  These parameters stabilize the queue at 200 for
+    %%%%%%%%%%%  2,10 and 64 flows at 4ms
+    %b = 1.816e-5;
+    %a = (1+.0001)*b;
+    %%%%%%%%%%%  These parameters stabilize the queue at 200 for
+    %%%%%%%%%%%  2,10 and 64 flows at 85ms
+    b = 5.816e-6;
+    a = (1+.0001)*b;
+
     %
     % DCQCN fixed parameters.
     %
@@ -75,7 +82,7 @@ function sol = dcqcn2()
     g = 1/256;
 
     for taustar = [85e-6]  % vary the feedback delay
-        for numFlows = [64]
+        for numFlows = [10]
             % Initial conditions: (single column matrix)
             %
             % 1: rc1
@@ -180,7 +187,7 @@ function dx = DCQCNModel(t,x,lag_matrix)
     
      numCalls = numCalls +1;
      if (mod(numCalls, 10000) == 0)
-         fprintf ('%g %d %f\n', t, numCalls, p);
+         fprintf ('%g %d %f %f\n', t, numCalls, p, x(end) );
      end
     
 end
@@ -260,8 +267,8 @@ function p = CalculatePUsingPI(t, q)
     %pold = p;
 
     p = a*(q - qref) - b*(qold - qref) + pold;
-    p = min(max(p, 0), 1);
     pold = p;
+    p = min(max(p, 0), 1);
     qold  = q;
 end
 
