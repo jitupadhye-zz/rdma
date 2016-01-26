@@ -36,7 +36,7 @@ not publically available, the core timing functionality it relies on is
 supported by most Mellanox NICs and their drivers. 
 
 Apart from this practical consideration, we are also driven by
-scientific curiosity. Numerous ECN and delay based congestion control protocls
+scientific curiosity. Numerous ECN and delay based congestion control protocols
 have been proposed and analyzed before~\cite{ecn, tcp-vegas,
 Hollot:PIController,misra2000fluid,hollot2001designing,misra:TAC2002,gorinsky2004feedback}.
 However, barring a few recent exceptions~\cite{dctcp-analysis, qcn-analysis}
@@ -67,11 +67,12 @@ models.
 
 % summary of contributions and findings.
 
-We stress that it is not our goal to do a head-to-head comparison of DCQCN and
+We stress that it is not our goal to do a comparison of DCQCN between
 TIMELY.  Such comparison makes little sense, since both protocols offer several
-tuning knob, and given a specific scenario, either protocol can be made to
+tuning knobs, and given a specific scenario, either protocol can be made to
 perform as well as the other. Instead, we focus on understanding the basic
-behavior of the two protocols, and drawing generic insights from the analysis.
+behavior of delay based and marking based protocols, understand the
+tradeoffs and draw generic insights from the analysis.
 Our key contributions, and findings are summarized as follows.
 
 \para{DCQCN:} $(i)$ We extend the fluid model proposed in~\cite{dcqcn}, to
@@ -81,7 +82,7 @@ fixed point, as long as the feedback latency is low. The relationship between
 stability and the number of competing flows is non-monotonic, which is very
 different from TCP's behavior~\cite{misra:TAC2002}. DCQCN is stable for both
 very small, and very large number of flows, and tends to be unstable in between;
-especially if the feedback latency is high.  $(iii)$ Using a discreet model, we
+especially if the feedback latency is high.  $(iii)$ Using a discrete model, we
 who that for typical parameter values, DCQCN converges to the aforementioned
 fixed point within 100ms.
 
@@ -92,12 +93,18 @@ arbitrary unfairness.  $(iii)$ We propose a simple fix to remedy this problem,
 and show that the modified version of TIMELY is stable, and converges to a fixed
 point within \fixme{xxx}. 
 
-\para{Generic:} $(i)$ Using insights gained from the above analyses, we show
-that due to both practical and theoretical reasons, ECN is a more useful
-congestion signal than delay in a data center environment. $(ii)$ We show that a
-by using ECN as a congestion signal, and a PI~\cite{Hollot:PIController}-like
-marking scheme, we can ensure not just stability of DCQCN, but also guarantee
-that queue length (and hence delay) is independent of the number of contending
-flows. $(iii)$ We discuss the pros and cons of the use of hardware rate limiters
+\para{Fundamental results:} $(i)$ We show that for both variants of
+the protocols studied, the fixed point of the queue length (and hence
+feedback delay) increases with the number of flows $(ii)$ Higher
+delays are undesirable both from an application perspective as well as
+difficulty in controlling the loop. To fix that, we show that using
+integral control, e.g. the PI~\cite{Hollot:PIController}-like
+marking scheme, we can make 
+the queue length (and hence delay) independent of the number of contending
+flows. $(iii)$ In controlling the queue length to a fixed point, we
+derive a \emph{fundamental} result for congestion control: for a
+distributed protocol that uses only delay as the feedback signal, you
+can achive either fairness or a guaranteed delay, but not both simultaneously. For a
+protocol that employs ECN marking, you can achieve both  $(iv)$ We discuss the pros and cons of the use of hardware rate limiters
 (DCQCN uses then, TIMELY does not).
 
