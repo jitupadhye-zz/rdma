@@ -41,7 +41,7 @@ drain. In contrast, the one-hop propagation delay, with cut-through forwarding
 is enabled, are in the range of 1-2 $\mu$s. Typical diameter of a DC network is
 6 hops, propagation delay is just 10-18 $\mu$s. In contrast, in wide area
 networks, queuing delays and propagation delays can be comparable (excluding
-scenarios like buffer bloat~\cite{buffer bloat}). 
+scenarios like buffer bloat~\cite{bufferbloat}). 
 
 However, one can ask the question - can we build congestion control protocols
 that are guaranteed to maintain a fixed queue length at the bottleneck,
@@ -74,7 +74,7 @@ thus such a scheme cannot ensure fairness.
 
 We can use a PI controller, proposed in~\cite{Hollot:PIController}, to
 control the queue to a fixed value.  The PI
-controller has also been used to solve the problem of bufferbloat, and
+controller has also been used to solve the problem of bufferbloat~\cite{conf/hpsr/PanNPPSBV13,bufferbloat-pi}~, and
 has become part of the DOCSIS 3.1 standard. As we see in
 Figure~\ref{fig:dcqcn_pi}~the queue length is stabilized to a
 preconfigured value, regardless of the number of flows (as well as
@@ -100,3 +100,8 @@ in~Theorem~\ref{thm:fairness-delay}.
 \caption{PI controller to stabilize TIMELY}
 \label{fig:dcqcn_pi}
 \end{figure}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:
