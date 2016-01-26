@@ -1,5 +1,4 @@
 \subsection {Patched TIMELY}
-
 \begin{figure}[t]
 \center
 \includegraphics[width=0.33\textwidth]{figures/timely_stability.eps}
@@ -7,20 +6,24 @@
 \label{fig:timely_stability}
 \end{figure}
 
+In order to ensure the protocol has a unique fixed point, and all flows get fair
+share and are stable at the fixed point, we make two minor modifications over
+TIMELY.
 
-In order to ensure the protocol has a unique fixed point, and all flows get fair share and are stable at the fixed point,
-we make two minor modifications over TIMELY.
+First, we make the step of rate decrease rely on absolute queue length, instead
+of the gradient of queue length.  This will ensure that there is only one fixed
+point for the queue length. In addition, all flow will have the same rate
+because the queue length, which is shared across flows, can uniquely determine
+the rate of each flow. This is similar to the use of ECN in DCQCN. The side
+effect is that, with different number of flows, the fixed point of queue will be
+different.
 
-First, we make the step of rate decrease rely on absolute queue length, instead of the gradient of queue length. 
-This will ensure that there is only one fixed point for the queue length. In addition, all flow will have the same rate 
-because the queue length, which is shared across flows, can uniquely determine the rate of each flow. This is 
-similar to the use of ECN in DCQCN. The side effect is that, with different number of flows, the fixed point of 
-queue will be different.
-
-Second, we use a continuous weighting function $w(g)$ to make the transition between rate increase and rate decrease
-smooth. This avoids the on-off behavior that causes oscillation, and stabilizes the protocol at the fixed point. 
-This is similar to the fact that probabilistic ECN marking stabilizes TCP, QCN and DCQCN. With $w(g)$, we combine 
-the two conditions of $g \le 0$ and $g>0$ in the $dR(t)/dt$ equation:
+Second, we use a continuous weighting function $w(g)$ to make the transition
+between rate increase and rate decrease smooth. This avoids the on-off behavior
+that causes oscillation, and stabilizes the protocol at the fixed point.  This
+is similar to the fact that probabilistic ECN marking stabilizes TCP, QCN and
+DCQCN. With $w(g)$, we combine the two conditions of $g \le 0$ and $g>0$ in the
+$dR(t)/dt$ equation:
 
 
 \begin{equation}
