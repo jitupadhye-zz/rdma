@@ -1,23 +1,18 @@
 \section{Introduction}
 
-Large cloud service providers like Microsoft and Google are turning to Remote
-DMA (RDMA) technology to support their most demanding
+Large cloud service providers are turning to Remote DMA (RDMA) technology to
+support their most demanding
 applications~\cite{dcqcn,timely,tcp-bolt,erasure-storage,farm,pilaf}.  The
 reason is that RDMA offers significantly higher bandwidth and lower latency than
 the traditional TCP/IP stacks, while minimizing CPU
 overhead~\cite{dcqcn,farm,timely}. 
-\fixme{google is no longer using rdma.}
 
-
-In modern data centers, RDMA is deployed using the ROCEv2 standard~\cite{rocev2}.
-For efficient operation, ROCEv2 needs to eliminate packet drops due to buffer
-overflow. This is achieved by enabling Priority Flow Control (PFC)~\cite{pfc},
-and by using per-flow congestion control~\cite{dcqcn,timely}. 
-
-
-Since PFC eliminates packet drops, any end-to-end congestion control protocol
-for RoCEv2 networks must use either ECN markings, or delay as the congestion
-signal. Last year, two protocols were proposed for this purpose, namely
+In modern data centers, RDMA is deployed using the ROCEv2
+standard~\cite{rocev2}. To ensure efficient operation, ROCEv2 eliminates packet
+drops due to buffer overflow using Priority Flow Control (PFC)~\cite{pfc}.
+Since there are no packet drops, any end-to-end congestion control protocol for
+RoCEv2 networks must use either ECN markings, or delay as the congestion signal.
+Last year, two protocols were proposed for this purpose, namely
 DCQCN~\cite{dcqcn} and TIMELY~\cite{timely}. DCQCN uses ECN marking as a
 congestion signal, while TIMELY measures changes to end-to-end delay.
 
@@ -27,32 +22,36 @@ In this paper, we analyze DCQCN and TIMELY for stability, convergence and
 fairness. More importantly, using the insights drawn from the analysis, we
 answer the broader question: are there fundamental reasons to prefer either ECN
 or delay as the congestion signal in such environments?
-\fixme{i think this should be flipped. first we want to answer the broad question. for that we analyze dcqcn and timely.}
 
 % why we do it.
 
 One of our motivations for analyzing these protocols is their potential for
-widespread deployment, beyond reported deployments at Microsoft~\cite{dcqcn} and
-Google~\cite{timely}. DCQCN is implemented entirely in Mellanox NICs, and
-drivers both Windows and Linux operating system are available. Thus, anyone can
-deploy DCQCN in their data centers. While Google's implementation of TIMELY is
-not publically available, the core timing functionality it relies on is
-supported by most Mellanox NICs and their drivers.
+widespread deployment, beyond large cloud providers.  DCQCN is implemented
+entirely in Mellanox NICs, and drivers both Windows and Linux operating system
+are available. Thus, anyone can deploy DCQCN in their data centers. While TIMELY
+is not publically available, the core timing functionality it relies on is
+supported by most modern NICs and their drivers.
 
-Apart from this practical consideration, we are also driven by
-scientific curiosity. Numerous ECN and delay based congestion control protocols
-have been proposed and analyzed before~\cite{ecn, tcp-vegas,
+Apart from this practical consideration, we are also driven by scientific
+curiosity.  Numerous ECN and delay based congestion control protocols have been
+proposed and analyzed before~\cite{ecn, tcp-vegas,
 Hollot:PIController,misra2000fluid,hollot2001designing,misra:TAC2002,gorinsky2004feedback}.
 However, barring a few recent exceptions~\cite{dctcp-analysis, qcn-analysis}
 most prior work has been in the context of wide area networks.  Unfortunately,
-neither ECN, nor delay based congestion control has seen widespread
-deployment in the wide area Internet, for a variety of reasons. 
+neither ECN, nor delay based congestion control has seen widespread deployment
+in the wide area Internet, for a variety of reasons. 
 
 However, since RoCEv2 data center networks are drop-free, ECN or
 delay-based congestion control is not just useful --- it is necessary. These
 networks are a very different from the wide area Internet: the links have far
 higher bandwidths, propagation delays are much lower, and the traffic is highly
-bursty. \fixme{are we saying that a non-roce datacenter cannot use timely or dcqcn? would packet drops break dcqcn?}
+bursty. Thus, protocols like DCQCN or TIMELY are likely to widespread deployment
+in such networks.
+
+We also note that while both DCQCN and TIMELY were developed for RoCEv2
+networks, there is nothing RDMA-specific about either protocol, apart from the
+fact that they both ignore the impact of packet drops. We believe that like
+DCTCP~\cite{dctcp}, they are generally useful in any data center environment.
 
 Thus, the time is ripe for analytical exploration of ECN and delay-based
 congestion control protocols in this context; specifically to answer the
