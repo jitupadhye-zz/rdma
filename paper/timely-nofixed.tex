@@ -20,32 +20,32 @@ differential equations converge to 0. Thus:
 \small
 {dq}/{dt} = 0 \; \; \mbox{and} \; \;  \sum_{i} R_i(t) =  C
 \end{equation} 
-Now, either $g > 0$ or $g  \le 0$. If $g \ne 0$, then:
+Now, either $g_i > 0$ or $g_i  \le 0$. If $g_i \ne 0$, then:
 \begin{equation}
 \small
-\frac{{dg}}{{dt}} =  \frac{\alpha }{{\tau *}}( - g(t) + \frac{{q(t
-                        - \tau ') - q(t - \tau ' - \tau
-                        *)}}{{C*{D_{\min RTT}}}})\\
- =   -\frac{\alpha }{{\tau *}} g(t)  \ne  0
+\frac{{dg_i}}{{dt}} =  \frac{\alpha }{{\tau_i^*}}( - g_i(t) + \frac{{q(t
+                        - \tau ') - q(t - \tau ' - \tau_i^*
+                        )}}{{C*{D_{\min RTT}}}})\\
+ =   -\frac{\alpha }{{\tau_i^*}} g_i(t)  \ne  0
 \end{equation}
-Thus, $g$ is zero for $dg/dt$ to be zero. But then:
+Thus, $g_i$ is zero for $dg_i/dt$ to be zero. But then:
 \begin{equation}
 \small
-{dR_i}/{dt} =  {\delta }/{{\tau *}} \ne 0
+{dR_i}/{dt} =  {\delta }/{{\tau_i^*}} \ne 0
 \end{equation}
 Thus, all derivatives cannot be simultaneously 0 and thus the system has no fixed
 point.
 \end{proof}
 
 If we modify the fluid model very slightly, by moving the equality condition to
-the term involving $g$, we get:
+the term involving $g_i$, we get:
 \begin{equation}
 \small
 \frac{{dR_i}}{{dt}} = \left\{ \begin{array}{ll}
-\frac{\delta }{{\tau *}}, & q(t - \tau ') < C*{T_{low}}\\
-\frac{\delta }{{\tau *}}, & g < 0\\
- - \frac{{g\beta }}{{\tau *}}R(t), & g \ge 0\\
- - \frac{\beta }{{\tau *}}(1 - \frac{{C*{T_{high}}}}{{q(t - \tau ')}})R(t), & q(t - \tau ') > C*{T_{high}}
+\frac{\delta }{{\tau_i^*}}, & q(t - \tau ') < C*{T_{low}}\\
+\frac{\delta }{{\tau_i^*}}, & g_i < 0\\
+ - \frac{{g_i\beta }}{{\tau_i^*}}R(t), & g_i \ge 0\\
+ - \frac{\beta }{{\tau_i^*}}(1 - \frac{{C*{T_{high}}}}{{q(t - \tau ')}})R(t), & q(t - \tau ') > C*{T_{high}}
 \end{array} \right.\\
 \label{eq:timely_r_modified}
 \end{equation}
@@ -65,11 +65,11 @@ the term involving $g$, we get:
 \label{fig:timely_unstable}
 \end{figure*}
 
-This is equaivalent to changing the $leq$ sign on line 9 of
+This is equaivalent to changing the $\le$ sign on line 9 of
 Algorithm~\ref{fig:timely_algo} to $<$. This makes little difference in
-practice, since floating point computations for $g$ rarely yield an exact zero
+practice, since floating point computations for $g_i$ rarely yield an exact zero
 value -- we have verified this via simulations. With this modification, we can
-obtain the condition that with $g =0$, $\tfrac{dq}{dt} = 0$, $\tfrac{dg}{dt} =
+obtain the condition that with $g_i =0$, $\tfrac{dq}{dt} = 0$, $\tfrac{dg_i}{dt} =
 0$ and $C*T_{low} < q < C*T_{high}$. However, now we run into the issue that
 TIMELY moves from zero fixed points to \emph{infinite} fixed points!
 
@@ -79,12 +79,12 @@ modification introduced in Equation~\ref{eq:timely_r_modified} has
 infinite fixed points
 \end{thm}
 \begin{proof}
-To obtain ${dg}/{dt} =0$, we need $g = 0$ and ${dq}/{dt} = 0$.  Note that $q$
+To obtain ${dg_i}/{dt} =0$, we need $g_i = 0$ and ${dq}/{dt} = 0$.  Note that $q$
 cannot converge to a value outside of the thresholds $ C*{T_{low}}$ and
 $C*{T_{high}}$ as that would imply $\frac{dR_i}{dt} \ne 0$.
 
 Any value of $q$ such that $C*T_{low} < q < C*T_{high}$ makes ${dR_i}/{dt} = 0$
-for any value of $R_i$ as long as $\sum_{i} R(t) =  C$ and hence $q$ have
+for any value of $R_i$ as long as $\sum_{i} R_i(t) =  C$ and hence $q$ have
 infinitely many fixed points. 
 \end{proof}
 

@@ -72,26 +72,26 @@ $Seg$ & Burst size \\ \hline
 \begin{equation}
 \small
 \frac{{dR_i}}{{dt}} = \left\{ \begin{array}{ll}
-\frac{\delta }{{\tau *}}, & q(t - \tau ') < C*{T_{low}}\\
-\frac{\delta }{{\tau *}}, & g \le 0\\
- - \frac{{g\beta }}{{\tau *}}R_i(t), & g > 0\\
- - \frac{\beta }{{\tau *}}(1 - \frac{{C*{T_{high}}}}{{q(t - \tau ')}})R_i(t), & q(t - \tau ') > C*{T_{high}}
+\frac{\delta }{{\tau_i^*}}, & q(t - \tau ') < C*{T_{low}}\\
+\frac{\delta }{{\tau_i^*}}, & g_i \le 0\\
+ - \frac{{g_i\beta }}{{\tau_i^*}}R_i(t), & g_i > 0\\
+ - \frac{\beta }{{\tau_i^*}}(1 - \frac{{C*{T_{high}}}}{{q(t - \tau ')}})R_i(t), & q(t - \tau ') > C*{T_{high}}
 \end{array} \right.\\
 \label{eq:timely_r}
 \end{equation}
 \begin{equation}
 \small
-\frac{{dg}}{{dt}} = \frac{\alpha }{{\tau *}}( - g(t) + \frac{{q(t - \tau ') - q(t - \tau ' - \tau *)}}{{C*{D_{\min RTT}}}})\\
+\frac{{dg_i}}{{dt}} = \frac{\alpha }{{\tau_i^*}}( - g_i(t) + \frac{{q(t - \tau ') - q(t - \tau ' - \tau_i^*)}}{{C*{D_{\min RTT}}}})\\
 \label{eq:timely_g}
 \end{equation}
 \begin{equation}
 \small
-\tau * = \max \{ \frac{{Seg}}{R},{D_{\min RTT}}\} \\
+\tau_i^* = \max \{ \frac{{Seg}}{R_i},{D_{\min RTT}}\} \\
 \label{eq:timely_taus}
 \end{equation}
 \begin{equation}
 \small
-\tau ' = \frac{q}{C} + \frac{{Seg}}{C} + {D_{prop}}
+\tau ' = \frac{q}{C} + \frac{{MTU}}{C} + {D_{prop}}
 \label{eq:timely_taup}
 \end{equation}
 \end{minipage}

@@ -1,5 +1,12 @@
 \subsection {Patched TIMELY}
 
+\begin{figure}[t]
+\center
+\includegraphics[width=0.33\textwidth]{figures/timely_stability.eps}
+\caption{Patched TIMELY stability}
+\label{fig:timely_stability}
+\end{figure}
+
 
 In order to ensure the protocol has a unique fixed point, and all flows get fair share and are stable at the fixed point,
 we make two minor modifications over TIMELY.
@@ -67,13 +74,38 @@ In addition, we can easily obtain the fixed point of queue length:
 \label{eq:timely_fixed_q}
 \end{equation}
 
-As shown in Figure TODO, flows with different initial rates converge to the fixed point and are 
-stable without oscillation. 
+\begin{thm}[Patched TIMELY convergence.]
+The system described in Equation~\ref{eq:timely_fixed} always converges to the unique fixed point.
+\end{thm}
+
+Here we provide a sketch of the proof. First, the queue length $q$ always
+converges to the fixed point $q^*$. This can be proved by contradiction because whenever $q$ stabilizes
+at $q>q^*$, we have ${\left. {\frac{{dR}}{{dt}}} \right|_{q > {q^*}}} < {\left. {\frac{{dR}}{{dt}}} \right|_{q = {q^*}}} = 0$, 
+leading to queue length decrease. Vice versa holds for $q<q^*$. 
+
+Second, once queue length converges to a stable state, we see $g_i$ converges to 0 by obtaining
+the solution of the differential equation $\frac{{d{g_i}}}{{dt}} =  - \frac{\alpha }{{{\tau ^*}}}{g_i}$.
+
+Finally, after $g_i$ converges to 0, which means $w_i=0.5$, we rewrite the $j$th flow's Equation~\ref{eq:timely_fixed} 
+and subtract it from $i$th flow's. After simplification, we get:
+
+\begin{equation}
+\small
+\frac{{d\left( {{R_i} - {R_j}} \right)}}{{dt}} = \frac{\delta }{{2Seg}}\left( {1 - \frac{N}{C}\left( {{R_i} + {R_j}} \right)} \right)\left( {{R_i} - {R_j}} \right)
+\end{equation}
+
+If one of flow ${i,j}$ is larger than the fair share $C/N$ while the other is smaller than $C/N$,
+the rate different between them will decrease over time. Assuming ${{R_i} + {R_j}}$ does not change
+much, we see that they converge exponentially over time by solving the differential equation.
+
+We verify this using simulations. As shown in Figure TODO, flows with different initial rates converge 
+to the fixed point and are stable without oscillation. 
 
 \para{Stability.} We use the same technique as analyzing
 DCQCN stability, {\em i.e.,} linearize the equations, Laplace transform and compute the phase margin 
 of its characteristic equation. The phase margin result shows this system is stable when the number of 
-flows is less than 40. The phase margin falls below 0 rapidly because more flows lead to large 
-queue size (see Equation~\ref{eq:timely_fixed_q}), thus larger feedback delay (see Equation~\ref{eq:timely_taup}). 
+flows is less than 40 (Figure~\ref{fig:timely_stability}). After 40 flows, the phase margin falls below 
+0 rapidly because more flows lead to larger queue size (see Equation~\ref{eq:timely_fixed_q}), 
+thus leading to larger feedback delay (see Equation~\ref{eq:timely_taup}). 
 This leads to system instability. We conclude that with some minor tuning, TIMELY can be stable 
 within a range of number of flows.

@@ -1,4 +1,5 @@
 \subsection{Convergence}
+\label{sec:dcqcn_convergence}
 
 %\begin{figure}[t]
 %\center
@@ -85,15 +86,18 @@ R_C^{(i)}(T_{k + 1}) - R_T^{(i)}(T_{k + 1}) + {R_{AI}}\\
 \end{equation}
 
 From this, we know that during a consecutive additive rate increase phase, $R_T^{(i)} - R_C^{(i)}$
-will converge towards $R_{AI}$ exponentially. In common cases, the step of additive increase,
-$\Delta {T_k} - 1$, is around 10 or even more\footnote{This can be easily estimated by numerical approaches, 
-thus omitted for brevity}. 
+will converge towards $R_{AI}$ exponentially. In addition, at the beginning of the phase, 
+$R_C^{(i)}({T_k} + 1) = R_T^{(i)}({T_k})$ (Figure~\ref{fig:dcqcn_convergence}). Therefore:
+%In common cases, the step of additive increase,
+%$\Delta {T_k} - 1$, is around 10 or even more\footnote{This can be easily estimated by numerical approaches, 
+%thus omitted for brevity}. 
 %Also, due to DCQCN definition, we have $R_C^{(i)}({T_k} + 1) = R_T^{(i)}({T_k} + 1)$
 %as shown in Figure~\ref{fig:dcqcn_convergence}. 
-Therefore, we can safely approximate $R_T^{(i)}$ by:
+%Therefore, we can safely approximate $R_T^{(i)}$ by:
 \begin{equation}
 \small
-R_T^{(i)}({T_k}) \approx R_C^{(i)}({T_k}) + {R_{AI}},\forall k = 1,2,...
+R_T^{(i)}({T_k}) = R_C^{(i)}({T_k}) + \left( 1 - ({\frac{1}{2}})^{\Delta {T_k}-1}\right){R_{AI}},\forall k = 1,2,...
+\label{eq:convergence_rt}
 \end{equation}
 Back to Equation~\ref{eq:converge_rc}, we must further know $\alpha ^{(i)}({T_k})$ and $\Delta T_k$ to 
 analyze $R_C(T_k)$. During $\Delta T_k$, $\alpha ^{(i)}({T_k})$ has one increase event as Equation~\ref{eq:rp_dec},
@@ -119,7 +123,7 @@ $\Delta T_k$.
 
 Once the $\alpha$ of different flows converge to the same value $\alpha(T_{k'})$ at some $T_{k'}$, we can show 
 the rates $R_C$ converge afterwards. We rewrite the $j$th flow's Equation~\ref{eq:converge_rc}, and subtract it 
-from Equation~\ref{eq:converge_rc}, we get:
+from Equation~\ref{eq:converge_rc}. Combining Equation~\ref{eq:convergence_rt}, we get:
 \begin{equation}
 \small
 \begin{array}{l}
@@ -142,7 +146,7 @@ $\alpha^{*}$ and DCQCN parameters, as shown in Appendix.}:
 \small
 {\alpha ^*} = {(1 - g)^{\Delta {T^*}}}\left( {(1 - g){\alpha ^*} + g} \right)
 \end{equation}
-Equation~\ref{eq:converge_alphastar} concludes our proof. Combining Equation~\ref{eq:converge_rc}, 
+Equation~\ref{eq:converge_alphastar} concludes our proof. Combining Equation~\ref{eq:converge}, 
 we know that $R_C$ is converging at the rate of at least $( {1 - \frac{{{\alpha ^{*}}}}{2}} )^k$, 
 $k$ is the number of AIMD cycles.
 \end{proof}
@@ -180,7 +184,7 @@ simply the smallest value of $x$ that satisfies the following inequality:
 { \left( {1 - \frac{{{\alpha ^*}}}{2}} \right)^{\frac{x}{{\tau '\Delta{T^*}}}}}C \le \frac{0.1 \times C}{N} 
 \end{equation}
 
-We solve equation numerically for different parameter settings. The results are
+We solve $\alpha^*$ and above equation numerically for different parameter settings. The results are
 shown Figure~\ref{fig:dcqcn_convergence_time}. With default parameter settings,
 DCQCN converges within 100ms, and the convergenced time decreases quickly as the
 number of flow increases.  We have also calculated convergence time for a range
