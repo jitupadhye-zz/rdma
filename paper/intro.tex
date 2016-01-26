@@ -93,7 +93,7 @@ arbitrary unfairness.  $(iii)$ We propose a simple fix to remedy this problem,
 and show that the modified version of TIMELY is stable, and converges to a fixed
 point within \fixme{xxx}. 
 
-\para{Fundamental results:} $(i)$ We show that for both variants of
+\para{General results:} $(i)$ We show that for both variants of
 the protocols studied, the fixed point of the queue length (and hence
 feedback delay) increases with the number of flows $(ii)$ Higher
 delays are undesirable both from an application perspective as well as
@@ -105,6 +105,7 @@ flows. $(iii)$ In controlling the queue length to a fixed point, we
 derive a \emph{fundamental} result for congestion control: for a
 distributed protocol that uses only delay as the feedback signal, you
 can achive either fairness or a guaranteed delay, but not both simultaneously. For a
-protocol that employs ECN marking, you can achieve both  $(iv)$ We discuss the pros and cons of the use of hardware rate limiters
+protocol that employs ECN marking based network feedback, you can
+achieve both. $(iv)$ We discuss the pros and cons of the use of hardware rate limiters
 (DCQCN uses then, TIMELY does not).
 
