@@ -16,7 +16,6 @@ function sol = timely_pi()
     global sim_length;
     global a; % PI parameters
     global b; % PI parameters
-    global prevprevQueue %hack
     global pold;
     global p;
     global qold;
@@ -29,8 +28,8 @@ function sol = timely_pi()
     %
     % Simulation control
     % 
-    step_len = 50e-4 ; % 5 microseconds
-    sim_length = 10e-2; % 100 milliseconds 
+    step_len = 10e-4 ; % 5 microseconds
+    sim_length = 500e-2; % 100 milliseconds 
 
     % 
     % Fixed Parameters
@@ -42,14 +41,14 @@ function sol = timely_pi()
     % Setting PI parameters
     %    a = (5.822e-7);
     %b = (5.8219996e-7);
-    b = 1.816e-5;
+    b = 1.816e-10;
     a = (1+.00001)*b;
     %b = 0;
 
     %
     % Parameters we can play with.
     %
-    delta = 10e76; % 10Mbps
+    delta = 10e6; % 10Mbps
     T_high = 500e-6; % 500 microseconds (see section 4.4)
     T_low = 50e-6; % 50 microseconds (see section 4.4). 
     minRTT = 20e-6; % 20 microseconds 
@@ -120,7 +119,6 @@ end
 
 function dx = TimelyModel(t,x,lag)
     global numFlows;
-    global prevprevQueue;
     dx  = zeros(3*numFlows+1, 1);
     
     % 1: rate for flow 1
@@ -142,17 +140,20 @@ function dx = TimelyModel(t,x,lag)
     dx(end) = QueueDelta(x(end), rates);
     % update rate delta. 
     for i = 1:3:3*numFlows
-        dx(i) = RateDelta(x(i), lag(2*numFlows+1,i), x(i+1), ...
-                          prevprevQueue);
-        prevprevQueue = lag(2*numFlows+1,i);
+        dx(i) = RateDelta(x(i), lag(3*numFlows+1,i), x(i+1), ...
+                          lag(3*numFlows+1,i+1)
+        %prevprevQueue);
+        % prevprevQueue = lag(3*numFlows+1,i);
     end  
     
     % update RTT gradient
     for i = 2:3:3*numFlows
-        dx(i) = RTTGradientDelta(x(i-1), x(i), lag(2*numFlows+1,i-1), lag(2*numFlows+1,i));
+        dx(i) = RTTGradientDelta(x(i-1), x(i), lag(3*numFlows+1,i-1), lag(3*numFlows+1,i));
     end  
-    for i = 3:3:3*numFlows
-        dx(i) = pDelta(lag(2*numFlows+1,i-1), lag(2*numFlows+1,i));
+    for col = 1:2:2*numFlows
+        dx(i) = pDelta(lag(3*numFlows+1,i-1), lag(3*numFlows+1,i));
+        % 
+        
     end  
 
 end
@@ -161,6 +162,7 @@ function deltaP = pDelta(prevQueue, prevprevQueue)
     global qref;
     global a;
     global b;
+    global C;
    
     %    prevQueue
     %    prevprevQueue
@@ -198,11 +200,12 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient, ...
     queueLow = C * T_low;
     %queueLow = 0;
     queueHigh = C * T_high;
-    qref = (queueHigh+queueLow)/2;
+    qref = (T_low+T_high)/2;
+    prevQueue;
     p = a*(prevQueue - qref) - b*(qold - qref) + pold
     qold  = prevQueue;
 
-    % p = min(max(p, 0), 1);
+    %  p = min(max(p, 0), 1);
     pold = p;
     deltaRate = delta - p*.5*currentRate;
     
@@ -273,9 +276,9 @@ function delays = DelayModel(t, x)
     % 4: t - t' - t* for flow 2
     % ...
 
-    delays = zeros(3*numFlows, 1);
+    delays = zeros(2*numFlows, 1);
     tprime = x(end)/C + Seg/C + prop;
-    for i=1:3:3*numFlows
+    for i=1:2:2*numFlows
         tstar = max(Seg/x(i), minRTT);
         delays(i) = t - tprime;
         delays(i+1) = t - tstar - tprime;
