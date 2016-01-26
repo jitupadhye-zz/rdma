@@ -48,10 +48,10 @@ higher bandwidths, propagation delays are much lower, and the traffic is highly
 bursty. Thus, protocols like DCQCN or TIMELY are likely to widespread deployment
 in such networks.
 
-We also note that while both DCQCN and TIMELY were developed for RoCEv2
-networks, there is nothing RDMA-specific about either protocol, apart from the
-fact that they both ignore the impact of packet drops. We believe that like
-DCTCP~\cite{dctcp}, they are generally useful in any data center environment.
+Note that while both DCQCN and TIMELY were developed for RoCEv2 networks, there
+is nothing RDMA-specific about either protocol, apart from the fact that they
+both ignore the impact of packet drops. We believe that like DCTCP~\cite{dctcp},
+they are useful in any data center environment.
 
 Thus, the time is ripe for analytical exploration of ECN and delay-based
 congestion control protocols in this context; specifically to answer the
@@ -60,13 +60,11 @@ question we posed earlier.
 % Methodology.
 
 To this end, we analyze DCQCN and TIMELY using detailed fluid models and NS3
-simulations. Our methodology is similar to the methodology used ny Alizadeh et.
-al. for analyzing DCTCP~\cite{dctcp-analysis} and QCN~\cite{qcn-analysis}. Fluid
-models are useful for analyzing properties such as stability, and for rapid
-exploration of parameter space.  Simulations are useful for studying
-packet-level dynamics and establishing the fidelity of the fluid model.  We will
-publish our simulation code, as well the Matlab code used to solve the fluid
-models.
+simulations.  Fluid models are useful for analyzing properties such as
+stability, and for rapid exploration of parameter space.  Simulations are useful
+for studying packet-level dynamics and establishing the fidelity of the fluid
+model.  We will publish our simulation code, as well the Matlab code used to
+solve the fluid models.
 
 % summary of contributions and findings.
 
@@ -78,37 +76,35 @@ behavior of delay based and marking based protocols, understand the
 tradeoffs and draw generic insights from the analysis.
 Our key contributions, and findings are summarized as follows.
 
-\para{DCQCN:} $(i)$ We extend the fluid model proposed in~\cite{dcqcn}, to
-show that DCQCN has a unique fixed point, where flows converge to their fair
-share. $(ii)$ We show that while DCQCN is generally stable around this
-fixed point, as long as the feedback latency is low. The relationship between
-stability and the number of competing flows is non-monotonic, which is very
-different from TCP's behavior~\cite{misra:TAC2002}. DCQCN is stable for both
-very small, and very large number of flows, and tends to be unstable in between;
-especially if the feedback latency is high.  $(iii)$ Using a discrete model, we
-who that for typical parameter values, DCQCN converges to the aforementioned
-fixed point within 100ms.
+\para{DCQCN:} $(i)$ We extend the fluid model proposed in~\cite{dcqcn}, to show
+that DCQCN has a unique fixed point, where flows converge to their fair share.
+Using a discrete model, we show that for typical parameter values, DCQCN
+converges to the aforementioned fixed point within 100ms.  $(ii)$ We show that
+while DCQCN is generally stable around this fixed point, as long as the feedback
+latency is low. The relationship between stability and the number of competing
+flows is, strangely, non-monotonic, which is very different from TCP's
+behavior~\cite{misra:TAC2002}. DCQCN is stable for both very small, and very
+large number of flows, and tends to be unstable in between; especially if the
+feedback latency is high.
 
 \para{TIMELY:} $(i)$ We develop a fluid model for TIMELY, and validate it using
-simulations. $(ii)$ The fluid model reveals that since TIMELY relies on {\em RTT
+simulations. The fluid model reveals that since TIMELY relies on {\em RTT
 gradient} as congestion signal, it can have infinite fixed points, resulting in
-arbitrary unfairness.  $(iii)$ We propose a simple fix to remedy this problem,
-and show that the modified version of TIMELY is stable, and converges to a fixed
-point within \fixme{xxx}. 
+arbitrary unfairness.  $(ii)$ We propose a simple fix to remedy this problem,
+and show that the modified version is stable, and converges to a fixed point
+within 75ms for typical parameter values.
 
-\para{General results:} $(i)$ We show that for both variants of
-the protocols studied, the fixed point of the queue length (and hence
-feedback delay) increases with the number of flows $(ii)$ Higher
-delays are undesirable both from an application perspective as well as
-difficulty in controlling the loop. To fix that, we show that using
-integral control, e.g. the PI~\cite{Hollot:PIController}-like
-marking scheme, we can make 
-the queue length (and hence delay) independent of the number of contending
-flows. $(iii)$ In controlling the queue length to a fixed point, we
-derive a \emph{fundamental} result for congestion control: for a
-distributed protocol that uses only delay as the feedback signal, you
-can achieve either fairness or a guaranteed delay, but not both simultaneously. For a
-protocol that employs ECN marking based network feedback, you can
-achieve both. $(iv)$ We discuss the pros and cons of the use of hardware rate limiters
-(DCQCN uses them, TIMELY does not).
+\para{General results:} $(i)$ We show that for both variants of the protocols
+studied, the fixed point of the queue length (and hence feedback delay)
+increases with the number of flows $(ii)$ Higher delays are undesirable both
+from an application perspective as well as difficulty in controlling the loop.
+To fix that, we show that using integral control, e.g. the
+PI~\cite{Hollot:PIController}-like marking scheme, we can make the queue length
+(and hence delay) independent of the number of contending flows. $(iii)$ In
+controlling the queue length to a fixed point, we derive a \emph{fundamental}
+result for congestion control: for a distributed protocol that uses only delay
+as the feedback signal, you can achieve either fairness or a guaranteed delay,
+but not both simultaneously. For a protocol that employs ECN marking based
+network feedback, you can achieve both. $(iv)$ We discuss the pros and cons of
+the use of hardware rate limiters (DCQCN uses them, TIMELY does not).
 
