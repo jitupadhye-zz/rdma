@@ -3,6 +3,7 @@ function sol = timely2()
 
     global C; % bandwidth 
     global Seg; % MSS 
+    global MTU; % MTU
     global delta; % the additive increment step
     global T_high; % if RTT is greater than this, decrease rate multiplicatively.
     global T_low; % if RTT is lower than this, do increase rate additively. 
@@ -20,13 +21,14 @@ function sol = timely2()
     % Simulation control
     % 
     step_len = 5e-6 ; % 5 microseconds
-    sim_length = 5e-3; % 100 milliseconds 
+    sim_length = 50e-3; % 100 milliseconds 
 
     % 
     % Fixed Parameters
     %
     C = 10 * 1e9; % line rate.
-    Seg = 64 * 8 * 1e3; % burstsize.
+    Seg = 16 * 8 * 1e3; % burstsize.
+    MTU = 1 * 8 * 1e3;
     prop = 4e-6; % propagation delay
     
     % PI parameters
@@ -40,7 +42,7 @@ function sol = timely2()
     T_high = 500e-6; % 500 microseconds (see section 4.4)
     T_low = 50e-6; % 50 microseconds (see section 4.4). 
     minRTT = 20e-6; % 20 microseconds 
-    beta = 0.8;
+    beta = 8/1000;
     alpha = 0.875; % unsure
     maxQueue = 2 * C * T_high; % only for corner cases - queue won't grow beyond this. 
 
@@ -55,16 +57,16 @@ function sol = timely2()
     % 2*numFlow +1: initial queue size. 
     %
 
-    for numFlows = 3
+    for numFlows = 2
         initVal = zeros(2*numFlows + 1, 1);
         for i=1:numFlows
             %SetInitialRate(i, (1+rand*0.2-0.1)* 1e9);
             %SetInitialRate(i, C/numFlows);
         end
 
-        SetInitialRate(1, 5e9);
+        SetInitialRate(1, 7e9);
         SetInitialRate(2, 3e9);
-        SetInitialRate(3, 2e9);
+        %SetInitialRate(3, 1e9);
         %
         % Options.
         %
@@ -130,7 +132,9 @@ function dx = TimelyModel(t,x,lag)
     % update RTT gradient
     for i = 2:2:2*numFlows
         dx(i) = RTTGradientDelta(x(i-1), x(i), lag(2*numFlows+1,i-1), lag(2*numFlows+1,i));
-    end  
+    end
+    
+    %dx
 end
 
 function deltaQueue = QueueDelta(currentQueue, flowRates)
@@ -158,20 +162,22 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient)
     
     queueLow = C * T_low;
     queueHigh = C * T_high;
-    targetQueue = (queueLow+queueHigh)/2;
-    error = prevQueue-targetQueue;
+    targetQueue = C * T_low;
+    error = (prevQueue-targetQueue)/targetQueue;
     if (prevQueue < queueLow)
        deltaRate = delta;
     else if (prevQueue > queueHigh)
             deltaRate = -1 * beta * (1 - queueHigh/prevQueue) * currentRate;
         else
-            if (rttGradient < 0)
-                deltaRate = delta;
-            else
+            p = CalculateP(rttGradient);
+            deltaRate = delta*(1-p) - beta*error*currentRate*p;
+            %if (rttGradient < 0)
+            %    deltaRate = delta;
+            %else
                 %     deltaRate = -1 * rttGradient * beta *
                 %     currentRate;
-                deltaRate = -1*rttGradient *a*1000*currentRate -1*b/1000*error*currentRate
-            end
+            %    deltaRate = -1*rttGradient *a*1000*currentRate -1*b/1000*error*currentRate
+            %end
         end
     end
     
@@ -180,6 +186,7 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient)
         deltaRate = 0;
     end
     deltaRate = deltaRate / RTTSampleInterval(currentRate);
+    %deltaRate = deltaRate / RTTSampleInterval(C);
 end
 
 function deltaRTTGradient = RTTGradientDelta(currentRate, currRTTGradient, prevQueue, prevPrevQueue)   
@@ -197,6 +204,7 @@ end
 
 function delays = DelayModel(t, x)
     global Seg;
+    global MTU;
     global minRTT;
     global C;
     global prop;
@@ -218,7 +226,7 @@ function delays = DelayModel(t, x)
     % ...
 
     delays = zeros(2*numFlows, 1);
-    tprime = x(end)/C + Seg/C + prop;
+    tprime = x(end)/C + MTU/C + prop;
     for i=1:2:2*numFlows
         tstar = max(Seg/x(i), minRTT);
         delays(i) = t - tprime;
@@ -275,3 +283,15 @@ function  SetInitialRate(flownum, rate)
     initVal(2*(flownum-1)+1, 1) = rate;
 end
 
+function p = CalculateP(g)
+    gmin = -0.25;
+    gmax = 0.25;
+    if g > gmax
+        p = 1;
+    else if g < gmin
+            p = 0;
+        else
+            p = (g - gmin) / (gmax - gmin);
+        end
+    end
+end
