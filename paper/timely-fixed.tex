@@ -1,4 +1,5 @@
 \subsection {Patched TIMELY}
+
 \begin{figure}[t]
 \center
 \includegraphics[width=0.33\textwidth]{figures/timely_stability.eps}
@@ -6,24 +7,47 @@
 \label{fig:timely_stability}
 \end{figure}
 
-In order to ensure the protocol has a unique fixed point, and all flows get fair
-share and are stable at the fixed point, we make two minor modifications over
-TIMELY.
 
-First, we make the step of rate decrease rely on absolute queue length, instead
-of the gradient of queue length.  This will ensure that there is only one fixed
-point for the queue length. In addition, all flow will have the same rate
-because the queue length, which is shared across flows, can uniquely determine
-the rate of each flow. This is similar to the use of ECN in DCQCN. The side
-effect is that, with different number of flows, the fixed point of queue will be
-different.
+In order to ensure the protocol has a unique fixed point, and all flows get fair share and are stable at the fixed point,
+we make two minor modifications over TIMELY. As shown in Algorithm\ref{fig:timely_fixed_algo}, we only modified the last
+three lines of Algorithm\ref{fig:timely_algo}.
 
-Second, we use a continuous weighting function $w(g)$ to make the transition
-between rate increase and rate decrease smooth. This avoids the on-off behavior
-that causes oscillation, and stabilizes the protocol at the fixed point.  This
-is similar to the fact that probabilistic ECN marking stabilizes TCP, QCN and
-DCQCN. With $w(g)$, we combine the two conditions of $g \le 0$ and $g>0$ in the
-$dR(t)/dt$ equation:
+\begin{algorithm}[t]
+\footnotesize
+{
+\begin{algorithmic}[1]
+%\Procedure{CalcRate}{$newRTT$}
+\State $newRTTDiff \gets newRTT - prevRTT$
+\State $prevRTT \gets newRTT$
+\State $rttDiff \gets (1-\alpha) \cdot rttDiff + \alpha \cdot newRTTDiff$
+\State $rttGradient = rttDiff/D_{minRTT}$
+\If {$newRTT < T_{low}$}
+        \State $rate \gets rate + \delta$
+\ElsIf {$newRTT > T_{high}$}
+        \State $rate \gets rate \cdot  (1 - \beta \cdot (1 - T_{high}/newRTT))$
+\Else
+		\State $weight \gets w(rttGradient)$	
+		\State $error \gets \frac{{newRTT - RT{T_{ref}}}}{{RT{T_{ref}}}}$
+        \State $rate \gets \delta (1-weight) +  rate \cdot (1 - \beta \cdot weight  \cdot error)$
+\EndIf 
+%\EndProcedure
+\end{algorithmic}
+}
+\caption{TIMELY rate calculation}
+\label{fig:timely_fixed_algo}
+\end{algorithm}
+
+
+First, we make the step of rate decrease rely on absolute queue length (RTT), instead of the gradient of queue length (RTT). 
+This will ensure that there is only one fixed point for the queue length. In addition, all flow will have the same rate 
+because the queue length, which is shared across flows, can uniquely determine the rate of each flow. This is 
+similar to the use of ECN in DCQCN. The side effect is that, with different number of flows, the fixed point of 
+queue will be different.
+
+Second, we use a continuous weighting function $w(g)$ to make the transition between rate increase and rate decrease
+smooth. This avoids the on-off behavior that causes oscillation, and stabilizes the protocol at the fixed point. 
+This is similar to the fact that probabilistic ECN marking stabilizes TCP, QCN and DCQCN. With $w(g)$, we combine 
+the two conditions of $g \le 0$ and $g>0$ in the $dR(t)/dt$ equation:
 
 
 \begin{equation}
