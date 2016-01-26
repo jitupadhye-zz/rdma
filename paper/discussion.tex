@@ -1,12 +1,56 @@
-\section{Discussion}
+\section {ECN versus Delay}
 
-\subsection{PI with DCQCN}
+In the previous sections, we saw that barring the small anomaly, DCQCN remains
+stable as the number of flows increase. We also saw that this is not the case
+ofor TIMELy. Apart from teh pecularities of the two protocols, there is a deeper
+reason behind this problem, that is closely related to the data center
+networking environment. 
 
+Let's assume a single-bottleneck scenario, and assume that ECN marking is used
+to convey congestion information. Typical shared-buffer switches, especially
+those that use Boradcom's cmearchent sillicon, do ECN marking on {\em packet
+egress}. When a packet is ready to depart, the controller checks the egress
+queue for that port {\em at that instant}, and depending on the specified
+marking algorithm (e.g.  Equation~\ref{eq:mark}), decides whether to mark the
+packet. Thus, the mark carried by the packet conveys information about the state
+of the queue at the time the packet {\em departs} the queue. In other words,
+information carried by just-departed packet (say $p_i$) is influenced by all the
+packets that arrived in the queue {\em after} $p_i$ arrived, but before $p_i$
+left. 
 
-\subsection {Tradeoff}
+On the other hand, consider what RTT measurements do. If the egress queue
+discpline is FIFO within a priority class, (which it typically is), the delay
+experienced by a packet reflects the state of the queue at the time the packet
+{\em arrives} at the queue. Susequent packet arrivals have no bearing on the
+delay experienced by the packet. 
+
+This seemingly small detail means that the information about queue state
+conveyed by RTT measurements is always {\em stale} compared to what can be
+conveyed by ECN markings. In practice, this means that as the queue length
+increases, congestion control algorithms that rely on RTT suffer from increasing
+{\em lag} in their control loop, making them unstable. Since steady state queue
+length typically increases with number of flows, RTT based congestion control is
+is more likely to become more unstbale, compared to ECN-based congestion control.
+
+This issue is critical in data center networks, because queueing delays can
+easily dominate switching and propagation delays.  For example, an Arista
+7040QX32 has 40Gbps ports, and a total shared buffer of switch has 12MB. Even if
+just 1MB worth of queue builds ip at an egress port, it takes 200 $\mu$s to
+drain. In contrast, the one-hop propagation delaym, with cut-through forwarding
+is enabled, are in the range of 1-2 $\mu$s. Typical diameter of a DC network is
+6 hops, propagation delay is just 10-18 $\mu$s. In contrast, in wide area
+networks, queuing delays and propagation delays can be comparable (excluding
+scenarios like bufferbloat~\cite{bufferbloat}). 
+
+However, one can ask the question - can we build congestion control protocols
+that are guranteed to maintain a fixed queue length at the bottleneck,
+regardless of the number of flows? The answer, as we show below, turns out to be
+yes - but only if you use ECN.
+
 We next prove another result that gives a fundamental tradeoff between fairness
 and guaranteed delay for protocols that rely on delay measurements at the end
 points to implement congestion control.
+
 \begin{thm}[Fairness/Delay tradeoff]
 For congestion control mechanisms that relay purely on end to end
 delay measurements, you can either have fairness or a guaranteed delay
@@ -25,3 +69,22 @@ to the guarantee. Since the guarantee is set independent of $N$, the
 actual delay contains no information on N and 
 thus such a scheme cannot ensure fairness.
 \end{proof}
+
+However, using a PI controller, we are able to stablize the queue length for
+DCQCN just fine, as seen below.
+
+\begin{figure}
+\center
+\includegraphics[width=0.33\textwidth]{figures/stable_q_85_pi.pdf}
+\caption{PI marking scheme can stabilize DCQCN}
+\label{fig:dcqcn_pi}
+\end{figure}
+
+\para{Using PI controller for enhanced stability:}
+A more principled appraoch to stabilizing DCQCN for all operating regimes is to
+use a PI~\cite{Hollot:PIController}-based packet marking scheme, instead of the
+RED-like marking scheme of Equation (\ref{eq:mark}). We are currently
+investigating this option in more detail; a sample result is shown in
+Figure~\ref{fig:dcqcn_pi}. One important advantage of the using the PI
+controller is that the staedy-state queue length is indepedent of the number of
+flows.
