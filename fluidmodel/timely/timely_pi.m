@@ -3,6 +3,7 @@ function sol = timely_pi()
 
     global C; % bandwidth 
     global Seg; % MSS 
+    global MTU; % MTU
     global delta; % the additive increment step
     global T_high; % if RTT is greater than this, decrease rate multiplicatively.
     global T_low; % if RTT is lower than this, do increase rate additively. 
@@ -16,26 +17,21 @@ function sol = timely_pi()
     global sim_length;
     global a; % PI parameters
     global b; % PI parameters
-    global pold;
-    global p;
-    global qold;
     global qref;
-    pold=0;
-    p=0;
-    prevprevQueue = 0;
-    qold = 0;
+
 
     %
     % Simulation control
     % 
-    step_len = 10e-4 ; % 5 microseconds
-    sim_length = 500e-2; % 100 milliseconds 
+    step_len = 20e-4 ; % 5 microseconds
+    sim_length = 1000e-3; % 100 milliseconds 
 
     % 
     % Fixed Parameters
     %
     C = 10 * 1e9; % line rate.
     Seg = 64 * 8 * 1e3; % burstsize.
+    MTU = 1 * 8 * 1e3;
     prop = 4e-6; % propagation delay
     
     % Setting PI parameters
@@ -139,35 +135,41 @@ function dx = TimelyModel(t,x,lag)
     rates = x(1:3:3*numFlows);
     dx(end) = QueueDelta(x(end), rates);
     % update rate delta. 
-    for i = 1:3:3*numFlows
-        dx(i) = RateDelta(x(i), lag(3*numFlows+1,i), x(i+1), ...
-                          lag(3*numFlows+1,i+1)
+    for j = 0:(numFlows-1)
+        i = j*3+1;
+        dx(i) = RateDelta(x(i), lag(3*numFlows+1,j*2+1), x(i+1), ...
+                          lag(3*numFlows+1,j*2+2), x(i+2));
         %prevprevQueue);
         % prevprevQueue = lag(3*numFlows+1,i);
     end  
     
     % update RTT gradient
-    for i = 2:3:3*numFlows
-        dx(i) = RTTGradientDelta(x(i-1), x(i), lag(3*numFlows+1,i-1), lag(3*numFlows+1,i));
-    end  
-    for col = 1:2:2*numFlows
-        dx(i) = pDelta(lag(3*numFlows+1,i-1), lag(3*numFlows+1,i));
+    for j = 0:(numFlows-1)
+        i = j*3+2;
+        dx(i) = RTTGradientDelta(x(i-1), x(i), lag(3*numFlows+1,j*2+1), lag(3*numFlows+1,j*2+2));
+    end 
+    
+    % update p
+    for j = 0:(numFlows-1)
+        i = j*3+3;
+        dx(i) = pDelta(x(i-2), lag(3*numFlows+1,j*2+1), lag(3*numFlows+1,j*2+2));
         % 
-        
     end  
 
 end
 
-function deltaP = pDelta(prevQueue, prevprevQueue)
+function deltaP = pDelta(currentRate, prevQueue, prevprevQueue)
     global qref;
     global a;
     global b;
     global C;
    
-    %    prevQueue
-    %    prevprevQueue
+    prevQueue
+    prevprevQueue
     %qref
     deltaP = a*(prevQueue - qref) - b*(prevprevQueue - qref);
+    %deltaP = deltaP / 1e-5;
+    deltaP = deltaP / RTTSampleInterval(currentRate);
 end
     
     
@@ -186,7 +188,7 @@ function deltaQueue = QueueDelta(currentQueue, flowRates)
 end
 
 function deltaRate = RateDelta(currentRate, prevQueue, rttGradient, ...
-                               prevprevQueue)
+                               prevprevQueue, currentP)
     global delta;
     global beta;
     global C;
@@ -197,17 +199,17 @@ function deltaRate = RateDelta(currentRate, prevQueue, rttGradient, ...
     global pold;
     global p;
     global qold;
-    queueLow = C * T_low;
+    %queueLow = C * T_low;
     %queueLow = 0;
-    queueHigh = C * T_high;
-    qref = (T_low+T_high)/2;
-    prevQueue;
-    p = a*(prevQueue - qref) - b*(qold - qref) + pold
-    qold  = prevQueue;
+    %queueHigh = C * T_high;
+    %qref = (T_low+T_high)/2;
+    %prevQueue;
+    %p = a*(prevQueue - qref) - b*(qold - qref) + pold
+    %qold  = prevQueue;
 
     %  p = min(max(p, 0), 1);
-    pold = p;
-    deltaRate = delta - p*.5*currentRate;
+    %pold = p;
+    deltaRate = delta - currentP*.5*currentRate;
     
     %   if (prevQueue < queueLow)
         %deltaRate = delta;
@@ -256,6 +258,7 @@ end
 
 function delays = DelayModel(t, x)
     global Seg;
+    global MTU;
     global minRTT;
     global C;
     global prop;
@@ -277,11 +280,12 @@ function delays = DelayModel(t, x)
     % ...
 
     delays = zeros(2*numFlows, 1);
-    tprime = x(end)/C + Seg/C + prop;
-    for i=1:2:2*numFlows
+    tprime = x(end)/C + MTU/C + prop;
+    for j=0:(numFlows-1)
+        i = j*3+1;
         tstar = max(Seg/x(i), minRTT);
-        delays(i) = t - tprime;
-        delays(i+1) = t - tstar - tprime;
+        delays(2*j+1) = t - tprime;
+        delays(2*j+2) = t - tstar - tprime;
     end
 end
 
