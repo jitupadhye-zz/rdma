@@ -164,8 +164,8 @@ function deltaP = pDelta(currentRate, prevQueue, prevprevQueue)
     global b;
     global C;
    
-    prevQueue
-    prevprevQueue
+    %prevQueue
+    %prevprevQueue
     %qref
     deltaP = a*(prevQueue - qref) - b*(prevprevQueue - qref);
     %deltaP = deltaP / 1e-5;
