@@ -49,15 +49,13 @@ are determined by Equation~\ref{eq:mark} and \ref{eq:alpha}:
 \alpha^{(i)*}  = 1 - {(1 - p^*)^{{\tau '}R_C^{(i)*}}}
 \end{equation}
 Next, we show that $p^*$ exists and is uniquely determined by $R_C^{(i)*}$ in
-the DCQCN model.  From Equation~\ref{eq:rt} and \ref{eq:rc}, at the fixed point,
-we get the two forms of $R_T^{(i)*}$, respectively:
+the DCQCN model. Combining Equation~\ref{eq:rt} and \ref{eq:rc}, 
+we eliminate the variable $R_T^{(i)*}$. After simplification, we see that the value 
+of $p^*$ is determined by:
 \begin{equation}
 \small
-{R_T^{(i)*}} = R_C^{(i)*} + \frac{{a\alpha^{(i)*} }}{{(b + d)\tau }}
-\end{equation}
-\begin{equation}
-\small
-{R_T^{(i)*}} = R_C^{(i)*}\left( {1 + \frac{{(c + e)\tau {R_{AI}}}}{a}} \right)
+\frac{{{a^2}\alpha^{(i)*} }}{{(b + d)(c + e)}} = {\tau ^2}{R_{AI}}R_C^{(i)*}
+\label{eq:p_fixed}
 \end{equation}
 Where we denote $a, b, c, d, e$ as follows:
 \begin{equation}
@@ -67,31 +65,35 @@ a = 1 - {(1 - p^*)^{\tau {R_C^{(i)*}}}},b = \frac{{p^*}}{{{{(1 - p^*)}^{ - B}} -
 d = \frac{{p^*}}{{{{(1 - p^*)}^{ - T{R_C^{(i)*}}}} - 1}},e = \frac{{{{(1 - p^*)}^{FT{R_C^{(i)*}}}}p^*}}{{{{(1 - p^*)}^{ - T{R_C^{(i)*}}}} - 1}}
 \end{array}
 \end{equation}
-Combining the two forms of $R_T^{(i)*}$, we see that the value of $p^*$ is determined by:
-\begin{equation}
-\small
-\frac{{{a^2}\alpha^{(i)*} }}{{(b + d)(c + e)}} = {\tau ^2}{R_{AI}}R_C^{(i)*}
-\label{eq:p_fixed}
-\end{equation}
-The LHS of Equation (\ref{eq:p_fixed}) is monotonic when $p \in [0,1]$.
+%at the fixed point,
+%we get the two forms of $R_T^{(i)*}$, respectively:
+%\begin{equation}
+%\small
+%{R_T^{(i)*}} = R_C^{(i)*} + \frac{{a\alpha^{(i)*} }}{{(b + d)\tau }}
+%\end{equation}
+%\begin{equation}
+%\small
+%{R_T^{(i)*}} = R_C^{(i)*}\left( {1 + \frac{{(c + e)\tau {R_{AI}}}}{a}} \right)
+%\end{equation}
+%Combining the two forms of $R_T^{(i)*}$, we see that the value of $p^*$ is determined by:
+The LHS of Equation (\ref{eq:p_fixed}) is a monotonic function of $p$ when $p \in [0,1]$.
 Furthermore, when $p = 0$, the LHS is smaller than RHS, and vice versa when $p =
 1$. Thus DCQCN has a unique fixed point of marking probability $p^*$, leading to
 a unique fixed point of queue length $q^*$.
 \end{proof}
 
 Next we approximate the value of $p^*$. Numerical analysis shows that $p^*$ is 
-typically very close to 0. Therefore, we approximate the LHS using Taylor series around $p=0$:
-\begin{equation}
-\small
-\frac{{{a^2}\alpha }}{{(b + d)(c + e)}} = \frac{{(R_C^{(i)*})^3{\tau ^2}\tau '}}{{{{\left( {\frac{1}{B} + \frac{1}{{TR_C^{(i)*}}}} \right)}^2}}}{p^3} + O\left( {{p^4}} \right)
-\end{equation}
-Omitting the $O(p^4)$ term, and combining with Equation~\ref{eq:p_fixed}, we have the fixed point of $p$:
+typically very close to 0. Therefore, we approximate the LHS using Taylor series around $p=0$.
+%\begin{equation}
+%\small
+%\frac{{{a^2}\alpha }}{{(b + d)(c + e)}} = \frac{{(R_C^{(i)*})^3{\tau ^2}\tau '}}{{{{\left( {\frac{1}{B} + \frac{1}{{TR_C^{(i)*}}}} \right)}^2}}}{p^3} + O\left( {{p^4}} \right)
+%\end{equation}
+After omitting the $O(p^4)$ term in the Taylor series, we have:
 \begin{equation}
 \small
 {p^*} = \sqrt[3]{{\frac{{{R_{AI}}}}{{{\tau '}(R_C^{(i)*})^2}}{{\left( {\frac{1}{B} + \frac{1}{TR_C^{(i)*}}} \right)}^2}}}
 \label{eq:fixedp}
 \end{equation}
-
 With this estimation, we see that $p^*$ uniquely determine $R_C^{(i)*}$. 
 Since $p^*$ is shared by all flows $i$, $i = 1, 2, ..., N$, we have:\footnote{In 
 Section~\ref{sec:dcqcn_convergence}, we show a more rigorous proof that all flows
@@ -105,7 +107,7 @@ $i = 1, 2, ..., N$.
 
 \para{Stability analysis.} 
 We test the system against {\em Bode Stability Criteria}~\cite{controltheory}. 
-More details can be found in Appendix~\ref{sec:dcqcn_stability_analysis},
+More details can be found in~\cite{fullpaper},
 while the final results are shown in
 Figure~\ref{fig:dcqcn_stability}.  The degree of stability is shown as {\em
 Phase Margin}. The system is stable when its {\em Phase Margin} is larger than
@@ -142,15 +144,6 @@ margin is larger than 0.
 \end{minipage}
 }
 \end{figure*}
-
-
-\begin{figure}[t]
-\center
-\includegraphics[width=0.4\textwidth]{figures/dcqcn_convergence.eps}
-\caption{DCQCN's AIMD-style updates of flow rate.}
-\label{fig:dcqcn_convergence}
-\end{figure}
-
 
 \begin{figure}[t]
 \centering
