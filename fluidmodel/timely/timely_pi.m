@@ -37,7 +37,7 @@ function sol = timely_pi()
     % Setting PI parameters
     %    a = (5.822e-7);
     %b = (5.8219996e-7);
-    b = 1.816e-10/(10*Seg/C);
+    b = 1.816e-9/(10*Seg/C);
     a = (1+.0005)*b;
     %b = 0;
 

@@ -34,8 +34,7 @@ supported by most modern NICs and their drivers.
 
 Apart from this practical consideration, we are also driven by scientific
 curiosity.  Numerous ECN and delay based congestion control protocols have been
-proposed and analyzed before~\cite{ecn, tcp-vegas,
-Hollot:PIController,misra2000fluid,hollot2001designing,misra:TAC2002,gorinsky2004feedback}.
+proposed and analyzed before~\cite{ecn, tcp-vegas,misra2000fluid,hollot2001designing,misra:TAC2002,gorinsky2004feedback}.
 However, barring a few recent exceptions~\cite{dctcp-analysis, qcn-analysis}
 most prior work has been in the context of wide area networks.  Unfortunately,
 neither ECN, nor delay based congestion control has seen widespread deployment
@@ -99,7 +98,7 @@ studied, the fixed point of the queue length (and hence feedback delay)
 increases with the number of flows $(ii)$ Higher delays are undesirable both
 from an application perspective as well as difficulty in controlling the loop.
 To fix that, we show that using integral control, e.g. the
-PI~\cite{Hollot:PIController}-like marking scheme, we can make the queue length
+PI~\cite{hollot2001designing}-like marking scheme, we can make the queue length
 (and hence delay) independent of the number of contending flows. $(iii)$ In
 controlling the queue length to a fixed point, we derive a \emph{fundamental}
 result for congestion control: for a distributed protocol that uses only delay
@@ -108,3 +107,8 @@ but not both simultaneously. For a protocol that employs ECN marking based
 network feedback, you can achieve both. $(iv)$ We discuss the pros and cons of
 the use of hardware rate limiters (DCQCN uses them, TIMELY does not).
 
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:
