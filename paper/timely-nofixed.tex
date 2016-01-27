@@ -130,15 +130,25 @@ configuration.
 Instead, we propose a simple fix to the TIMELY algorithm, that solves the
 problem to a large extent.
 
-\begin{figure}[t]
+\begin{figure*}[t]
+\centering
+\mbox{
+\begin{minipage}{0.66\textwidth}
 \subfigure[Two flows starting at 7 and 3Gbps, 16KB burst] { 
-\includegraphics[width=0.47\columnwidth]{figures/2f73burst16.pdf}
+\includegraphics[width=0.47\textwidth]{figures/2f73burst16.pdf}
 \label{fig:timely_burst_73_16}
 }
 \subfigure[Two flows starting at 5Gbps, 64KB burst] { 
-\includegraphics[width=0.47\columnwidth]{figures/timely_bursty_64_rate.pdf}
+\includegraphics[width=0.47\textwidth]{figures/timely_bursty_64_rate.pdf}
 \label{fig:timely_burst_55_64}
 }
 \caption{TIMELY with bursts}
 \label{fig:timely_sim_bursty}
-\end{figure}
+\end{minipage}
+\begin{minipage}{0.33\textwidth}
+\includegraphics[width=0.99\textwidth]{figures/timely_stability.eps}
+\caption{Patched TIMELY stability}
+\label{fig:timely_stability}
+\end{minipage}
+}
+\end{figure*}
