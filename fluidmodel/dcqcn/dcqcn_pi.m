@@ -49,8 +49,7 @@ function sol = dcqcn_pi()
     
     % PI parameters
     usePI = 1;
-    qold = 0;
-    pold = 0;
+  
     qref = 200e3*8/packetSize;
     %    a = 1.822e-3/1.1;
     %%%%%%%%%%%  These parameters stabilize the queue at 200 for
@@ -81,8 +80,12 @@ function sol = dcqcn_pi()
     pmax = 1e-1; % 1 percent.
     g = 1/256;
 
-    for taustar = [85e-6]  % vary the feedback delay
-        for numFlows = [10]
+    for taustar = [4e-6, 85e-6]  % vary the feedback delay
+        for numFlows = [2, 10, 64]
+            
+           qold = 0;
+           pold = 0;
+    
             % Initial conditions: (single column matrix)
             %
             % 1: rc1
@@ -113,7 +116,7 @@ function sol = dcqcn_pi()
 
             prefix = 'unstable';
             if (usePI == 1)
-                prefix = 'unstable.pix';
+                prefix = 'unstable.pifixed';
             end
             fileName = sprintf('%s.%d.%d.dat', prefix, numFlows, taustar*1e6);
             
