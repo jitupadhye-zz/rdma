@@ -7,6 +7,20 @@
 \label{fig:timely_stability}
 \end{figure}
 
+\begin{figure*}[t]
+\center
+\subfigure[Two flows, 7Gbps and 3Gbps] { 
+\includegraphics[width=0.3\textwidth]{figures/timely_stability_2f73_fixed.pdf}
+}
+\subfigure[Two flows, 7Gbps and 3Gbps] { 
+\includegraphics[width=0.3\textwidth]{figures/timely_stability_q_2f73_fixed.pdf}
+}
+\subfigure[40 flows, starting at 0.25Gbps] { 
+\includegraphics[width=0.3\textwidth]{figures/timely_stability_q_40f_fixed.pdf}
+}
+\caption{Performance of patched TIMELY}
+\label{fig:timely_unstable}
+\end{figure*}
 
 In order to ensure the protocol has a unique fixed point, and all flows get fair share and are stable at the fixed point,
 we make two minor modifications over TIMELY. As shown in Algorithm\ref{fig:timely_fixed_algo}, we only modified the last
