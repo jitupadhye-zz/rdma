@@ -23,8 +23,8 @@ function sol = timely_pi()
     %
     % Simulation control
     % 
-    step_len = 20e-4 ; % 5 microseconds
-    sim_length = 1000e-3; % 100 milliseconds 
+    step_len = 20e-3 ; % 5 microseconds
+    sim_length = 500e-2; % 100 milliseconds 
 
     % 
     % Fixed Parameters
@@ -37,8 +37,8 @@ function sol = timely_pi()
     % Setting PI parameters
     %    a = (5.822e-7);
     %b = (5.8219996e-7);
-    b = 1.816e-10;
-    a = (1+.00001)*b;
+    b = 1.816e-10/(10*Seg/C);
+    a = (1+.0005)*b;
     %b = 0;
 
     %
@@ -169,7 +169,7 @@ function deltaP = pDelta(currentRate, prevQueue, prevprevQueue)
     %qref
     deltaP = a*(prevQueue - qref) - b*(prevprevQueue - qref);
     %deltaP = deltaP / 1e-5;
-    deltaP = deltaP / RTTSampleInterval(currentRate);
+    %deltaP = deltaP / RTTSampleInterval(currentRate);
 end
     
     
