@@ -18,14 +18,15 @@ function sol = timely_pi()
     global a; % PI parameters
     global b; % PI parameters
     global qref;
-
+    global numCalls;
 
     %
     % Simulation control
     % 
     step_len = 20e-3 ; % 5 microseconds
     sim_length = 500e-2; % 100 milliseconds 
-
+    numCalls = 0; % for debguuing
+    
     % 
     % Fixed Parameters
     %
@@ -67,21 +68,17 @@ function sol = timely_pi()
     % 2*numFlow +1: initial queue size. 
     %
 
-    for numFlows = 3
+    for numFlows = 10
         initVal = rand(3*numFlows + 1, 1)*0.01;
         initVal(end) = 0;
-        for i=1:numFlows
-            %SetInitialRate(i, (1+rand*0.2-0.1)* 1e9);
-            %SetInitialRate(i, C/numFlows);
+        for flowId = 1:numFlows
+            SetInitialRate(flowId, C*flowId/(numFlows*(numFlows+1)/2));
         end
-
-        SetInitialRate(1, 5e9);
-        SetInitialRate(2, 3e9);
-        SetInitialRate(3, 2e9);
+        
         %
         % Options.
         %
-        options = ddeset('MaxStep', step_len, 'RelTol', 1e-2, 'AbsTol', 1e-5);
+        options = ddeset('MaxStep', step_len, 'RelTol', 1e-2, 'AbsTol', 1e-4);
 
         %
         % Solve.
@@ -102,13 +99,11 @@ function sol = timely_pi()
         % 
         
         fprintf('%d %f %d\n', numFlows, utilization, err);       
-        fileName =  sprintf('timely.%d.dat', numFlows);
+        fileName =  sprintf('timely.withpi.%d.%d.dat', numFlows, prop*1e6);
         fileId = fopen (fileName, 'w');
         fprintf(fileId, '## utilization = %f\n', utilization);
         fclose(fileId);
         dlmwrite(fileName,[t',rates'./1e9, q'./8e3], '-append', 'delimiter','\t');
-  
-       
         PlotSol(t, q, rates);
         %break;
     end
@@ -116,6 +111,8 @@ end
 
 function dx = TimelyModel(t,x,lag)
     global numFlows;
+    global numCalls;
+    
     dx  = zeros(3*numFlows+1, 1);
     
     % 1: rate for flow 1
@@ -157,6 +154,11 @@ function dx = TimelyModel(t,x,lag)
         % 
     end  
 
+    numCalls = numCalls + 1;
+    if (mod(numCalls, 1000) == 0)
+        fprintf ('%g %d\n', t, numCalls);
+    end
+        
 end
 
 function deltaP = pDelta(currentRate, prevQueue, prevprevQueue)
@@ -172,8 +174,7 @@ function deltaP = pDelta(currentRate, prevQueue, prevprevQueue)
     %deltaP = deltaP / 1e-5;
     %deltaP = deltaP / RTTSampleInterval(currentRate);
 end
-    
-    
+       
 function deltaQueue = QueueDelta(currentQueue, flowRates)
     global C;
     global maxQueue;
@@ -332,7 +333,7 @@ function PlotSol(t, q, rates)
     axis([0 sim_length 0 max(q)/(8e3)])
     xlabel('Time (seconds)')
     ylabel('Queue (KBytes)')
-    end
+end
 
 function  SetInitialRate(flownum, rate)
     global initVal;
