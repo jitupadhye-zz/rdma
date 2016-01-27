@@ -68,7 +68,7 @@ function sol = timely_pi()
     %
 
     for numFlows = 3
-        initVal = rand(3*numFlows + 1, 1);
+        initVal = rand(3*numFlows + 1, 1)*0.01;
         initVal(end) = 0;
         for i=1:numFlows
             %SetInitialRate(i, (1+rand*0.2-0.1)* 1e9);
