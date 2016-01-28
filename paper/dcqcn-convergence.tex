@@ -9,11 +9,37 @@
 %\end{figure}
 
 \begin{figure}[t]
+\centering
+\includegraphics[width=0.33\textwidth]{figures/dcqcn_convergence_time.eps}
+\vspace{-1em}
+\caption{Upper bound on DCQCN convergence time under conservative assumptions}
+\vspace{-1em}
+\label{fig:dcqcn_convergence_time}
+\end{figure}
+
+\begin{figure}[t]
 \center
 \includegraphics[width=0.4\textwidth]{figures/dcqcn_convergence_brief.eps}
 \caption{DCQCN's AIMD-style updates of flow rate.}
+\vspace{-1em}
 \label{fig:dcqcn_convergence}
 \end{figure}
+
+In Section~\ref{sec:dcqcn_stability}, we showed that for reasonable parameter
+settings,  DCQCN is stable {\em after} flows converge to the unique fixed point.
+We also showed that at the fixed point, the flows share the bandwidth equally.
+However, two questions remain unanswered: $(i)$ do flows the always converge
+to this fixed point, and $(ii)$ how fast do flows converge? 
+
+We cannot answer these questions using the fluid model, so
+like~\cite{dctcp-analysis}, we construct and analyze a discrete model of the
+rate adjustment at the RP. The default parameter settings given in~\cite{dcqcn}
+set both the Timer $T$ and $\alpha$ update interval $\tau '$ equal to $55\mu s$.
+Thus, we use $\tau '$ as the unit of time.  The process of DCQCN rate update is
+similar to TCP AIMD, as shown in Figure~\ref{fig:dcqcn_convergence}.  The flows
+get the peak rates at $T_k$. For simplicity, we assume all flows are
+synchronized, and peak at the same time.  This is a common assumption, for data
+center environments~\cite{dctcp-analysis}.
 
 \begin{figure*}[t]
 \center
@@ -32,24 +58,11 @@
 \includegraphics[width=0.32\textwidth]{figures/dcqcn_converge_11.pdf}
 \label{fig:dcqcn_convergence_sim_11}
 }
+\vspace{-2em}
 \caption{DCQCN convergence: simulation results}
+\vspace{-1em}
 \label{fig:dcqcn_convergence_sim}
 \end{figure*}
-In Section~\ref{sec:dcqcn_stability}, we showed that for reasonable parameter
-settings,  DCQCN is stable {\em after} flows converge to the unique fixed point.
-We also showed that at the fixed point, the flows share the bandwidth equally.
-However, two questions remain unanswered: $(i)$ do flows the always converge
-to this fixed point, and $(ii)$ how fast do flows converge? 
-
-We cannot answer these questions using the fluid model, so
-like~\cite{dctcp-analysis}, we construct and analyze a discrete model of the
-rate adjustment at the RP. The default parameter settings given in~\cite{dcqcn}
-set both the Timer $T$ and $\alpha$ update interval $\tau '$ equal to $55\mu s$.
-Thus, we use $\tau '$ as the unit of time.  The process of DCQCN rate update is
-similar to TCP AIMD, as shown in Figure~\ref{fig:dcqcn_convergence}.  The flows
-get the peak rates at $T_k$. For simplicity, we assume all flows are
-synchronized, and peak at the same time.  This is a common assumption, for data
-center environments~\cite{dctcp-analysis}.
 
 \begin{thm}[DCQCN convergence]
 Under the control of DCQCN, the rate difference of any two flows decrease exponentially
