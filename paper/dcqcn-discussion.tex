@@ -1,8 +1,7 @@
-\subsection{Discussion}
-
-
-
-%DCQCN is stable at 100Gbps even when the control loop delay is $100\mu s$. TODO:
-%similar for the PI controller. We conclude that DCQCN easily adapts to higher
-%bandwidth fabrics with minor tunings. 
-
+\subsection{Summary}
+We have shown that DCQCN has a unique fixed point, where all flows get a fair
+share of the bottleneck bandwidth. For typical parameter values flows converges
+to this fixed point within 100ms. DCQCN generally stable around this fixed
+point, an $R_{AI}$ and $K_{max}$ can be tuned to ensure stability, if needed.
+However, a PI-controller based approach is perhaps the more principled way to
+ensure stability and fixed queue length.

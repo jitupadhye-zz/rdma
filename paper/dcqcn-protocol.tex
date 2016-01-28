@@ -39,8 +39,6 @@ Note that $\tau'$ must be larger than the CNP generation timer. Furthermore, RP
 increases its sending rate using a timer and a byte counter, in a manner
 identical to QCN~\cite{qcn}. The rate increases has two phases, five stages of
 so-called ``fast recovery'', where $R_c$ rapidly approaches $R_t$, and then a
-gradual additive increase.
-
-Note that that DCQCN does not have slow start. Senders start at line rate, in
-order to optimize the common case of no congestion. DCQCN relies on hardware
-rate limiters for per-packet rate limiting. 
+gradual additive increase.  DCQCN does not have slow start. Senders start at
+line rate, in order to optimize the common case of no congestion. DCQCN relies
+on hardware rate limiters for per-packet rate limiting. 

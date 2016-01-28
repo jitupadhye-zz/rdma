@@ -21,16 +21,16 @@
 \caption{DCQCN stability}
 \label{fig:dcqcn_stability}
 \end{figure*}
-To analyze stability, we first obtain the fixed point of the system, and then
-linearize the model around the fixed point. We analyze the linearized model for
-stability using classical frequency domain techniques~\cite{controltheory}.  
+We first obtain the fixed point of the system, and linearize the model around
+the fixed point. We analyze the linearized model for stability using standard
+frequency domain techniques~\cite{controltheory}.  
 
 \begin{thm}[DCQCN's unique fixed point]
 A unique fixed point of queue length exists for DCQCN. 
 \end{thm}
 \begin{proof}
 By setting the left-hand side of Equation~\ref{eq:q} to 0,
-it is easy to see that any fixed points of the DCQCN (if they exist) must
+we see that any fixed points of the DCQCN (if they exist) must
 satisfy:
 \begin{equation}
 \small
@@ -96,8 +96,8 @@ After omitting the $O(p^4)$ term in the Taylor series, we have:
 \end{equation}
 With this estimation, we see that $p^*$ uniquely determine $R_C^{(i)*}$. 
 Since $p^*$ is shared by all flows $i$, $i = 1, 2, ..., N$, we have:\footnote{In 
-Section~\ref{sec:dcqcn_convergence}, we show a more rigorous proof that all flows
-converge the the same rate.}
+Section~\ref{sec:dcqcn_convergence}, we rigorously prove that all flows
+converge to the same rate.}
 \begin{equation}
 \small
 R_C^{(1)*} = R_C^{(2)*} = ... = R_C^{(N)*}
@@ -107,9 +107,9 @@ $i = 1, 2, ..., N$.
 
 \para{Stability analysis.} 
 We test the system against {\em Bode Stability Criteria}~\cite{controltheory}. 
-More details can be found in~\cite{fullpaper},
-while the final results are shown in
-Figure~\ref{fig:dcqcn_stability}.  The degree of stability is shown as {\em
+Results are shown in Figure~\ref{fig:dcqcn_stability}. See~\cite{fullpaper} for
+details of the derivation of the characteristic equation for $R_C$.
+The degree of stability is shown as {\em
 Phase Margin}. The system is stable when its {\em Phase Margin} is larger than
 0, and the larger {\em Phase Margin} means the system is more stable.
 
@@ -117,8 +117,7 @@ We analyze DCQCN stability in different conditions, particularly with different
 control signal delays (propagation delay plus queuing delay in practice), and
 different number of flows. An ideal protocol should be tolerant with large delay
 and scalable to any number of flows. As Figure~\ref{fig:dcqcn_stability} shows,
-DCQCN, with default parameters, is mostly stable. In most cases, the phase
-margin is larger than 0.
+DCQCN, with default parameters, is mostly stable. 
 
 \begin{figure*}[t]
 \centering
@@ -161,26 +160,26 @@ margin is larger than 0.
 %\label{fig:dcqcn_unstable_ns}
 %\end{figure}
 
-Curiously, unlike TCP, the relationship between number of flows and the phase
-margin is non-monotonic. When the delay is large, {\em e.g., 100$\mu$s}, the
-phase margin dips below zero for certain number of flows, before rising again.
-For the set of parameters we have chosen, the system can be unstable with 10
-flows at high feedback delays.  DCQCN is increasingly stable with larger number
-of flows, which means good scalability. This point is further illustrated in the
-fluid model results shown Figure~\ref{fig:dcqcn_unstable}. When the feedback
-delay is small (4 $\mu$s), DCQCN is stable - flow rates, and queue length
-quickly\footnote{Remember that DCQCN flows always start at line rate.}
-stabilizes regardless of the number of flows. However, when the delay is large
-(85$\mu$s), the protocol is unstable for 10 flows. It is, however, stable for 2
-and 64 flows. Figure~\ref{fig:dcqcn_unstable_ns} confirms that we observe the
-same instability in packet-level simulations.
+However, unlike TCP~\cite{misra200fluid}, the relationship between number of
+flows and the phase margin is non-monotonic. When the delay is large, {\em e.g.,
+100$\mu$s}, the phase margin dips below zero for certain number of flows, before
+rising again.  For the set of parameters we have chosen, the system can be
+unstable with 10 flows at high feedback delays.  DCQCN is increasingly stable
+with larger number of flows, which means good scalability. This point is further
+illustrated in the fluid model results shown Figure~\ref{fig:dcqcn_unstable}.
+When the feedback delay is small (4 $\mu$s), DCQCN is stable - flow rates, and
+queue length quickly\footnote{Remember that DCQCN flows always start at line
+rate.} stabilizes regardless of the number of flows. However, when the delay is
+large (85$\mu$s), the protocol is unstable for 10 flows. It is, however, stable
+for 2 and 64 flows. Figure~\ref{fig:dcqcn_unstable_ns} shows the instability
+with packet-level simulations.
 
-While this problem may not be particularly serious in practice, it can be easily 
-fixed by tuning the values of $R_{AI}$ and $K_{max}$.  Smaller $R_{AI}$
-means flows increase their rate more gently, and stabilizes the system.
-Similarly, larger $K_{max} - K_{min}$ makes rate decreasing more fine grained,
-because the perturbation of queue length leads to smaller marking probability
-perturbation. We show these trends in Figures \ref{fig:dcqcn_stability_rai} and
+While this problem may not be particularly serious in practice, it can be easily
+fixed by tuning the values of $R_{AI}$ and $K_{max}$.  Smaller $R_{AI}$ means
+flows increase their rate more gently, and stabilizes the system.  Similarly,
+larger $K_{max} - K_{min}$ makes rate decreasing more fine grained, because the
+perturbation of queue length leads to smaller perturbation in marking
+probability.  We show these trends in Figures \ref{fig:dcqcn_stability_rai} and
 \ref{fig:dcqcn_stability_rai_kmax}.  With small $R_{AI}$ and large $K_{max}$,
 DCQCN can be always stable even when the control signal delay reaches 100$\mu
 s$, which equals to the propagation delay of a $30KM$ cable, or $500KB$ queuing
@@ -191,14 +190,12 @@ latency. Smaller $R_{AI}$ leads to slower ramp-up, while larger $K_{max}$ leads
 to larger queue length. In most cases, the default parameters strike a good
 enough balance between stability and latency.
 
-\para{Extending to 100Gbps network.}  As the datacenter network fabric is moving
-towards 100Gbps bandwidth, we analyze DCQCN stability given $C=100Gbps$. As
-shown in Figure~\ref{fig:dcqcn_100gbps}, the default parameters of DCQCN work
-reasonably well when the delay is small, {\em e.g.,} close to $0\mu s$.
-However, DCQCN on 100Gbps is sensitive to the control loop delay. With
-$50\mu s$ and $100\mu s$, the phase marginal decreases much more than in 40Gbps
-case and leads to consistent instability.  The methods that stabilize the 40Gbps
-system, like tuning down $R_{AI}$ and tuning up $K_{max}$, are also effective in
-100Gbps system. Though we verified that tuning $R_{AI}$ and $K_{max}$
-can help stabilize DCQCN at 100Gbps at the price of convergence speed and queue length, 
-we believe PI controller is a more favorable option.
+\para{Stability at 100Gbps.}  As the datacenter network fabric is moving towards
+100Gbps bandwidth, we analyze DCQCN stability for $C=100Gbps$.
+Figure~\ref{fig:dcqcn_100gbps} shows DCQCN is stable with default parameter when
+the delay is small, {\em e.g.,} close to $0\mu s$. However, at higher delays
+($50-100 \mu s$), the phase margin is much lower than it is for 40Gbps links, and
+the system is unstable unless $N$ is high. While we can stabilize the system by
+tuning down $R_{AI}$ and tuning up $K_{max}$, it hurts convergence speed and
+queue length significantly. In \S~\ref{sec:discuss} we argue that using a PI
+controller is a more principled approach to enhance stability.

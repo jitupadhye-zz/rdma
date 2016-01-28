@@ -2,12 +2,12 @@
 
 A fluid model of DCQCN was described in~\cite{dcqcn}. The original model
 considers N flows with exactly same rates and states, traversing a single
-bottleneck link.  In this paper, we extend it to account for flows with
+bottleneck link.  In this paper, we extend it slightly to account for flows with
 different rates and states.  Instead of having variables that are shared by all
 flows, we model each flow individually. The model is shown in
 Figure~\ref{fig:dcqcn_model} and Table~\ref{tab:dcqcn_varparam}.
 
-The model assumes that DCQCN is triggered before PFC, and hence ignores the
+We assume that DCQCN is triggered before PFC, and hence ignore the
 impact of PFC. Equation~\ref{eq:mark} calculates the probability of a packet
 getting marked.  Equation~\ref{eq:q} describes the queue behavior.
 Equation~\ref{eq:alpha} captures the evolution of alpha.  Equations~\ref{eq:rt}
@@ -58,6 +58,7 @@ p(t) = \left\{ \begin{array}{ll}
 \end{minipage}
 }
 \caption{DCQCN fluid model}
+\vspace{-1em}
 \label{fig:dcqcn_model}
 \end{figure}
 \begin{table}
@@ -93,28 +94,29 @@ $\tau '$ & Interval of Equation (\ref{eq:rp_alpha_recover})\\ \hline
 \end{table}
 
 \para{Model Validation:}
-In~\cite{dcqcn} it was shown that the fluid model shown in
-Figure~\ref{fig:dcqcn_model} matches actual hardware implementation. Here we
-only show our NS3 packet-level simulations are in agreement with the model.We
-model a simple topology, in which N senders, connected to a switch, send to a
-single receiver, also connected to that switch. DCQCN parameters are set to the
-values proposed in~\cite{dcqcn}. Note that as per DCQCN specification, all flows
-start at line rate. In Figure~\ref{fig:dcqcn_validation} we compare rate of one
-of the N flows, for both fluid model and the NS3 simulations. We see the fluid
-model and the simulator are in good agreement, and unsurprisingly, the agreement
-gets better as N increases.
+In~\cite{dcqcn} it was shown that the fluid model matches actual hardware
+implementation. Here we only show that our NS3 packet-level simulations are in
+agreement with the model.  To do so, we simulate and model a simple topology, in
+which N senders, connected to a switch, send to a single receiver, also
+connected to that switch. DCQCN parameters are set to the values proposed
+in~\cite{dcqcn}. Note that as per DCQCN specification, all flows start at line
+rate. In Figure~\ref{fig:dcqcn_validation} we compare rate of one of the N
+flows, for both fluid model and the NS3 simulations. We see the fluid model and
+the simulator are in good agreement, and the agreement gets better as N
+increases.
 
 \begin{figure*}[t]
 \center
-\subfigure[N=2] { 
+\subfigure { 
 \includegraphics[width=0.3\textwidth]{figures/dcqcn_validation_2_rate.pdf}
 }
-\subfigure[N=10] { 
+\subfigure { 
 \includegraphics[width=0.3\textwidth]{figures/dcqcn_validation_10_rate.pdf}
 }
-\subfigure[N=20] { 
+\subfigure { 
 \includegraphics[width=0.3\textwidth]{figures/dcqcn_validation_20_rate.pdf}
 }
+\vspace{-1em}
 \caption{Comparison of DCQCN fluid model and NS3 simulations}
 \label{fig:dcqcn_validation}
 \end{figure*}

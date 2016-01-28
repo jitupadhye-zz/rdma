@@ -35,27 +35,27 @@
 \caption{DCQCN convergence: simulation results}
 \label{fig:dcqcn_convergence_sim}
 \end{figure*}
-
-
 In Section~\ref{sec:dcqcn_stability}, we showed that for reasonable parameter
 settings,  DCQCN is stable {\em after} flows converge to the unique fixed point.
 We also showed that at the fixed point, the flows share the bandwidth equally.
 However, two questions remain unanswered: $(i)$ do flows the always converge
 to this fixed point, and $(ii)$ how fast do flows converge? 
 
-We cannot answer these questions using the fluid model, so we construct and
-analyze a discrete model of the rate adjustment at the RP. The default parameter
-settings given in~\cite{dcqcn} set both the Timer $T$ and $\alpha$ update
-interval $\tau '$ equal to $55\mu s$. Thus, we use $\tau '$ as the unit of time.
-The process of DCQCN rate update is similar to TCP AIMD, as shown in
-Figure~\ref{fig:dcqcn_convergence}.  The flows get the peak rates at $T_k$. For
-simplicity, we assume all flows get to the peak at the same time, which is
-likely to happen because the queue peak at the bottleneck leads to high marking
-probability for all flows. 
+We cannot answer these questions using the fluid model, so
+like~\cite{dctcp-analysis}, we construct and analyze a discrete model of the
+rate adjustment at the RP. The default parameter settings given in~\cite{dcqcn}
+set both the Timer $T$ and $\alpha$ update interval $\tau '$ equal to $55\mu s$.
+Thus, we use $\tau '$ as the unit of time.  The process of DCQCN rate update is
+similar to TCP AIMD, as shown in Figure~\ref{fig:dcqcn_convergence}.  The flows
+get the peak rates at $T_k$. For simplicity, we assume all flows are
+synchronized, and peak at the same time.  This is a common assumption, for data
+center environments~\cite{dctcp-analysis}.
+
 \begin{thm}[DCQCN convergence]
 Under the control of DCQCN, the rate difference of any two flows decrease exponentially
 overtime. 
 \end{thm}
+\begin{proof}
 Here we provide a brief proof whereas the detailed proof can be found in~\cite{fullpaper}.
 Whenever a flow gets ECN marks at $T_k$, it reduces its
 rate in one unit of time, then starts $\Delta {T_k} -1 $ consecutive additive rate
@@ -102,9 +102,11 @@ converge exponentially. In~\cite{fullpaper}, we prove that:
 \label{eq:converge_alphastar}
 \end{equation}
 where $\alpha^{*}$ is the fixed point of the Equation~\ref{eq:converge_alpha}.
-Equation~\ref{eq:converge_alphastar} concludes our proof. Combining Equation~\ref{eq:converge}, 
-we know that $R_C$ is converging at the rate of at least $( {1 - \frac{{{\alpha ^{*}}}}{2}} )^k$, 
-$k$ is the number of AIMD cycles.
+Equation~\ref{eq:converge_alphastar} concludes our proof. 
+\end{proof}
+Combining Equation~\ref{eq:converge}, we know that $R_C$ converges at the rate
+of at least $( {1 - \frac{{{\alpha ^{*}}}}{2}} )^k$, where $k$ is the number of
+AIMD cycles.
 
 
 %\begin{figure}[t]
