@@ -1,66 +1,86 @@
 \section {ECN versus Delay}
 \label{sec:discuss}
-In the previous sections, we saw that barring the small anomaly, DCQCN remains
-stable as the number of flows increase. We also saw that this is not the case
-for TIMELY. However, for both protocols, the fixed point of the queue
-and hence the round trip delay increases with the number of contending
-flows, and this makes designing the controller more difficuly with TIMELY as compared to DCQCN.
 
+We have now seen that DCQCN and TIMELY (with a small modification) perform
+generally well, if properly tuned for a given scenario. Can we thus conclude
+that ECN and delay are both "equivalent" signals, when it comes to congestion
+control? 
 
-Let's assume a single-bottleneck scenario, and assume that ECN marking is used
-to convey congestion information. Typical shared-buffer switches, especially
-those that use Broadcom's merchent sillicon, do ECN marking on {\em packet
-egress}. When a packet is ready to depart, the controller checks the egress
-queue for that port {\em at that instant}, and depending on the specified
-marking algorithm (e.g.  Equation~\ref{eq:mark}), decides whether to mark the
-packet. Thus, the mark carried by the packet conveys information about the state
-of the queue at the time the packet {\em departs} the queue. In other words,
-information carried by just-departed packet (say $p_i$) is influenced by all the
-packets that arrived in the queue {\em after} $p_i$ arrived, but before $p_i$
-left. 
+We believe that the answer is no, because ECN has two potential advantages.  One
+of them stems from a small, but important detail about how ECN marking is done
+on modern, shared-buffer switches.  The second advantage stems simply from the
+fact that ECN marking is done in a ``centralized'' manner, while delay
+measurements are done in a distributed manner.
 
-On the other hand, consider what RTT measurements do. If the egress queue
-discipline is FIFO within a priority class, (which it typically is), the delay
-experienced by a packet reflects the state of the queue at the time the packet
-{\em arrives} at the queue. Subsequent packet arrivals have no bearing on the
-delay experienced by the packet. 
+\para{ECN marking is done on packet egress:}
+Modern shared-buffer switches, especially those that use Broadcom's merchant
+silicon, do ECN marking on {\em packet egress}. When a packet is ready to
+depart, the controller checks the egress queue for that port {\em at that
+instant}, and depending on the specified marking algorithm (e.g.
+Equation~\ref{eq:mark}), decides whether to mark the packet. This means the mark
+carried by the packet conveys information about the state of the queue at the
+time the packet {\em departs} the queue. 
 
-This seemingly small detail means that the information about queue state
-conveyed by RTT measurements is always {\em stale} compared to what can be
-conveyed by ECN markings. In practice, this means that as the queue length
-increases, congestion control algorithms that rely on RTT suffer from increasing
-{\em lag} in their control loop, making them unstable. Since steady state queue
-length typically increases with number of flows, RTT based congestion control is
-is more likely to become unstable, compared to ECN-based congestion control.
+On the other hand, consider what happens with RTT measurements. If the egress
+queue discipline is FIFO within a priority class, (which it typically is), the
+delay experienced by a packet reflects the state of the queue at the time the
+packet {\em arrives} at the queue. 
 
-This issue is critical in data center networks, because queueing delays can
-easily dominate switching and propagation delays.  For example, an Arista
-7040QX32 has 40Gbps ports, and a total shared buffer of switch has 12MB. Even if
-just 1MB worth of queue builds ip at an egress port, it takes 200 $\mu$s to
-drain. In contrast, the one-hop propagation delay, with cut-through forwarding
-is enabled, are in the range of 1-2 $\mu$s. Typical diameter of a DC network is
-6 hops, propagation delay is just 10-18 $\mu$s. In contrast, in wide area
-networks, queuing delays and propagation delays can be comparable (excluding
-scenarios like buffer bloat~\cite{bufferbloat}). 
+What this means is that the control signal carried by the ECN mark is delayed
+only by the propagation delay, but the control signal carried by the RTT signal
+is affected both by the queuing delay as well as the propagation delay. 
 
-However, one can ask the question - can we build congestion control protocols
-that are guaranteed to maintain a fixed queue length at the bottleneck,
-regardless of the number of flows? The answer, as we show below, turns out to be
-yes - but you can guarantee fairness only if you use ECN.
+This is a subtle difference: the claim is not that ECN carries more information;
+just that the delay of the control loop is decoupled from the queuing delay.
 
-The key to building protocols that guarantee delay to a fixed quantity
-is to use a controller with \emph{integral} control. In the context of
-network transport protocols and AQM, integral control was first introduced
-by the PI controller~\cite{hollot2001designing}\footnote{ 
-The PI controller has also been used to solve the problem of bufferbloat~\cite{conf/hpsr/PanNPPSBV13,bufferbloat-pi}~, and
-has become part of the DOCSIS 3.1 standard}~and
-REM~\cite{REM}.
-The idea behind integral control is to look at an
-error signal, e.g. the difference between the actual queue length and
-a desired or reference queue length, and adjust the feedback until the
-error signal goes to 0 and a stable PI controller is guaranteed to
-achieve that. In a continuous system, the feedback signal $p(t)$
-evolves in the following way with a PI controller:
+This is why the DCQCN fluid model (Figure~\ref{fig:dcqcn_model}) assumes that
+the control loop delay is constant\footnote{DCTCP fluid model
+in~\cite{dctcp-analysis} makes the same assumption.}. We cannot make the same
+assumption for TIMELY, and  thus we incorporate $\tau'$ and
+Equation~\ref{eq:timely_taup} in the TIMELY fluid model
+(Figure~\ref{fig:timely_model}).
+
+In practice, this means that as the queue length increases (e.g. when there are
+more flows), congestion control algorithms that rely on RTT suffer from
+increasing {\em lag} in their control loop, making them unstable. We see this
+happening for TIMELY (Figure~\ref{fig:timely_stability}). DCQCN escapes this
+predicament (Figure~\ref{fig:dcqcn_stability_default}).
+
+As an aside -- we believe that this issue has gone unnoticed in the congestion
+control literature so far, because most of it has focused on wide area networks.
+In wide area networks, queuing delays and propagation delays can be comparable
+(excluding scenarios like buffer bloat~\cite{bufferbloat}). However, in data
+center networks, queueing delays can easily dominate switching and
+propagation delays.  For example, an Arista 7040QX32 has 40Gbps ports, and a
+total shared buffer of switch has 12MB. Even if just 1MB worth of queue builds
+ip at an egress port\footnote{This requires enabling dynamic thresholding, but it is
+almost always enabled in real deployments.}, it takes 200 $\mu$s to drain. In contrast, the one-hop
+propagation delay, with cut-through forwarding enabled, is around
+1-2 $\mu$s.  Typical diameter of a DC network is 6 hops, so overall propagation
+delay is under $20\mu s$.
+
+The reader may argue that it is easy to fix this issue  -- all we have to do is
+to build a delay-based protocol that strives to keep the  bottleneck queue
+(more-or-less) constant. Then, the control signal delay experienced by the RTT
+feedback signal is also fixed, albeit a little higher (propagation delay, plus
+fixed queuing delay). 
+
+Unfortunately, it seems to be the case that a delay based congestion control
+protocol that maintains a fixed queue, cannot ensure fairness at the fixed point.
+
+\para{Fixed queue comes at the cost of fairness:}
+The key to building protocols that guarantee delay to a fixed quantity is to use
+a controller with \emph{integral} control. In the context of network transport
+protocols and AQM, integral control was first introduced by the PI
+controller~\cite{hollot2001designing}\footnote{ The PI controller is 
+used to solve
+bufferbloat~\cite{conf/hpsr/PanNPPSBV13,bufferbloat-pi}~, and is part of
+the DOCSIS 3.1}~and REM~\cite{REM}.  The idea behind integral control
+is to look at an error signal, e.g. the difference between the actual queue
+length and a desired or reference queue length, and adjust the feedback until
+the error signal goes to 0 and a stable PI controller is guaranteed to achieve
+that. In a continuous system, the feedback signal $p(t)$ evolves in the
+following way with a PI controller:
 
 $$ \frac{dp}{dt} = K_1\frac{de}{dt}+K_2e(t) $$
 
@@ -138,23 +158,17 @@ thus such a scheme cannot ensure fairness.
 \end{proof}
 
 \noindent
-Based on these two factors, the faster feedback to the sources as well
-as the ability to simultaneously achieve fairness and bounded delay
-point strongly in favor of using ECN instead of delay in a datacenter
-environment for congestion control. Even though using delay as a
-feedback signal has a simpler
-implementation path not requiring switch support, delay based
-congestion control has fundamental limitations. Note that TCP, or more
-precisely AIMD, is also an end system based congestion control
-mechanism but it uses loss probability as the feedback signal. This
-loss probability depends upon the number of flows and hence that
-information is encoded in the feedback and so it does not suffer from
+Based on these two factors, the faster feedback to the sources as well as the
+ability to simultaneously achieve fairness and bounded delay point strongly in
+favor of using ECN instead of delay in a datacenter environment for congestion
+control. Even though using delay as a feedback signal has a simpler
+implementation path not requiring switch support, delay based congestion control
+has fundamental limitations. Note that TCP, or more precisely AIMD, is also an
+end system based congestion control mechanism but it uses loss probability as
+the feedback signal. This loss probability depends upon the number of flows and
+hence that information is encoded in the feedback and so it does not suffer from
 the same limitation. 
 
-A full exploration of PI (like)
-controllers for RDMA including a hardware implementation is under
-active study by us and is beyond the scope of this paper.
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "main"
-%%% End:
+A full exploration of PI (like) controllers for RDMA including a hardware
+implementation is under active study by us and is beyond the scope of this
+paper.
