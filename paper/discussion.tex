@@ -7,10 +7,10 @@ that ECN and delay are both "equivalent" signals, when it comes to congestion
 control? 
 
 We believe that the answer is no, because ECN has two potential advantages.  One
-of them stems from a small, but important detail about how ECN marking is done
-on modern, shared-buffer switches.  The second advantage stems simply from the
-fact that ECN marking is done in a ``centralized'' manner, while delay
-measurements are done in a distributed manner.
+stems from a small, but important detail about how ECN marking is done on
+modern, shared-buffer switches.  The second advantage stems simply from the fact
+that ECN marking is done in a ``centralized'' manner, while delay measurements
+are done in a distributed manner.
 
 \para{ECN marking is done on packet egress:}
 Modern shared-buffer switches, especially those that use Broadcom's merchant
@@ -68,7 +68,7 @@ fixed queuing delay).
 Unfortunately, it seems to be the case that a delay based congestion control
 protocol that maintains a fixed queue, cannot ensure fairness at the fixed point.
 
-\para{Fixed queue comes at the cost of fairness:}
+\para{Fixed queue comes at the cost of fairness, for delay-based control:}
 The key to building protocols that guarantee delay to a fixed quantity is to use
 a controller with \emph{integral} control. In the context of network transport
 protocols and AQM, integral control was first introduced by the PI
@@ -78,36 +78,36 @@ bufferbloat~\cite{conf/hpsr/PanNPPSBV13,bufferbloat-pi}~, and is part of
 the DOCSIS 3.1}~and REM~\cite{REM}.  The idea behind integral control
 is to look at an error signal, e.g. the difference between the actual queue
 length and a desired or reference queue length, and adjust the feedback until
-the error signal goes to 0 and a stable PI controller is guaranteed to achieve
-that. In a continuous system, the feedback signal $p(t)$ evolves in the
+the error signal goes to 0. A stable PI controller is guaranteed to achieve
+this. In a continuous system, the feedback signal $p(t)$ evolves in the
 following way with a PI controller:
-
-$$ \frac{dp}{dt} = K_1\frac{de}{dt}+K_2e(t) $$
-
+$$ {dp}/{dt} = K_1 {de}/{dt}+K_2e(t) $$
 When the feedback signal converges, both the error signal $e(t)$ as
 well as the derivative of the error signal, $de/dt$ must converge to
 0. The derivative of the error signal, (the derivative of the queue length), goes to 0
 when the sum of the rates $R_i$ match the link capacity $C$. The error signal itself goes to 0
 when the queue length matches the reference value. Thus the integral
 controller implements the ``match rate, clear buffer'' scheme
-presented in~\cite{REM}. For DCQCN we can implement the PI
-controller to mark the packets at the switch instead of RED (which is
-a proportional controller without the integral action) and use that
-$p$ in the usual way to perform the multiplicative decrease. For
-(patched) TIMELY, we can
-measure the delay at the end hosts and implement a PI controller by
-generating an internal variable ``p'', using the error signal
-``$e(t)$'' as the difference between the measured delay and some
-reference or desired delay. This internal variable $p$ can then
-replace the $\tfrac{{q(t - \tau ') - q'}}{{q'}}$ term in
-Equation (\ref{eq:timely_fixed}) as the feedback to control the rates.
+presented in~\cite{REM}. 
 
-We implemented the PI controller for both the DCQCN and patched TIMELY
-fluid models and performed simulations. As we see in
-Figure~\ref{fig:dcqcn_pi}~for DCQCN, the queue length is stabilized to a
-preconfigured value, regardless of the number of flows (as well as
-regardless of propagation delay). This is important not only for
-stability, but also for performance reasons in a datacenter network.
+For DCQCN we can implement the PI controller to mark the packets at the switch
+instead of RED (which is a proportional controller without the integral action)
+and use that $p$ in the usual way to perform the multiplicative decrease. 
+
+For (patched) TIMELY, we can measure the delay at the end hosts and implement a
+PI controller by generating an internal variable ``p'', using the error signal
+``$e(t)$'' as the difference between the measured delay and some reference or
+desired delay. This internal variable $p$ can then replace the $\tfrac{{q(t -
+\tau ') - q'}}{{q'}}$ term in Equation (\ref{eq:timely_fixed}) as the feedback
+to control the rates.
+
+We implemented the PI controller for both the DCQCN and patched TIMELY fluid
+models and performed simulations. As we see in Figure~\ref{fig:dcqcn_pi}~for
+DCQCN, the queue length is stabilized to a preconfigured value, regardless of
+the number of flows (as well as regardless of propagation delay). This is
+important not only for stability, but also for performance reasons in a data
+center networks, where is important to ensure that completion times for short
+flows do not suffer from excessive queuing delays~\cite{dctcp}.
 
 \begin{figure}
 \subfigure[] {\includegraphics[width=0.49\columnwidth]{figures/stable_rate_4_pifixed.pdf}}
@@ -157,18 +157,17 @@ actual delay contains no information on N and
 thus such a scheme cannot ensure fairness.
 \end{proof}
 
-\noindent
-Based on these two factors, the faster feedback to the sources as well as the
-ability to simultaneously achieve fairness and bounded delay point strongly in
-favor of using ECN instead of delay in a datacenter environment for congestion
-control. Even though using delay as a feedback signal has a simpler
-implementation path not requiring switch support, delay based congestion control
-has fundamental limitations. Note that TCP, or more precisely AIMD, is also an
-end system based congestion control mechanism but it uses loss probability as
-the feedback signal. This loss probability depends upon the number of flows and
-hence that information is encoded in the feedback and so it does not suffer from
-the same limitation. 
+\para{Summary:}
+Based on these two factors, {\em i.e.,} the faster feedback to the sources, and
+the ability to simultaneously achieve fairness and bounded delay point, we argue
+in favor of using ECN instead of delay for congestion control in a data center
+environment.
 
-A full exploration of PI (like) controllers for RDMA including a hardware
-implementation is under active study by us and is beyond the scope of this
-paper.
+We are aware that arguing for PI-based ECN controller opens the proverbial
+pandora's box. PI is not implemented by today's commodity switches, and
+maintaining a stable queue length may not be everyone's goal. If we are going to
+modify switches to do extra work, numerous other alternatives like
+XCP~\cite{katabi2002congestion}, RCP~\cite{rcp} and pFabric~\cite{pfabric} that
+offer various other tradeoffs must also be considered. We don't dispute this.
+We are actively working on a fuller exploration of PI and other controllers for
+RDMA -- detailed analysis is beyond the scope of this paper.
