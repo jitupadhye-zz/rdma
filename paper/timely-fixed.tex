@@ -25,9 +25,10 @@
 \label{fig:timely_fixed}
 \end{figure*}
 
-In order to ensure the protocol has a unique fixed point, and all flows get fair share and are stable at the fixed point,
-we make two minor modifications over TIMELY. As shown in Algorithm\ref{fig:timely_fixed_algo}, we only modified the last
-three lines of Algorithm\ref{fig:timely_algo}.
+In order to ensure the protocol has a unique fixed point, and all flows get fair
+share and are stable at the fixed point, we make two minor modifications over
+TIMELY, as shown in Algorithm~\ref{fig:timely_fixed_algo}. We only modify the
+last three lines of Algorithm~\ref{fig:timely_algo}.
 
 \begin{algorithm}[t]
 \footnotesize
@@ -54,17 +55,22 @@ three lines of Algorithm\ref{fig:timely_algo}.
 \label{fig:timely_fixed_algo}
 \end{algorithm}
 
+First, we make the step of rate decrease rely on absolute RTT, instead of the
+gradient of RTT. In effect, this means that all flows have the knowledge of the
+bottleneck queue length.  This ensures two things. First, the system can have a
+unique fixed point, determined by the RTT\footnote{Recall that the issue with
+the original TIMELY was that the RTT graident could be the same, but absoliute
+RTTs could be different}.  Second, all flow can converge to the same rate, since
+they share the knowledge of the bottleneck RTT.  The side effect, of course, is
+that, with different number of flows, the fixed point of queue can be different.
+We will address this in \S\ref{sec:discuss}. 
 
-First, we make the step of rate decrease rely on absolute queue length (RTT), instead of the gradient of queue length (RTT). 
-This will ensure that there is only one fixed point for the queue length. In addition, all flow will have the same rate 
-because the queue length, which is shared across flows, can uniquely determine the rate of each flow. This is 
-similar to the use of ECN in DCQCN. The side effect is that, with different number of flows, the fixed point of 
-queue will be different.
-
-Second, we use a continuous weighting function $w(g)$ to make the transition between rate increase and rate decrease
-smooth. This avoids the on-off behavior that causes oscillation, and stabilizes the protocol at the fixed point. 
-This is similar to the fact that probabilistic ECN marking stabilizes TCP, QCN and DCQCN. With $w(g)$, we combine 
-the two conditions of $g \le 0$ and $g>0$ in the $dR(t)/dt$ equation:
+Second, we use a continuous weighting function $w(g)$ to make the transition
+between rate increase and rate decrease smooth. This avoids the on-off behavior
+that causes oscillation.  This is similar to the fact that probabilistic ECN
+marking stabilizes TCP~\cite{misra2000fluid}, DCTCP~\cite{dctcp-analysis},
+QCN~\cite{qcn-analysis} and DCQCN. With $w(g)$, we combine the two conditions of
+$g \le 0$ and $g>0$ in the $dR(t)/dt$ equation:
 \begin{equation}
 \small
 \frac{{dR_i}}{{dt}} = \left\{ \begin{array}{ll}
@@ -76,7 +82,7 @@ the two conditions of $g \le 0$ and $g>0$ in the $dR(t)/dt$ equation:
 \end{equation}
 where $w_i$, the weight of rate decreasing, is a function of $g_i$, and must satisfy $0 \le w_i(g_i) \le 1$ for any $g$. 
 Intuitively, $w_i(g_i)$ is monotonically increasing with $g_i$, because larger RTT gradient should lead to larger 
-weight of rate decreasing. In original TIMELY protocol, $w_i(g_i)$ is an indicator function of $g_i$, {\em i.e.,} 
+rate decrease. In original TIMELY protocol, $w_i(g_i)$ is an indicator function of $g_i$, {\em i.e.,} 
 $w_i(g_i)=1$ when $g \le 0$, and $w_i(g_i)=0$ when $g<0$. Here we simply use a linear function of $g_i$ for $w_i$:
 \begin{equation}
 \small
@@ -87,7 +93,8 @@ $w_i(g_i)=1$ when $g \le 0$, and $w_i(g_i)=0$ when $g<0$. Here we simply use a l
 \end{array} \right.
 \end{equation}
 In Equation~\ref{eq:timely_fixed}, $q'$ is a reference queue length. We simply set it as $C*T_{low}$, 
-so that we decrease the rate harsher if the queue length exceeds more than $C*T_{low}$. All the TIMELY
+so that we decrease the rate faster if the queue length exceeds $C*T_{low}$. All
+other TIMELY
 parameters remain the same except we set $\beta=0.008$ and $Seg=16KB$. 
 \begin{thm}[Patched TIMELY's fixed point.]
 The system described in Equation~\ref{eq:timely_fixed} has a unique fixed point.
@@ -139,13 +146,15 @@ Solving the differential equation with ${{R_i} + {R_j}}$ as the variable, we get
 different between the fatest and slowest flow decrease over time exponentially, as we shall see below. 
 
 \para{Convergence speed.} We estimate the TIMELY convergence time {\em after}
-the queue stabilizes. We start from the case of $N=2$, where $R_i + R_j = C$ because of Equation~\ref{timely_q}.
+the queue stabilizes. We start from the case of $N=2$, where $R_i + R_j = C$
+because of Equation~\ref{eq:timely_q}.
 Then we get:
 \begin{equation}
 \small
 {R_i}(t) - {R_j}(t) = \left( {{R_i}(0) - {R_j}(0)} \right){e^{\frac{{\delta (1 - N)}}{{2Seg}}t}}
 \end{equation}
-We use the same definition of ``converged'' as in Section~\ref{sec:dcqcn_convergence}, then the convergence
+We use the same definition of ``converged'' as in
+\S~\ref{sec:dcqcn_convergence}. Thus, the convergence
 time is the smallest $t$ that satisfies (assuming two flows start with maximum possible rate difference, $C$):
 \begin{equation}
 \small
@@ -154,16 +163,19 @@ time is the smallest $t$ that satisfies (assuming two flows start with maximum p
 With $N=2$ and parameters we choose earlier, we get $t = 76.7ms$. With this equation, it is easy to see that
 with larger $N$,\footnote{Details omitted.} larger $\delta$ or smaller $Seg$, patched TIMELY will converge faster.
 
-We verify patched TIMELY convergence and stability using simulations. As shown in Figure~\ref{fig:timely_fixed_a}
-and~\ref{fig:timely_fixed_b}, flows with different initial rates converge to the fixed point and are stable without 
-oscillation, opposed to Figure~\ref{fig:timely_unstable}.
+We verify patched TIMELY convergence and stability using simulations.
+Figure~\ref{fig:timely_fixed_a} and~\ref{fig:timely_fixed_b}, shows that flows
+with different initial rates converge to the fixed point and are stable without
+oscillation, opposed to Figure~\ref{fig:ts2f73}. Results for the case depicted
+in Figure~\ref{fig:ts2f55time} are similar.
 
-\para{Stability.} We use the same technique as analyzing
-DCQCN stability, {\em i.e.,} linearize the equations, Laplace transform and compute the phase margin 
-of its characteristic equation. The phase margin result shows this system is stable until the number of 
-flows is greater than 40 (Figure~\ref{fig:timely_stability}). 
-This is again confirmed by NS-3 simulation (Figure~\ref{fig:timely_fixed_b} and ~\ref{fig:timely_fixed_c}).
-After 40 flows, the phase margin falls below 0 rapidly because more flows lead to larger queue size 
-(see Equation~\ref{eq:timely_fixed_q}), thus leading to larger feedback delay (see Equation~\ref{eq:timely_taup}). 
-This leads to system instability. We conclude that with some minor tuning, TIMELY can be stable 
+\para{Stability.} We proceed as we did for DCQCN -- linearize the equations,
+Laplace transform and compute the phase margin of its characteristic equation.
+The phase margin result shows this system is stable until the number of flows is
+greater than 40 (Figure~\ref{fig:timely_stability}).  This is again confirmed by
+NS-3 simulation (Figure~\ref{fig:timely_fixed_b} and ~\ref{fig:timely_fixed_c}).
+After 40 flows, the phase margin falls below 0 rapidly because more flows lead
+to larger queue size (see Equation~\ref{eq:timely_fixed_q}), thus leading to
+larger feedback delay (see Equation~\ref{eq:timely_taup}).  This leads to system
+instability. We conclude that with some minor tuning, TIMELY can be stable
 within a range of number of flows.

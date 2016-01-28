@@ -54,12 +54,15 @@ the term involving $g_i$, we get:
 \center
 \subfigure[Both flows start at time 0 at 5Gbps] { 
 \includegraphics[width=0.3\textwidth]{figures/timely_stability_2f55.pdf}
+\label{fig:ts2f55}
 }
 \subfigure[Both start at 10Gbps, one starts 10ms late] { 
 \includegraphics[width=0.3\textwidth]{figures/timely_stability_2ftime.pdf}
+\label{fig:ts2f55time}
 }
 \subfigure[Both start at time 0, one at 7Gbps, other at 3Gbps] { 
 \includegraphics[width=0.3\textwidth]{figures/timely_stability_2f73.pdf}
+\label{fig:ts2f73}
 }
 \caption{Performance of two TIMELY flows under different starting conditions}
 \label{fig:timely_unstable}
@@ -108,28 +111,30 @@ The results shown in Figure~\ref{fig:timely_unstable} were obtained with
 per-packet pacing. If, instead we user per-burst pacing, TIMELY appears to
 converge, as shown in Figure~\ref{fig:timely_burst_73_16}. The bursts introduce
 enough ``noise'' to de-correlate the flows, and this appears to lead the system
-to a relatively stable point. We attempted to mathematically prove that
+to a relatively stable fixed point. We attempted to mathematically prove that
 per-burst pacing would lead to a unique fixed point, but were unable to do so.
 
 In any case, per-burst pacing is not ideal, since it can lead to large
 oscillations in queue length, leading to poor utilization. This is apparent in
-Figure~\ref{fig:timely_burst_55_64}, where we use 64KB chunks. The initial chunks sent by the
-two senders arrive at the switch near-simultaneously (i.e. ``incast''), and both
-flows receive a very large RTT sample. This causes TIMELY to reduce its rate
-drastically (line 8 in the TIMELY algorithm). Since the subsequent rate increase
-occurs in small steps ($\delta = 10Mbps$, see line 6.), it takes a long time for
-the flow rates to climb back to their fair share. 
+Figure~\ref{fig:timely_burst_55_64}, where we use 64KB chunks. The initial
+chunks sent by the two senders arrive at the switch near-simultaneously (i.e.
+``incast''), and both flows receive a very large RTT sample. This causes TIMELY
+to reduce its rate drastically (line 8 in the TIMELY algorithm). Since the
+subsequent rate increase occurs in small steps ($\delta = 10Mbps$, see line
+6.)\footnote{Hyperactive increase does not kick in until RTT exceeds
+$T_{low}$.}, it takes a long time for the flow rates to climb back to their fair
+share. 
 
-These problems can be mitigated to some extent by not sending bursts at less
-than line rate\footnote{Indeed, the TIMELY paper hints at this, see Section 5
+These problems can be mitigated to some extent by sending bursts at less than
+line rate\footnote{Indeed, the TIMELY paper does this, see Section 5
 in~\cite{timely}.}, by adjusting the burst size, or by adjusting the $T_{min}$
-threshold. However, it is easy to see that such tuning is fragile, since the
-``optimal'' values of these parameters depend not just on the link speed, but
-also on the number of competing flows, which is unknown at the time of
-configuration.
+threshold. However, such tuning is fragile, since the right values of these
+parameters depend not just on the link speed, but also on the number of
+competing flows, which is unknown at the time of configuration. 
 
-Instead, we propose a simple fix to the TIMELY algorithm, that solves the
-problem to a large extent.
+In summary, while burst pacing can lead to a fixed point by introducing noise,
+it can lead to other problems. Rather than rely on ``noise'' to ensure
+convergence and stability, we propose a simple fix to the TIMELY algorithm.
 
 \begin{figure*}[t]
 \centering

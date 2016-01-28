@@ -95,15 +95,13 @@ $\tau '$ & Interval of Equation (\ref{eq:rp_alpha_recover})\\ \hline
 
 \para{Model Validation:}
 In~\cite{dcqcn} it was shown that the fluid model matches actual hardware
-implementation. Here we only show that our NS3 packet-level simulations are in
-agreement with the model.  To do so, we simulate and model a simple topology, in
-which N senders, connected to a switch, send to a single receiver, also
-connected to that switch. DCQCN parameters are set to the values proposed
-in~\cite{dcqcn}. Note that as per DCQCN specification, all flows start at line
-rate. In Figure~\ref{fig:dcqcn_validation} we compare rate of one of the N
-flows, for both fluid model and the NS3 simulations. We see the fluid model and
-the simulator are in good agreement, and the agreement gets better as N
-increases.
+implementation. Here we only show that our NS3~\cite{ns3} packet-level
+simulations are in agreement with the model.  To do so, we simulate and model a
+simple topology, in which N senders, connected to a switch, send to a single
+receiver, also connected to that switch. DCQCN parameters are set to the values
+proposed in~\cite{dcqcn}. Note that as per DCQCN specification, all flows start
+at line rate. Figure~\ref{fig:dcqcn_validation} shows that the the fluid model
+and the simulator are in good agreement.
 
 \begin{figure*}[t]
 \center
