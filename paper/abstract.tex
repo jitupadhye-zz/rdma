@@ -1,14 +1,18 @@
 \begin{abstract}
-Large scale RDMA deployments require congestion control. Recently, two
-protocols, namely, DCQCN and TIMELY have been proposed for thus purpose. In this
-paper, using fluid models, control theory and simulations, we study the
-stability and convergence properties of these two protocols. Apart from
-derivation of stability margins, and convergence bounds, our analysis uncovers
-several surprising behaviors of these protocols. For example, we show that DCQCN
-exhibits non-monotonic stability behavior, and that TIMELY can converge to
-stable regime with arbitrary unfairness.  We propose simple fixes that can
-alleviate these problems. More generally, we show that when properly tuned, the
-performance of the two protocols is comparable, and thus, the decision about
-which protocol to use can largely be made on the basis of engineering
-considerations.
+Data center networks, and especially drop-free RoCEV2 networks require efficient
+congestion control protocols.  Recently, two protocols, namely, DCQCN
+(ECN-based) and TIMELY (delay-based) were proposed for this purpose.  In this
+paper, we analyze DCQCN and TIMELY using fluid models and simulations, for
+stability and convergence. Our analysis uncovers several surprising behaviors of
+these protocols. For example, we show that DCQCN exhibits non-monotonic
+stability behavior, and that TIMELY can converge to stable regime with arbitrary
+unfairness. We propose simple fixes that can alleviate these problems. We find
+that in general, both protocols perform generally well, especially with proper
+tuning.
+
+Finally, using the lessons learnt from the analysis, we address the broader
+question: are there fundamental reasons to prefer either ECN or delay as the
+congestion signal in data center networks? We argue that ECN may be a better
+congestion signal in data center environment, due to the way modern switches
+mark packets, and also due to a fundamental limitation of delay-based protocols.
 \end{abstract}
