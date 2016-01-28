@@ -43,9 +43,10 @@ Equation~\ref{eq:timely_taup} in the TIMELY fluid model
 
 This means that as the queue length increases (e.g. when there are
 more flows), congestion control algorithms that rely on RTT suffer from
-increasing {\em lag} in their control loop, making them unstable. We see this
-happening for TIMELY (Figure~\ref{fig:timely_stability}). DCQCN escapes this
-predicament (Figure~\ref{fig:dcqcn_stability_default}).
+increasing {\em lag} in their control loop, making them more difficult to control. We see this
+happening for TIMELY (Figure~\ref{fig:timely_stability}). DCQCN is
+affected less by  this
+effect (Figure~\ref{fig:dcqcn_stability_default}).
 
 As an aside -- we believe that this issue has gone unnoticed in the congestion
 control literature so far, because most of it has focused on wide area networks.
@@ -73,10 +74,7 @@ protocol that maintains a fixed queue, cannot ensure fairness at the fixed point
 The key to building protocols that guarantee delay to a fixed quantity is to use
 a controller with \emph{integral} control. In the context of network transport
 protocols and AQM, integral control was first introduced by the PI
-controller~\cite{hollot2001designing}\footnote{ The PI controller is 
-used to solve
-bufferbloat~\cite{conf/hpsr/PanNPPSBV13,bufferbloat-pi}~, and is part of
-the DOCSIS 3.1}~and REM~\cite{REM}.  The idea behind integral control
+controller~\cite{hollot2001designing}~and REM~\cite{REM}.  The idea behind integral control
 is to look at an error signal, e.g. the difference between the actual queue
 length and a desired or reference queue length, and adjust the feedback until
 the error signal goes to 0. A stable PI controller is guaranteed to achieve
@@ -84,7 +82,7 @@ this. In a continuous system, the feedback signal $p(t)$ evolves in the
 following way with a PI controller:
 \begin{equation}
 \small
-{dp}/{dt} = K_1 {de}/{dt}+K_2e(t)
+\frac{dp}{dt} = K_1 \frac{de}{dt}+K_2e(t)
 \end{equation}
 When the feedback signal converges, both the error signal $e(t)$ as
 well as the derivative of the error signal, $de/dt$ must converge to
@@ -180,11 +178,24 @@ the ability to simultaneously achieve fairness and bounded delay point, we argue
 in favor of using ECN instead of delay for congestion control in a data center
 environment. We illustrate this in Figure~\ref{fig:design_choice}.
 
-We are aware that arguing for PI-based ECN controller opens the proverbial
-pandora's box. PI is not implemented by today's commodity switches, and
-maintaining a stable queue length may not be everyone's goal. If we are going to
-modify switches to do extra work, numerous other alternatives like
-XCP~\cite{katabi2002congestion}, RCP~\cite{rcp} and pFabric~\cite{pfabric} that
-offer various other tradeoffs must also be considered. We don't dispute this.
-We are actively working on a fuller exploration of PI and other controllers for
-RDMA -- detailed analysis is beyond the scope of this paper.
+Note that while PI is not implemented in today's commodity switches,
+as shown in~\cite{hollot2001designing}~it is a lightweight mechanism
+that requires less or comparable computational
+power as RED, which is already implemented. Also a variant of
+the PI controller (PIE) is being 
+used to solve
+bufferbloat~\cite{conf/hpsr/PanNPPSBV13,bufferbloat-pi}~, and is part of
+the DOCSIS 3.1 standard and efforts are underway for hardware
+implementations of PIE already.
+
+% If we are going to
+%modify switches to do extra work, numerous other alternatives like
+%XCP~\cite{katabi2002congestion}, RCP~\cite{rcp} and pFabric~\cite{pfabric} that
+%offer various other tradeoffs must also be considered. We don't dispute this.
+%We are actively working on a fuller exploration of PI and other controllers for
+%RDMA -- detailed analysis is beyond the scope of this paper.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

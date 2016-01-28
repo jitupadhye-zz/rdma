@@ -20,7 +20,14 @@ The discussion in Section~\ref{sec:discuss} assumes that congestion control is
 done on an end-to-end basis, and switches don't do much beyond marking packets.
 A number of congestion control protocols where the bottleneck switch or a
 central controller plays a more active role have been proposed. For example,
-RCP~\cite{dukkipati2006rcp} requires the switches to send more detailed
+RCP~\cite{dukkipati2006rcp} and XCP~\cite{katabi2002congestion}~require the switches to send more detailed
 feedback, while proposals like~\cite{vattikonda2012practical,wilson2011better}
-use an omniscient central controller for fine grain scheduling. Discussion of
-these options is beyond the scope of this paper.
+use an omniscient central controller for fine grain scheduling and pFabric~\cite{pfabric}~is a timeout based congestion control that requires switches to sort packets. 
+
+%XCP} and pFabri that
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:
