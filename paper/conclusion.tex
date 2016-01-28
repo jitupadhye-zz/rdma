@@ -24,7 +24,8 @@ the primary differences between DCQCN and TIMELY is that while the
 former uses ECN marking at the switch, the latter uses delay
 measurements at the end hosts to perform congestion control. To that
 end, we implement the PI controller on the switch for DCQCN and at the
-end host for TIMELY. In doing so, we can guarantee bounded delay for
+end host for TIMELY. In doing so, we can guarantee bounded delay and a
+fairness for
 DCQCN, however we demonstrate and prove a fundamental uncertainty
 result for TIMELY (and TIMELY-like protocols): if you use delay as the only
 feedback signal for congestion control, then you can either guarantee
