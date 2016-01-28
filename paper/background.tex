@@ -13,8 +13,8 @@ and NICs. The switches and NICs track ingress queues. When the queue exceeds a
 certain threshold, a PAUSE message is sent to the upstream entity. The uplink
 entity then stops sending on that link till it gets an RESUME message.  PFC is a
 blunt mechanism, since it does not operate on a per-flow basis. This leads to
-several well known problems such as head-of-the-line blocking, and
-victimization~\cite{dcqcn,tcp-bolt}. 
+several well known problems such as head-of-the-line
+blocking~\cite{dcqcn,tcp-bolt}. 
 
 PFC's problems can be mitigated using per-flow congestion control. Since PFC
 eliminates packet drops due to buffer overflow, either ECN or increase in RTT

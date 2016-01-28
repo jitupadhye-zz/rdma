@@ -112,10 +112,10 @@ AIMD cycles.
 In the above analysis, the convergence has two phases: (1) $\alpha ^{(i)}$
 converge to the same value (not necessarily at $\alpha^*$); (2) $R_C^{(i)}$
 converge along with $\alpha \to \alpha^*$.  In practice, the flows that
-encounter congestion for the first time all have the same initial value of 1.
-Therefore, we mainly focus on the second phase. We define the system as having
-``converged'' when the difference of any two flows is less than 10\% of expected
-fair share.
+encounter congestion for the first time all have the same initial value of
+$\alpha = 1$.  Therefore, we mainly focus on the second phase. We define the
+system as having ``converged'' when the difference of any two flows is less than
+10\% of expected fair share.
 
 We now derive an upper bound convergence time of under several worst-case
 assumptions. First, we assume that the value of $\alpha ({T_k})$ is $\alpha ^*$.
@@ -143,8 +143,8 @@ that convergence time is determined primarily $R_{AI}$, which is not surprising.
 We have verified these results with packet simulations. Sample results are shown
 in Figure~\ref{fig:dcqcn_convergence_sim}.
 Figure~\ref{fig:dcqcn_convergence_sim_3}, we start two flows (at 40Gbps), which
-converge to 20Gbps. Then, at time 0.1, we start the third flow, at 40Gbps. As we
-see, the three flows converge to 13Gbps in well within 100ms.
+converge to 20Gbps. Then, at time 0.1, we start the third flow, at 40Gbps.  The
+three flows converge to 13Gbps in well within 100ms.
 Figure~\ref{fig:dcqcn_convergence_sim_3rai} repeats the experiment, with a lower
 value of $R_{AI}$. As expected, it takes longer for the flows to converge. In
 Figure~\ref{fig:dcqcn_convergence_sim_11} we start with 10 flows, and add an
