@@ -19,9 +19,9 @@
 
 \begin{figure}[t]
 \center
-\includegraphics[width=0.4\textwidth]{figures/dcqcn_convergence_brief.eps}
+\includegraphics[width=0.35\textwidth]{figures/dcqcn_convergence_brief.eps}
 \caption{DCQCN's AIMD-style updates of flow rate.}
-\vspace{-1em}
+\vspace{-1.5em}
 \label{fig:dcqcn_convergence}
 \end{figure}
 
@@ -43,22 +43,22 @@ center environments~\cite{dctcp-analysis}.
 
 \begin{figure*}[t]
 \center
-\subfigure[]
+\subfigure
 {
-\includegraphics[width=0.32\textwidth]{figures/dcqcn_converge_3.pdf}
+\includegraphics[width=0.31\textwidth]{figures/dcqcn_converge_3.pdf}
 \label{fig:dcqcn_convergence_sim_3}
 }
-\subfigure[]
+\subfigure
 {
-\includegraphics[width=0.32\textwidth]{figures/dcqcn_converge_3rai.pdf}
+\includegraphics[width=0.31\textwidth]{figures/dcqcn_converge_3rai.pdf}
 \label{fig:dcqcn_convergence_sim_3rai}
 }
-\subfigure[]
+\subfigure
 {
-\includegraphics[width=0.32\textwidth]{figures/dcqcn_converge_11.pdf}
+\includegraphics[width=0.31\textwidth]{figures/dcqcn_converge_11.pdf}
 \label{fig:dcqcn_convergence_sim_11}
 }
-\vspace{-2em}
+\vspace{-1em}
 \caption{DCQCN convergence: simulation results}
 \vspace{-1em}
 \label{fig:dcqcn_convergence_sim}
@@ -117,7 +117,7 @@ converge exponentially. In~\cite{fullpaper}, we prove that:
 where $\alpha^{*}$ is the fixed point of the Equation~\ref{eq:converge_alpha}.
 Equation~\ref{eq:converge_alphastar} concludes our proof. 
 \end{proof}
-Combining Equation~\ref{eq:converge}, we see that $R_C$ converges at the rate
+From Equation~\ref{eq:converge}, we see that $R_C$ converges at the rate
 of at least $( {1 - \frac{{{\alpha ^{*}}}}{2}} )^k$, where $k$ is the number of
 AIMD cycles.
 
@@ -155,10 +155,10 @@ that convergence time is determined primarily $R_{AI}$, which is not surprising.
 
 We have verified these results with packet simulations. Sample results are shown
 in Figure~\ref{fig:dcqcn_convergence_sim}.
-Figure~\ref{fig:dcqcn_convergence_sim_3}, we start two flows (at 40Gbps), which
+Figure~\ref{fig:dcqcn_convergence_sim}(left), we start two flows (at 40Gbps), which
 converge to 20Gbps. Then, at time 0.1, we start the third flow, at 40Gbps.  The
 three flows converge to 13Gbps in well within 100ms.
-Figure~\ref{fig:dcqcn_convergence_sim_3rai} repeats the experiment, with a lower
+Figure~\ref{fig:dcqcn_convergence_sim}(middle) repeats the experiment, with a lower
 value of $R_{AI}$. As expected, it takes longer for the flows to converge. In
-Figure~\ref{fig:dcqcn_convergence_sim_11} we start with 10 flows, and add an
+Figure~\ref{fig:dcqcn_convergence_sim}(right) we start with 10 flows, and add an
 11th flow at time 0.1. As expected, the flows converge faster.

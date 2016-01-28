@@ -27,10 +27,10 @@
 \label{fig:timely_fixed}
 \end{figure*}
 
-In order to ensure the protocol has a unique fixed point, and all flows get fair
+In order to ensure there is a unique fixed point, and all flows get fair
 share and are stable at the fixed point, we make two minor modifications over
 TIMELY, as shown in Algorithm~\ref{fig:timely_fixed_algo}. We only modify the
-last three lines of Algorithm~\ref{fig:timely_algo}.
+last four lines of Algorithm~\ref{fig:timely_algo}.
 
 \begin{algorithm}[t]
 \footnotesize
@@ -136,7 +136,7 @@ length converges:
 \left| {{g_i}(n + 1)} \right| = \left( {1 - \alpha} \right)\left| {{g_i}(n)} \right| = {\left( {1 - \alpha} \right)}^{n+1} \left| {{g_i}(0)} \right|
 \end{equation}
 Finally, after $g_i$ converges to 0, which means $w_i=0.5$, we rewrite the $j$th flow's Equation~\ref{eq:timely_fixed} 
-and subtract it from $i$th flow's. Without losing generality, we choose $i,j, s.t.$ $i$th flow is the fatest among all flows,
+and subtract it from $i$th flow's. Without losing generality, we choose $i,j, s.t.$ $i$th flow is the fastest among all flows,
 whereas $j$th flow is the slowest. After simplification, we get:
 \begin{equation}
 \small
@@ -161,8 +161,9 @@ time is the smallest $t$ that satisfies (assuming two flows start with maximum p
 \begin{equation}
 \small
 {e^{\frac{{\delta (1 - N)}}{{2Seg}}t}}C \le \frac{{0.1 \times C}}{N}
+\label{eq:timely_convergence_time}
 \end{equation}
-With $N=2$ and parameters we choose earlier, we get $t = 76.7ms$. With this equation, it is easy to see that
+With $N=2$ and parameters we choose earlier, we get $t = 76.7ms$. With (\ref{eq:timely_convergence_time}), it is easy to see that
 with larger $N$,\footnote{Details omitted.} larger $\delta$ or smaller $Seg$, patched TIMELY will converge faster.
 
 We verify patched TIMELY convergence and stability using simulations.
