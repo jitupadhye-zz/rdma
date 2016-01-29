@@ -61,7 +61,7 @@ First, we make the step of rate decrease rely on absolute RTT, instead of the
 gradient of RTT. In effect, this means that all flows have the knowledge of the
 bottleneck queue length.  This ensures two things. First, the system can have a
 unique fixed point, determined by the RTT\footnote{Recall that the issue with
-the original TIMELY was that the RTT graident could be the same, but absoliute
+the original TIMELY was that the RTT gradient could be the same, but absolute
 RTTs could be different}.  Second, all flow can converge to the same rate, since
 they share the knowledge of the bottleneck RTT.  The side effect, of course, is
 that, with different number of flows, the fixed point of queue can be different.
