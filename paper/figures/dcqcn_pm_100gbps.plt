@@ -13,7 +13,7 @@ set ylabel "Phase Margin"
 set key top left
 
 plot \
-        "pm_100gbps_delay0.txt" using ($1):($2) ti "0us delay" w lines ls 3 lc rgb "blue",\
-        "pm_100gbps_delay50.txt" using ($1):($2) ti "50us delay" w lines ls 2 lc rgb "green",\
+        "pm_100gbps_delay0.txt" using ($1):($2) ti "0us delay" w lines ls 4 lc rgb "blue",\
+        "pm_100gbps_delay50.txt" using ($1):($2) ti "50us delay" w lines ls 2 lc rgb "dark-green",\
         "pm_100gbps_delay100.txt" using ($1):($2) ti "100us delay" w lines ls 1 lc rgb "red"
         
