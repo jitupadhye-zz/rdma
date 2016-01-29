@@ -5,8 +5,8 @@ support their most demanding applications~\cite{dcqcn,timely,tcp-bolt}.  RDMA
 offers significantly higher bandwidth and lower latency than the traditional
 TCP/IP stack, while minimizing CPU overhead~\cite{dcqcn,farm,timely}. 
 
-Today, RDMA is deployed using the ROCEv2 standard~\cite{rocev2}. To ensure
-efficient operation, ROCEv2 uses Priority Flow Control (PFC)~\cite{pfc} to
+Today, RDMA is deployed using the RoCEv2 standard~\cite{rocev2}. To ensure
+efficient operation, RoCEv2 uses Priority Flow Control (PFC)~\cite{pfc} to
 prevent packet drops due to buffer overflow.  Since there are no packet drops,
 any end-to-end congestion control protocol for RoCEv2 networks must use either
 ECN markings, or delay as the congestion signal.  Last year, two protocols were
