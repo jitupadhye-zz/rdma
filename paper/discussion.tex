@@ -165,7 +165,7 @@ $ R_i = f(d,p_i), i = 1,\ldots,N.$
 There is an additional equation constraining the throughput at the
 link, $\sum R_i = C$.
 Hence we have $N+1$ equations and $2 N$ unknowns -- $\{R_i,p_i\},
- i=1\ldots,N$. This is an underdetermined system with infinite (or no)
+ i=1\ldots,N$. This is an under-determined system with infinite (or no)
 solutions. To make this system consistent, we need a common $p_i$,
 reducing the number of variables to $N+1$. That can be achieved
 either by marking at the switch (violating the assumption of delay
@@ -188,7 +188,7 @@ environment. We illustrate this in Figure~\ref{fig:design_choice}.
 \para{Practical concerns:}
 ECN can require creating per-flow state on the receiver, if ECN marks must be
 aggregated. DCQCN~\cite{dcqcn} does this, since RoCEV2 does not send per-packet
-ACKs for efficiency reasons. Maitaning per-flow state may not be scalable since
+ACKs for efficiency reasons. Maintaining per-flow state may not be scalable since
 RoCEV2 is implemented on the NIC.  DCQCN's use of hardware rate limiters on the
 sender can also lead to scalability issues.  Detailed discussion of these issues
 is outside the scope of this paper.
