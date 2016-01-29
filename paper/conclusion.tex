@@ -1,19 +1,18 @@
 \section{Conclusion and future work}
 In this paper we have analyzed two recently proposed congestion control
 protocols for RoCEv2 networks, namely DCQCN (ECN based) and TIMELY (delay
-based), to both understand the behavior of the protocols in detail.
-Using fluid models and control theoretic analysis
-we derived stability regions for DCQCN, which demonstrated a somewhat odd
-non-monotonic behavior of stability with respect to the number of contending
-flows. We verified this behavior via packet level simulations. We also
-demonstrated that DCQCN converges to a unique fixed point and that with the
-proper choice of parameters the convergence is fast. In performing similar
-analysis for TIMELY, we discovered that as proposed the TIMELY protocol has
-infinite fixed points which could lead to unpredictable behavior and unbounded
-unfairness. We provide a simple fix to TIMELY that makes the behavior similar to
-DCQCN, with a unique operating point to which the protocol converges fast. 
+based), to both understand the behavior of the protocols in detail.  Using fluid
+models and control theoretic analysis we derived stability regions for DCQCN,
+which demonstrated a somewhat odd non-monotonic behavior of stability with
+respect to the number of contending flows. We verified this behavior via packet
+level simulations. We also demonstrated that DCQCN converges to a unique fixed
+point and that with the proper choice of parameters the convergence is fast. In
+performing similar analysis for TIMELY, we discovered that as proposed the
+TIMELY protocol has infinite fixed points which could lead to unpredictable
+behavior and unbounded unfairness. We provide a simple fix to TIMELY to remedy
+this problem.
 
-Both protocols however exhibit a behavior that could be problematic in the
+Both protocols, however, exhibit a behavior that could be problematic in the
 datacenter environment (with extremely low propagation delays), and that is the
 operating queue length in both cases grows with the number of contending flows
 and they could introduce significant latency. We showed that by using a PI
