@@ -73,7 +73,10 @@ length and a desired or reference queue length, and adjust the feedback until
 the error signal goes to 0. A stable PI controller is guaranteed to achieve
 this. In a continuous system, the feedback signal $p(t)$ evolves in the
 following way with a PI controller:
-$$\frac{dp}{dt} = K_1 \frac{de}{dt}+K_2e(t)$$
+\begin{equation}
+\small
+\frac{dp}{dt} = K_1 \frac{de}{dt}+K_2e(t)
+\end{equation}
 When the feedback signal converges, both the error signal $e(t)$ as
 well as the derivative of the error signal, $de/dt$ must converge to
 0. The derivative of the error signal, (the derivative of the queue length), goes to 0
@@ -134,7 +137,7 @@ and guaranteed delay for protocols that rely on delay measurements at the end
 points to implement congestion control. We first assume that the
 steady state throughput achieved by a congestion control transport
 protocol is a function of the observed delay $d$ and some feedback
-value $p$. The value of $p$ can the loss probability or the ECN marking
+value $p$. The value of $p$ can be the loss probability or the ECN marking
 probability or some internal variable $p$ computed by the patched
 TIMELY+PI mechanism we described above. Thus,
 $R = f(d,p)$ for steady state throughput $R$ and some function $f(d,p)$. Then the
@@ -145,8 +148,8 @@ following theorem formalizes the fairness/delay tradeoff in such systems.
 For congestion control mechanisms that have steady state throughput of
 the kind $R = f(d,p)$, for some function $f$, delay $d$ and
 feedback $p$, if the feedback is based on purely end to end
-delay measurements, you can either have fairness or a guaranteed delay
-bound, but not both simultaneously.
+delay measurements, you can either have fairness or a fixed delay, 
+but not both simultaneously.
 \end{thm}
 \begin{proof}
 To guarantee fairness, the system must have a
@@ -162,16 +165,17 @@ solutions. To make this system consistent, we need a common $p_i$,
 reducing the number of variables to $N+1$. That can be achieved
 either by marking at the switch (violating the assumption of delay
 being the only feedback), or by making this $p_i$ a function of
-the (common) queue length. However if we bound the delay to a fixed quantity,
+the (common) queue length. However if we control the delay to a fixed quantity,
 it becomes agnostic of the number of flows which will make the system
 of equations inconsistent, since the constraint $\sum_i R_i = C$
 implies the steady state throughput of a flow depends on the number of
 flows contending. Thus, to make the system consistent $p_i$ has to be
-a function of the common queue length which depends on the number of flows and hence we cannot bound
-the delay to a fixed quantity. 
+a function of the common queue length which depends on the number of flows 
+and hence we cannot control the delay to a fixed quantity. 
 \end{proof}
 Note that the preceding result does not apply to systems with
-limit cycles\cite{dctcp-analysis}.
+limit cycles,\footnote{Some window-based protocols have limit cycles~\cite{dctcp-analysis}.} 
+with which rate-based protocols do not have steady state throughput.
 
 \para{Summary:}
 Based on these two factors, {\em i.e.,} the faster feedback to the sources, and
@@ -181,9 +185,9 @@ environment. We illustrate this in Figure~\ref{fig:design_choice}.
 
 \para{Practical concerns:}
 ECN can require creating per-flow state on the receiver, if ECN marks must be
-aggregated. DCQCN~\cite{dcqcn} does this, since RoCEV2 does not send per-packet
+aggregated. DCQCN~\cite{dcqcn} does this, since RoCEv2 does not send per-packet
 ACKs for efficiency reasons. Maintaining per-flow state may not be scalable since
-RoCEV2 is implemented on the NIC.  DCQCN's use of hardware rate limiters on the
+RoCEv2 is implemented on the NIC.  DCQCN's use of hardware rate limiters on the
 sender can also lead to scalability issues.  Detailed discussion of these issues
 is outside the scope of this paper.
 
