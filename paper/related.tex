@@ -1,10 +1,9 @@
 \section{Related Work}
 \label{sec:related}
 
-There is a vast amount of literature on congestion control, and control
-theoretic analysis of congestion control protocols of all kinds (drop-based,
-delay-based, and ECN-based). For a short overview see~\cite{srikantbook}. Below,
-we discuss only a few representative papers.
+There is a vast amount of literature on congestion signals (drop, ECM delay),
+congestion control algorithms and their analysis. See~\cite{srikantbook} for a
+succinct overview. Below, we discuss only a few representative papers.
 
 In~\cite{dctcp-analysis} and ~\cite{qcn-analysis}, Alizadeh et.al. analyze the
 DCTCP~\cite{dctcp} and QCN~\cite{qcn} protocols that DCQCN is derived from. These papers served as useful guideposts during for our work.
@@ -15,13 +14,15 @@ in~\cite{misra2000fluid,hollot2001designing}. Our exploration of the PI
 controller for DCQCN and TIMELY is guided by results
 in~\cite{hollot2001designing}.
 
-The discussion in Section~\ref{sec:discuss} assumes that congestion control is
-done on an end-to-end basis, and switches don't do much beyond marking packets.
-A number of congestion control protocols where the bottleneck switch or a
-central controller plays a more active role have been proposed. For example,
-RCP~\cite{dukkipati2006rcp} and XCP~\cite{katabi2002congestion}~require the switches to send more detailed
+We have assumed that there is no central controller, and switches don't do much
+beyond marking packets. A number of congestion control protocols where the
+bottleneck switch or a central controller plays a more active role have been
+proposed.  For example, RCP~\cite{dukkipati2006rcp} and
+XCP~\cite{katabi2002congestion}~require the switches to send more detailed
 feedback, while proposals like~\cite{vattikonda2012practical,wilson2011better}
-use an omniscient central controller for fine grain scheduling and pFabric~\cite{pfabric}~is a timeout based congestion control that requires switches to sort packets. 
+use an omniscient central controller for fine grain scheduling and
+pFabric~\cite{pfabric}~is a timeout based congestion control that requires
+switches to sort packets. 
 
 %XCP} and pFabri that
 

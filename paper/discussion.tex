@@ -80,10 +80,7 @@ length and a desired or reference queue length, and adjust the feedback until
 the error signal goes to 0. A stable PI controller is guaranteed to achieve
 this. In a continuous system, the feedback signal $p(t)$ evolves in the
 following way with a PI controller:
-\begin{equation}
-\small
-\frac{dp}{dt} = K_1 \frac{de}{dt}+K_2e(t)
-\end{equation}
+$${dp}/{dt} = K_1 {de}/{dt}+K_2e(t)$$
 When the feedback signal converges, both the error signal $e(t)$ as
 well as the derivative of the error signal, $de/dt$ must converge to
 0. The derivative of the error signal, (the derivative of the queue length), goes to 0
@@ -159,17 +156,17 @@ delay measurements, you can either have fairness or a guaranteed delay
 bound, but not both simultaneously.
 \end{thm}
 \begin{proof}
-To guarantee fairness, a necessary condition is that the system have a
-unique fixed point.
-
-Suppose there are $N$ flows sharing a link of capacity $C$. 
+To guarantee fairness, the system must have a
+unique fixed point\footnote{Thus, this does not apply to system with
+limit cycles\cite{dctcp-analysis}.}.
+Consider $N$ flows sharing a link of capacity $C$. 
 Then, for each flow, we have 
 $ R_i = f(d,p_i), i = 1,\ldots,N.$
 There is an additional equation constraining the throughput at the
 link, $\sum R_i = C$.
-Hence we have $N+1$ equations and $2 N$ unknowns $\{R_i,p_i\},$ with $ i=1\ldots,N,$ giving
-rise to an underdetermined system with infinite solutions (or no
-solution). To make this system consistent, we need a common $p_i$,
+Hence we have $N+1$ equations and $2 N$ unknowns -- $\{R_i,p_i\},
+ i=1\ldots,N$. This is an underdetermined system with infinite (or no)
+solutions. To make this system consistent, we need a common $p_i$,
 reducing the number of variables to $N+1$. That can be achieved
 either by marking at the switch (violating the assumption of delay
 being the only feedback), or by making this $p_i$ a function of
@@ -186,23 +183,22 @@ the delay to a fixed quantity.
 Based on these two factors, {\em i.e.,} the faster feedback to the sources, and
 the ability to simultaneously achieve fairness and bounded delay point, we argue
 in favor of using ECN instead of delay for congestion control in a data center
-environment. %We illustrate this in Figure~\ref{fig:design_choice}.
+environment. We illustrate this in Figure~\ref{fig:design_choice}.
 
 \para{Practical concerns:}
 ECN can require creating per-flow state on the receiver, if ECN marks must be
 aggregated. DCQCN~\cite{dcqcn} does this, since RoCEV2 does not send per-packet
-ACKs for efficiency reasons. RoCEV2 protocol is implemented on the NIC, which
-has limited memory available for caching flow state. Thus, maintaining per-flow
-state can cause scalability issues. DCQCN's use of hardware rate limiters on the
-sender can also lead to scalability issues, although to a lesser extent.
-Detailed discussion of these issues is outside the scope of this paper.
+ACKs for efficiency reasons. Maitaning per-flow state may not be scalable since
+RoCEV2 is implemented on the NIC.  DCQCN's use of hardware rate limiters on the
+sender can also lead to scalability issues.  Detailed discussion of these issues
+is outside the scope of this paper.
 
 While PI is not implemented in today's commodity switches, as shown
 in~\cite{hollot2001designing}~it is a lightweight mechanism that requires less
-or comparable computational power as RED, which is already implemented. Also a
-variant of the PI controller (PIE) is being used to solve
-bufferbloat~\cite{conf/hpsr/PanNPPSBV13,bufferbloat-pi}~, and is part of the
-DOCSIS 3.1 standard.
+or comparable computational power as RED, which is supported by all modern
+switches. A variant of the PI controller (PIE) is being used to solve
+bufferbloat~\cite{conf/hpsr/PanNPPSBV13,bufferbloat-pi}~, in DOCSIS 3.1
+standard.
 
 \begin{figure}[t]
  \center
