@@ -2,14 +2,14 @@
 Data center networks, and especially drop-free RoCEV2 networks require efficient
 congestion control protocols. DCQCN (ECN-based) and TIMELY (delay-based) are two
 recent proposals for this purpose.  In this paper, we analyze DCQCN and TIMELY
-using fluid models and simulations, for stability and convergence. Our analysis
-uncovers several surprising behaviors of these protocols. For example, we show
-that DCQCN exhibits non-monotonic stability behavior, and that TIMELY can
-converge to stable regime with arbitrary unfairness. We propose simple fixes
-that can alleviate these problems, and describe how to tune protocol parameters.
-Finally, using the lessons learnt from the analysis, we address the broader
-question: are there fundamental reasons to prefer either ECN or delay for
-end-to-end congestion control in data center networks? We argue that ECN is 
-a better congestion signal, due to the way modern switches mark packets, and
-also due to a fundamental limitation of end-to-end delay-based protocols.
+using fluid models and simulations, for stability and convergence. We uncover
+several surprising behaviors of these protocols. For example, we show that DCQCN
+exhibits non-monotonic stability behavior, and that TIMELY can converge to
+stable regime with arbitrary unfairness. We propose simple fixes for these
+problems, and describe how to tune both protocols.  Finally, using the
+lessons learnt from the analysis, we address the broader question: are there
+fundamental reasons to prefer either ECN or delay for end-to-end congestion
+control in data center networks? We argue that ECN is a better congestion
+signal, due to the way modern switches mark packets, and also due to a
+fundamental limitation of end-to-end delay-based protocols.
 \end{abstract}
