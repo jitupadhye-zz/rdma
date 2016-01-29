@@ -21,5 +21,6 @@ eliminates packet drops due to buffer overflow, either ECN or increase in RTT
 are the only two available ``end-to-end'' congestion signals.  DCQCN relies on
 ECN, while TIMELY relies on RTT changes.
 
-As noted earlier, neither DCQCN, nor TIMELY are RDMA-specific. Thus the analysis
-in the rest of the paper makes no reference to RoCEv2 or RDMA.
+DCQCN and TIMELY are not RDMA-specific, so our analysis makes no reference to RoCEv2
+or RDMA. DCQCN and TIMELY are not designed for wide area traffic, so our
+analysis focuses on intra-DC networks. 
