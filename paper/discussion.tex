@@ -105,7 +105,7 @@ to control the rates.
 
 We implemented the PI controller for both the DCQCN and patched TIMELY fluid
 models and performed simulations. As we see in Figure~\ref{fig:dcqcn_pi}~for
-DCQCN, the queue length is stabilized to a preconfigured value, regardless of
+DCQCN, all the flows converge to the same (fair) rate and the queue length is stabilized to a preconfigured value, regardless of
 the number of flows (as well as regardless of propagation delay). This is
 important not only for stability, but also for performance reasons in a data
 center networks, where is important to ensure that completion times for short
