@@ -63,19 +63,17 @@ feedback signal is also fixed, albeit a little higher (propagation delay, plus
 fixed queuing delay). 
 
 However, a delay based congestion control protocol that maintains a fixed
-queue, cannot ensure fairness, as we show next.
+queue, cannot ensure fairness.
 
 \para{For delay-based control, fixed queue comes at the cost of fairness:}
-The key to building protocols that guarantee delay to a fixed quantity is to use
-a controller with \emph{integral} control. In the context of network transport
-protocols and AQM, integral control was first introduced by the PI
-controller~\cite{hollot2001designing}~and REM~\cite{REM}.  The idea behind integral control
+One way to build protocols that guarantee delay to a fixed quantity is to use
+a controller with \emph{integral} control~\cite{hollot2001designing,REM}.  The idea behind integral control
 is to look at an error signal, {\em e.g.,} the difference between the actual queue
 length and a desired or reference queue length, and adjust the feedback until
 the error signal goes to 0. A stable PI controller is guaranteed to achieve
 this. In a continuous system, the feedback signal $p(t)$ evolves in the
 following way with a PI controller:
-$${dp}/{dt} = K_1 {de}/{dt}+K_2e(t)$$
+$$\frac{dp}{dt} = K_1 \frac{de}{dt}+K_2e(t)$$
 When the feedback signal converges, both the error signal $e(t)$ as
 well as the derivative of the error signal, $de/dt$ must converge to
 0. The derivative of the error signal, (the derivative of the queue length), goes to 0
