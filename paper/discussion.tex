@@ -182,15 +182,6 @@ a function of the common queue length which depends on the number of flows and h
 the delay to a fixed quantity. 
 \end{proof}
 
-%% \begin{figure}[t]
-%% \center
-%% \includegraphics[width=0.45\textwidth]{figures/design_choice.eps}
-%% \vspace{-0.5em}
-%% \caption{The design choices and desirable properties.}
-%% \vspace{-1.5em}
-%% \label{fig:design_choice}
-%% \end{figure}
-
 \para{Summary:}
 Based on these two factors, {\em i.e.,} the faster feedback to the sources, and
 the ability to simultaneously achieve fairness and bounded delay point, we argue
@@ -212,6 +203,15 @@ or comparable computational power as RED, which is already implemented. Also a
 variant of the PI controller (PIE) is being used to solve
 bufferbloat~\cite{conf/hpsr/PanNPPSBV13,bufferbloat-pi}~, and is part of the
 DOCSIS 3.1 standard.
+
+\begin{figure}[t]
+ \center
+\includegraphics[width=0.45\textwidth]{figures/design_choice.eps}
+\vspace{-0.5em}
+ \caption{The design choices and desirable properties.}
+\vspace{-1.5em}
+\label{fig:design_choice}
+\end{figure}
 
 % If we are going to
 %modify switches to do extra work, numerous other alternatives like
