@@ -123,12 +123,11 @@ chunks sent by the two senders arrive at the switch near-simultaneously (i.e.
 ``incast''), and both flows receive a very large RTT sample. This causes TIMELY
 to reduce its rate drastically (line 8 in the TIMELY algorithm). Since the
 subsequent rate increase occurs in small steps ($\delta = 10Mbps$, see line
-6.)\footnote{Hyperactive increase does not kick in until RTT exceeds
-$T_{low}$.}, it takes a long time for the flow rates to climb back to their fair
+6.)\footnote{HAI kicks in only after $RTT > T_{low}$. See Algorithm 1 in \cite{timely}}, it takes a long time for the flow rates to climb back to their fair
 share. 
 
 These problems can be mitigated to some extent by sending bursts at less than
-line rate\footnote{Indeed, the TIMELY paper does this, see Section 5
+line rate\footnote{Indeed, the TIMELY does this, see \S~5
 in~\cite{timely}.}, by adjusting the burst size, or by adjusting the $T_{min}$
 threshold. However, such tuning is fragile, since the right values of these
 parameters depend not just on the link speed, but also on the number of
