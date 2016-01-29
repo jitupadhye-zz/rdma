@@ -62,8 +62,8 @@ to build a delay-based protocol that strives to keep the  bottleneck queue
 feedback signal is also fixed, albeit a little higher (propagation delay, plus
 fixed queuing delay). 
 
-Alas, a delay based congestion control protocol that maintains a fixed
-queue, cannot ensure fairness.
+However, a delay based congestion control protocol that maintains a fixed
+queue, cannot ensure fairness, as we show next.
 
 \para{For delay-based control, fixed queue comes at the cost of fairness:}
 The key to building protocols that guarantee delay to a fixed quantity is to use
@@ -116,7 +116,7 @@ In contrast, when we use a PI controller at the end hosts with patched
 TIMELY, we see that although we can control the queue
 to a specified value (300 KB), we cannot achieve fairness (Figure~\ref{fig:timely_pi}). 
 Thus, while patched TIMELY was able to achieve fairness without guaranteeing
-delay, patched TIMELY with PI is able to guarantee delay without
+delay, with PI it is able to guarantee delay without
 achieving fairness.
 \begin{figure}
 \center
@@ -136,10 +136,10 @@ and guaranteed delay for protocols that rely on delay measurements at the end
 points to implement congestion control. We first assume that the
 steady state throughput achieved by a congestion control transport
 protocol is a function of the observed delay $d$ and some feedback
-value $p$ which could be the loss probability or the ECN marking
+value $p$. The value of $p$ can the loss probability or the ECN marking
 probability or some internal variable $p$ computed by the patched
-TIMELY+PI mechanism we described above, i.e.,
-$R = f(d,p)$ for steady state throughput $R$ and some function $f$. Then the
+TIMELY+PI mechanism we described above. Thus,
+$R = f(d,p)$ for steady state throughput $R$ and some function $f(d,p)$. Then the
 following theorem formalizes the fairness/delay tradeoff in such systems.
 
 \begin{thm}[Fairness/Delay tradeoff]
@@ -152,8 +152,7 @@ bound, but not both simultaneously.
 \end{thm}
 \begin{proof}
 To guarantee fairness, the system must have a
-unique fixed point\footnote{Thus, this does not apply to system with
-limit cycles\cite{dctcp-analysis}.}.
+unique fixed point. 
 Consider $N$ flows sharing a link of capacity $C$. 
 Then, for each flow, we have 
 $ R_i = f(d,p_i), i = 1,\ldots,N.$
@@ -171,7 +170,8 @@ of equations inconsistent, since the constraint $\sum_i R_i = C$
 implies the steady state throughput of a flow depends on the number of
 flows contending. Thus, to make the system consistent $p_i$ has to be
 a function of the common queue length which depends on the number of flows and hence we cannot bound
-the delay to a fixed quantity. 
+the delay to a fixed quantity. Note that this result does not apply to systems with
+limit cycles\cite{dctcp-analysis}.
 \end{proof}
 
 \para{Summary:}
@@ -192,7 +192,7 @@ While PI is not implemented in today's commodity switches, as shown
 in~\cite{hollot2001designing}~it is a lightweight mechanism that requires less
 or comparable computational power as RED, which is supported by all modern
 switches. A variant of the PI controller (PIE) is being used to solve
-bufferbloat~\cite{conf/hpsr/PanNPPSBV13,bufferbloat-pi}~, in DOCSIS 3.1
+bufferbloat~\cite{conf/hpsr/PanNPPSBV13,bufferbloat-pi}~, and is part of DOCSIS 3.1
 standard.
 
 \begin{figure}[t]
