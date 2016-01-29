@@ -141,25 +141,45 @@ achieving fairness.
 
 We next prove a result that formalizes this fundamental tradeoff between fairness
 and guaranteed delay for protocols that rely on delay measurements at the end
-points to implement congestion control.
+points to implement congestion control. We first assume that the
+steady state throughput achieved by a congestion control transport
+protocol is a function of the observed delay $d$ and some feedback
+value $p$ which could be the loss probability or the ECN marking
+probability or some internal variable $p$ computed by the patched
+TIMELY+PI mechanism we described above, i.e.,
+$R = f(d,p)$ for steady state throughput $R$ and some function $f$. Then the
+following theorem formalizes the fairness/delay tradeoff in such systems.
 
 \begin{thm}[Fairness/Delay tradeoff]
 \label{thm:fairness-delay}
-For congestion control mechanisms that relay purely on end to end
+For congestion control mechanisms that have steady state throughput of
+the kind $R = f(d,p)$, for some function $f$, delay $d$ and
+feedback $p$, if the feedback is based on purely end to end
 delay measurements, you can either have fairness or a guaranteed delay
 bound, but not both simultaneously.
 \end{thm}
 \begin{proof}
-Assume N flows sharing a link of capacity $C$. Then every flow should
-distributedly arrive at a rate $C/N$. So the flows need to ``know'' this $N$. If we
-use end-to-end delay as the only signal, then this delay has to carry
-information about $N$. Hence the converged delay depends on $N$ and cannot be
-guaranteed independently. Conversely, if we implement a guaranteed delay
-congestion control scheme at the end points, they will converge to any rate
-$R_i$ such that $\sum_{i=0}^{N}R_i = C$ making the derivative of measured delay
-0 and the actual delay equal to the guarantee. Since the guarantee is set
-independent of $N$, the actual delay contains no information on N and such
-a scheme cannot ensure fairness.
+To guarantee fairness, a necessary condition is that the system have a
+unique fixed point.
+
+Suppose there are $N$ flows sharing a link of capacity $C$. 
+Then, for each flow, we have 
+$ R_i = f(d,p_i), i = 1,\ldots,N.$
+There is an additional equation constraining the throughput at the
+link, $\sum R_i = C$.
+Hence we have $N+1$ equations and $2 N$ unknowns $\{R_i,p_i\},$ with $ i=1\ldots,N,$ giving
+rise to an underdetermined system with infinite solutions (or no
+solution). To make this system consistent, we need a common $p_i$,
+reducing the number of variables to $N+1$. That can be achieved
+either by marking at the switch (violating the assumption of delay
+being the only feedback), or by making this $p_i$ a function of
+the (common) queue length. However if we bound the delay to a fixed quantity,
+it becomes agnostic of the number of flows which will make the system
+of equations inconsistent, since the constraint $\sum_i R_i = C$
+implies the steady state throughput of a flow depends on the number of
+flows contending. Thus, to make the system consistent $p_i$ has to be
+a function of the common queue length which depends on the number of flows and hence we cannot bound
+the delay to a fixed quantity. 
 \end{proof}
 
 %% \begin{figure}[t]
