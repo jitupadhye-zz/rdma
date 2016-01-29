@@ -143,9 +143,9 @@ whereas $j$th flow is the slowest. After simplification, we get:
 \frac{{d\left( {{R_i} - {R_j}} \right)}}{{dt}} = \frac{\delta }{{2Seg}}\left( {1 - \frac{N}{C}\left( {{R_i} + {R_j}} \right)} \right)\left( {{R_i} - {R_j}} \right)
 \end{equation}
 Among the total $N$ flows, there must exist at least one flow not slower than the fair share $C/N$.
-Therefore, ${{R_i} + {R_j}} > C/N$ since $R_i$, the fatest flow, is not slower than $C/N$.
+Therefore, ${{R_i} + {R_j}} > C/N$ since $R_i$, the fastest flow, is not slower than $C/N$.
 Solving the differential equation with ${{R_i} + {R_j}}$ as the variable, we get that the rate 
-different between the fatest and slowest flow decrease over time exponentially, as we shall see below. 
+different between the fastest and slowest flow decrease over time exponentially, as we shall see below. 
 
 \para{Convergence speed.} We estimate the TIMELY convergence time {\em after}
 the queue stabilizes. We start from the case of $N=2$, where $R_i + R_j = C$

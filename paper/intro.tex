@@ -38,9 +38,9 @@ analyzed before~\cite{ecn,
 tcp-vegas,misra2000fluid,hollot2001designing,misra:TAC2002,gorinsky2004feedback}.
 However, barring a few recent exceptions~\cite{dctcp-analysis, qcn-analysis}
 most prior work has been in the context of wide area networks. DCQCN and TIMELY
-are designed for data center networks, which is a very differnt environment than
+are designed for data center networks, which is a very different environment than
 the wide area Internet -- the links have far higher bandwidths, propagation
-delays are much lower, and the traffic is highly bursty, and more likley to get
+delays are much lower, and the traffic is highly bursty, and more likely to get
 synchronized.  We want to understand how ECN and delay-based congestion control
 protocols perform in data center networks; specifically to answer the question
 we posed earlier.
@@ -94,7 +94,7 @@ and show that the modified version is stable, and converges to a fixed point
 within 75ms for typical parameter values.
 
 \para{ECN or Delay:} Based on lessons learnt from analysis of DCQCN and TIMELY,
-we conclude that ECN is perhaps a better signal for conveyiing congestion
+we conclude that ECN is perhaps a better signal for conveying congestion
 information. One reason for this is that modern shared buffer switches mark
 packets with ECN {\em at egress}, effectively decoupling the queuing delay from
 feedback delay. This ensures that system stability is not coupled to queue

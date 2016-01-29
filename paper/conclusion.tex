@@ -16,13 +16,13 @@ Both protocols, however, exhibit a behavior that could be problematic in the
 datacenter environment (with extremely low propagation delays), and that is the
 operating queue length in both cases grows with the number of contending flows
 and they could introduce significant latency. We showed that by using a PI
-controller on the switch to mark packets, we can gurantee  we can guarantee
-bounded delay and a fairness for DCQCN.  However we demonstrate and prove a
+controller on the switch to mark packets, we can guarantee  we can guarantee
+bounded delay and fairness for DCQCN.  However we demonstrate and prove a
 fundamental uncertainty result for TIMELY (and TIMELY-like protocols): if you
 use delay as the only feedback signal for congestion control, then you can
 either guarantee fairness or a bounded delay, but not both simultaneously. Based
 on this reason, and the fact that ECN marking process on modern shared-buffer
-switches eeffectively excludes queuing delay from feedback loop, we conclude
+switches effectively excludes queuing delay from feedback loop, we conclude
 that ECN is a better congestion signal in data center environment. 
 
 For future work, we are doing a full exploration of PI like controllers for
