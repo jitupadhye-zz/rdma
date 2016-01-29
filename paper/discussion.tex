@@ -7,32 +7,28 @@ generally well, if properly tuned for a given scenario. Can we thus conclude
 that ECN and delay are both "equivalent" signals, when it comes to congestion
 control? 
 
-We believe that the answer is no, because ECN has two potential advantages.  One
-stems from a small, but important detail about how ECN marking is done on
-modern, shared-buffer switches.  The second advantage stems simply from the fact
-that ECN marking is done in a ``centralized'' manner, while delay measurements
-are done in a distributed manner.
+We believe that the answer is no, because ECN has two potential advantages, as
+discussed below.
 
 \para{ECN marking is done on packet egress:}
 Modern shared-buffer switches, especially those that use Broadcom's merchant
 silicon, do ECN marking on {\em packet egress}. When a packet is ready to
 depart, the controller checks the egress queue for that port {\em at that
-instant}, and depending on the specified marking algorithm (e.g.
-Equation~\ref{eq:mark}), decides whether to mark the packet. This means the mark
-carried by the packet conveys information about the state of the queue at the
-time the packet {\em departs} the queue. 
+instant}, and marks the packet according to the specified algorithm
+(e.g.  Equation~\ref{eq:mark}). Thus, the mark conveys information about the
+state of the queue at the time the packet {\em departure}.
 
-On the other hand, consider what happens with RTT measurements. If the egress
-queue discipline is FIFO within a priority class, (which it typically is), the
-delay experienced by a packet reflects the state of the queue at the time the
-packet {\em arrives} at the queue. 
+RTT measurements are different: If the egress queue discipline is FIFO within a
+priority class, (which it typically is), the delay experienced by a packet
+reflects the state of the queue at the time the packet {\em arrives} at the
+queue. 
 
-What this means is that the control signal carried by the ECN mark is delayed
-only by the propagation delay, but the control signal carried by the RTT signal
-is affected both by the queuing delay as well as the propagation delay. 
+This means is that the control signal carried by the ECN mark is delayed only by
+the propagation delay, but the control signal carried by the RTT signal is
+delayed both by the queuing delay as well as the propagation delay. 
 
 This is a subtle difference: the claim is not that ECN carries more information;
-just that the delay of the control loop is decoupled from the queuing delay.
+it that the delay of the control loop is decoupled from the queuing delay.
 
 This is why the DCQCN fluid model (Figure~\ref{fig:dcqcn_model}) assumes that
 the control loop delay is constant\footnote{DCTCP fluid model
@@ -48,18 +44,17 @@ happening for TIMELY (Figure~\ref{fig:timely_stability}). DCQCN is
 affected less by  this
 effect (Figure~\ref{fig:dcqcn_stability_default}).
 
-As an aside -- we believe that this issue has gone unnoticed in the congestion
-control literature so far, because most of it has focused on wide area networks.
-In wide area networks, queuing delays and propagation delays can be comparable
-(excluding scenarios like buffer bloat~\cite{bufferbloat}). However, in data
-center networks, queuing delays can easily dominate switching and
-propagation delays.  For example, an Arista 7050QX32 has 40Gbps ports, and a
-total shared buffer of switch has 12MB. Even if just 1MB worth of queue builds
-up at an egress port\footnote{This requires enabling dynamic thresholding, but it is
-almost always enabled in real deployments.}, it takes 200 $\mu$s to drain. In contrast, the one-hop
-propagation delay, with cut-through forwarding enabled, is around
-1-2 $\mu$s.  Typical diameter of a DC network is 6 hops, so overall propagation
-delay is under $20\mu s$.
+This issue has gone unnoticed in the congestion control literature so far,
+because most of it has focused on wide area networks.  In wide area networks,
+queuing delays and propagation delays can be comparable (excluding scenarios
+like buffer bloat~\cite{bufferbloat}). However, in data center networks, queuing
+delays can easily dominate switching and propagation delays.  For example, an
+Arista 7050QX32 has 40Gbps ports, and a total shared buffer of switch has 12MB.
+Even if just 1MB worth of queue builds up at an egress port\footnote{This
+requires enabling dynamic thresholding, but it is almost always enabled in real
+deployments.}, it takes 200 $\mu$s to drain it. In contrast, the one-hop
+propagation delay, with cut-through forwarding, is around 1-2 $\mu$s.  Typical
+DC network diameter is 6 hops, so overall propagation delay is under $25\mu s$.
 
 The reader may argue that it is easy to fix this issue  -- all we have to do is
 to build a delay-based protocol that strives to keep the  bottleneck queue
@@ -67,10 +62,10 @@ to build a delay-based protocol that strives to keep the  bottleneck queue
 feedback signal is also fixed, albeit a little higher (propagation delay, plus
 fixed queuing delay). 
 
-Unfortunately, it seems to be the case that a delay based congestion control
-protocol that maintains a fixed queue, cannot ensure fairness at the fixed point.
+Alas, a delay based congestion control protocol that maintains a fixed
+queue, cannot ensure fairness.
 
-\para{Fixed queue comes at the cost of fairness, for delay-based control:}
+\para{For delay-based control, fixed queue comes at the cost of fairness:}
 The key to building protocols that guarantee delay to a fixed quantity is to use
 a controller with \emph{integral} control. In the context of network transport
 protocols and AQM, integral control was first introduced by the PI
