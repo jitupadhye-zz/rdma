@@ -1,42 +1,38 @@
 \section{Conclusion and future work}
 In this paper we have analyzed two recently proposed congestion control
-protocols for RDMA over converged ethernet, DCQCN and TIMELY to both
-understand the behavior of the protocols as well as develop parameter
-tuning guidelines. Using
-fluid models and control theoretic analysis we derived stability regions
-for DCQCN, which demonstrated a somewhat odd non-monotonic behavior of
-stability with respect to the number of contending flows. We verified
-this behavior via packet level simulations. We also demonstrated that DCQCN
-converges to a unique fixed point and that with the proper choice of
-parameters the convergence is fast. In performing similar analysis
-for TIMELY, we discovered that as proposed the TIMELY protocol has
-infinite fixed points which could lead to unpredictable behavior and
-unbounded unfairness. We provide a simple fix to TIMELY that makes the
-behavior similar to DCQCN, with a unique operating point to which the
-protocol converges fast. Both protocols however exhibit a behavior that
-could be problematic in the datacenter environment (with extremely low
-propagation delays), and that is the
-operating queue length in both cases grows with the number of
-contending flows and they could introduce significant latency. In the
-wide area world, a technique to guarantee a bounded queueing delay has
-been demonstrated via an AQM mechanism using the PI controller. One of
-the primary differences between DCQCN and TIMELY is that while the
-former uses ECN marking at the switch, the latter uses delay
-measurements at the end hosts to perform congestion control. To that
-end, we implement the PI controller on the switch for DCQCN and at the
-end host for TIMELY. In doing so, we can guarantee bounded delay and a
-fairness for
-DCQCN, however we demonstrate and prove a fundamental uncertainty
-result for TIMELY (and TIMELY-like protocols): if you use delay as the only
-feedback signal for congestion control, then you can either guarantee
-fairness or a bounded delay, but not both simultaneously.
+protocols for RoCEv2 networks, namely DCQCN (ECN based) and TIMELY (delay
+based), to both understand the behavior of the protocols in detail.
+Using fluid models and control theoretic analysis
+we derived stability regions for DCQCN, which demonstrated a somewhat odd
+non-monotonic behavior of stability with respect to the number of contending
+flows. We verified this behavior via packet level simulations. We also
+demonstrated that DCQCN converges to a unique fixed point and that with the
+proper choice of parameters the convergence is fast. In performing similar
+analysis for TIMELY, we discovered that as proposed the TIMELY protocol has
+infinite fixed points which could lead to unpredictable behavior and unbounded
+unfairness. We provide a simple fix to TIMELY that makes the behavior similar to
+DCQCN, with a unique operating point to which the protocol converges fast. 
 
-For future work, we are doing a full exploration of PI like
-controllers for congestion control of RDMA in the datacenter,
-including a hardware implementation on the switches. Our control
-theoretic analysis also suggests that DCQCN can be simplified
-considerably, to remove strange artifacts like the non-monotonic
-stability behavior and that is the subject of our investigation as well.
+Both protocols however exhibit a behavior that could be problematic in the
+datacenter environment (with extremely low propagation delays), and that is the
+operating queue length in both cases grows with the number of contending flows
+and they could introduce significant latency. We showed that by using a PI
+controller on the switch to mark packets, we can gurantee  we can guarantee
+bounded delay and a fairness for DCQCN.  However we demonstrate and prove a
+fundamental uncertainty result for TIMELY (and TIMELY-like protocols): if you
+use delay as the only feedback signal for congestion control, then you can
+either guarantee fairness or a bounded delay, but not both simultaneously. Based
+on this reason, and the fact that ECN marking process on modern shared-buffer
+switches eeffectively excludes queuing delay from feedback loop, we conclude
+that ECN is a better congestion signal in data center environment. 
+
+For future work, we are doing a full exploration of PI like controllers for
+congestion control of RDMA in the datacenter, including a hardware
+implementation. Our analysis also suggests that DCQCN can be simplified
+considerably, to remove strange artifacts like the non-monotonic stability
+behavior and that is the subject of our investigation as well.  We also plan to
+extend our analysis to include the impact of PFC-induced PAUSES on the two
+protocols.
 
 
 %%% Local Variables:
