@@ -28,8 +28,8 @@ widespread deployment, beyond large cloud providers~\cite{dcqcn, timely}.  While
 both were developed for RoCEv2 networks, there is nothing RDMA-specific about
 them, apart from the fact that they both ignore the impact of packet drops. Like
 DCTCP~\cite{dctcp}, they are useful in any data center environment.  DCQCN is
-implemented entirely in Mellanox NICs, and drivers both Windows and Linux
-operating system are available.  Thus, anyone can deploy DCQCN in their data
+implemented entirely in Mellanox NICs, and drivers for both Windows and Linux
+are available.  Thus, anyone can deploy DCQCN in their data
 centers. While TIMELY is not publically available, the core timing functionality
 it relies on is supported by many modern NICs and their drivers. Our analysis
 provides an understanding of the pros and cons of the two options, and offers
@@ -89,11 +89,10 @@ large number of flows, and tends to be unstable in between; especially if the
 feedback latency is high.
 
 \para{TIMELY:} $(i)$ We develop a fluid model for TIMELY, and validate it using
-simulations. The model reveals that since TIMELY relies on {\em RTT
-gradient} as congestion signal, it can have infinite fixed points, resulting in
-arbitrary unfairness.  $(ii)$ We propose a simple remedy,
-and show that the modified version is stable, and converges to a fixed point. We
-also derive an upper bound on convergence time.
+simulations. The model reveals that since TIMELY can have infinite fixed points,
+resulting in arbitrary unfairness.  $(ii)$ We propose a simple remedy, and show
+that the modified version is stable, and converges to a fixed point. We also
+derive an upper bound on convergence time.
 
 \para{ECN or Delay:} Based on lessons learnt from analysis of DCQCN and TIMELY,
 we conclude that ECN is a better signal for conveying congestion information.
