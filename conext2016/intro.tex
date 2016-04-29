@@ -16,43 +16,16 @@ end-to-end delay.
 
 % what we do.
 
-In this paper, we analyze DCQCN and TIMELY for stability, convergence and
-fairness. Using the insights drawn from the analysis, we wish to answer the
-broader question: are there fundamental reasons to prefer either ECN or delay as
-the congestion signal in data center networks?
+In this paper, we analyze DCQCN and TIMELY for stability, convergence,
+fairness and flow completion time.
 
-% why we do it.
-
-One of our motivations for analyzing DCQCN and TIMELY is their potential for
-widespread deployment, beyond large cloud providers~\cite{dcqcn, timely}.  While
-both were developed for RoCEv2 networks, there is nothing RDMA-specific about
-them, apart from the fact that they both ignore the impact of packet drops. Like
-DCTCP~\cite{dctcp}, they are useful in any data center environment.  DCQCN is
-implemented entirely in Mellanox NICs, and drivers for both Windows and Linux
-are available.  Thus, anyone can deploy DCQCN in their data
-centers. While TIMELY is not publically available, the core timing functionality
-it relies on is supported by many modern NICs and their drivers. Our analysis
-provides an understanding of the pros and cons of the two options, and offers
-guidance on parameter tuning.
-
-Apart from this practical motivation, we are driven by plain curiosity. There is
-plenty of prior work on analysis of ECN and delay based congestion control
-protocols~\cite{ecn,
-tcp-vegas,misra2000fluid,hollot2001designing,misra:TAC2002,gorinsky2004feedback}.
-However, barring a few recent exceptions~\cite{dctcp-analysis, qcn-analysis}
-most prior work has been in the context of wide area networks. DCQCN and TIMELY
-are designed for data center networks, which is a very different environment
-than the wide area Internet -- the links have far higher bandwidths, propagation
-delays are much lower, and the traffic is highly bursty, and more likely to get
-synchronized.  We want to understand how ECN and delay-based congestion control
-protocols perform in data center networks; specifically to answer the question
-we posed earlier.
-
-As an added impetus, we note that neither ECN, nor delay based congestion
-control has seen widespread deployment in the wide area Internet, for a variety
-of reasons.  However, since RoCEv2 data center networks are drop-free, ECN or
-delay-based congestion control is not just useful --- it is necessary. Thus, the
-time is ripe to study the performance of DCQCN and TIMELY in detail.
+We have two motivations for this work. First, we want to understand the
+performance of DCQCN and TIMELY in detail. Given their potential for widespread
+deployment, we want to understand the tradeoffs made by the two protocols in
+detail, as well as offer guidance for parameter tuning.  Second, using insights
+drawn from the analysis, we want to answer a broader question: are there
+fundamental reasons to prefer either ECN or delay as the congestion signal in
+data center networks? 
 
 % Methodology.
 
@@ -69,7 +42,9 @@ to ECN and delay as congestion signals, since they are supported by current
 hardware. Protocols that require switches to do
 more~\cite{katabi2002congestion,rcp,pfabric} or use a central
 controller~\cite{deadline,perry2014fastpass} are outside the scope of this
-paper.
+paper. We also do not consider designing a new congestion control protocol that
+would use both ECN and delay as congestion signals. This is a fascinating topic,
+but outside the scope of this paper. 
 
 Second, it is not our goal to do a direct comparison of performance of DCQCN and
 TIMELY.  Such comparison makes little sense, since both protocols offer several
@@ -86,13 +61,13 @@ feedback latency is low. The relationship between stability and the number of
 competing flows is, strangely, non-monotonic, which is very different from TCP's
 behavior~\cite{misra:TAC2002}. DCQCN is stable for both very small, and very
 large number of flows, and tends to be unstable in between; especially if the
-feedback latency is high.
+feedback latency is high. \fixme{say something about fct}.
 
 \para{TIMELY:} $(i)$ We develop a fluid model for TIMELY, and validate it using
 simulations. The model reveals that since TIMELY can have infinite fixed points,
 resulting in arbitrary unfairness.  $(ii)$ We propose a simple remedy, and show
 that the modified version is stable, and converges to a fixed point. We also
-derive an upper bound on convergence time.
+derive an upper bound on convergence time. \fixme{say something about fct}.
 
 \para{ECN or Delay:} Based on lessons learnt from analysis of DCQCN and TIMELY,
 we conclude that ECN is a better signal for conveying congestion information.
