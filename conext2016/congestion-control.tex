@@ -1,0 +1,59 @@
+\section{The making of a congestion control algorithm}
+
+In the last few years there has been a steady growth of congestion control algorithms such as DCTCP, QCN, DeTail, DCQCN, TIMELY, RC3, ....\fixme{add citations}. They are targeted for similar environments (data center networks), but they use different congestion signals and react differently to the signal. Out of which, TIMELY and DCQCN while being drastically different, both been proposed for RoCE networks with exact goals: avoid congestion in an RDMA network. Instead of designing a new congestion control algorithm, we beg the question of: \textit{what is the difference between the two algorithms?} We answer this question by taking a fundamental approach providing insights on crucial components of any congestion control algorithm and use TIMELY and DCQCN as two examples.
+
+\subsection{Nuts and Bolts}
+Below we summarize the nuts and bolts of any congestion control algorithm including TCP. In section \fixme{X} we show what happens when a protocol like DCQCN or TIMELY ignores either of these fundamentals and we propose a fix. We hope this approach light the path for future congestion control designs.
+
+Congestion control provides for a fundamental set of mechanisms to maintain
+stability, efficiency, and fairness at the same time. Control theory is a mathematical tool for describing dynamic
+systems. It lends itself to modeling congestion control -- TCP is a perfect
+example of a typical closed loop system that can be described in control
+theoretic terms. (say something about fluid model here). 
+
+
+{\textbf{Stability}}: In control theory, there is a mathematically defined notion of system stability.  In a stable
+system, for any bounded input over any amount of time, the output will also be
+bounded.  For congestion control, what is actually meant by global  stability is
+typically asymptotic stability: a mechanism should converge to a certain state
+irrespective of the initial state of the network. Local stability means that if
+the system is perturbed from its stable state it will quickly return toward the
+locally stable state.
+
+{\textbf{Fairness}}: 
+We define fairness as approximate equality between the rates of flows that share the congestion path. The question is how should a new congestion control algorithm prove it is fair at all times? 
+Which mechanisms could be used to enforce approximate flow rate fairness?
+
+
+{\textbf{Performance (Utilization?)}}: 
+Congestion control is subject to some tradeoffs: on the one hand, it must allow high link utilizations and fair resource sharing, but on the other hand, the algorithms must also be stable. A further challenge is the fact that feedback information may be imprecise.  For instance, severe congestion can delay feedback signals.  Also, in-network
+measurement of parameters such as RTTs or data rates may contain estimation errors. \fixme{say something about ECN is a better signal to estimate congestion rather than rtt?}
+
+
+{\textbf{Congestion signal}}: 
+ Explicit notification mechanisms can be realized using ECN. Question is what is the impact of frequency of ECN feedback? What direction should feedback take (ECN or QCN?)
+
+Timely paper is emphasizing on high precision delay as a good congestion signal,
+we should emphasize that RTT, when precisely measured, is still an indicator of
+network congestion and that a congestion control mechanism can be designed using
+RTT. we should downplay the exact algorithmic contributions of timely but there
+are other algorithms that have been studied very well in literature based on RTT
+such as FAST, Vegas, and NV.
+
+\subsection{Pragmatic view point}
+
+Dependency on parameters: It is always possible to tune congestion control
+parameters based on some knowledge of the environment and the application
+scenario. However, ... the fundamental challenge is whether it is possible to
+define one congestion control mechanism that operates reasonably well in a whole
+range of possible scenarios without need to tweak parameters on the fly...
+
+also mention that from a pragmatic view point, generally in experiments the
+rates in gradient timely settle at fair shares and are stable. The reason is
+probably because there's always some disturbance/noise in experiments, so the
+gradient is never perfectly zero. For any non-zero gradient value the AIMD
+nature of timely should push the system towards fairness. I don't know how to
+show this with stability analysis, but it is certainly something to consider
+given that timely is working so well in practice.
+
+

@@ -1,0 +1,43 @@
+TIMELY~\cite{timely} is an end-to-end, rate-based congestion control algorithm
+that uses changes in RTT as a congestion signal.  It relies on NIC hardware to
+obtain fine-grained RTT measurements. RTT is estimated once per completion
+event~\cite{rocev2}, which signals the successful transmission of a chunk
+(16-64KB) of packets. Upon receiving a new RTT sample, TIMELY computes new rate
+for the flow, as shown in Algorithm \ref{fig:timely_algo}.  If the new RTT
+sample is less than ($T_{low}$), TIMELY increases sending rate additively by
+$\delta$. If the new sample is more than ($T_{high}$), rate is decreased
+multiplicatively by $\beta$. If the new sample is between $T_{low}$ and
+$T_{high}$, the rate change depends on the RTT gradient. The gradient is defined
+as the normalized change between two successive RTT samples. If the gradient is
+positive (i.e. RTT is increasing), sending rate is reduced multiplicatively, in
+proportion to the RTT gradient.  Otherwise, it is increased additively by
+$\delta$.
+
+TIMELY flows do not start at line rate. If there are N active flows at a sender,
+a new flow starts at rate C/(N+1), where C is the interface link
+bandwidth~\cite{timely}.
+
+\begin{algorithm}[t]
+\footnotesize
+{
+\begin{algorithmic}[1]
+%\Procedure{CalcRate}{$newRTT$}
+\State $newRTTDiff \gets newRTT - prevRTT$
+\State $prevRTT \gets newRTT$
+\State $rttDiff \gets (1-\alpha) \cdot rttDiff + \alpha \cdot newRTTDiff$
+\State $rttGradient = rttDiff/D_{minRTT}$
+\If {$newRTT < T_{low}$}
+        \State $rate \gets rate + \delta$
+\ElsIf {$newRTT > T_{high}$}
+        \State $rate \gets rate \cdot  (1 - \beta \cdot (1 - T_{high}/newRTT))$
+\ElsIf {$rttGradiant \le 0$}
+        \State $rate \gets rate + \delta$
+\Else
+        \State $rate \gets rate \cdot (1 - \beta \cdot rttGradient)$
+\EndIf 
+%\EndProcedure
+\end{algorithmic}
+}
+\caption{TIMELY rate calculation}
+\label{fig:timely_algo}
+\end{algorithm}

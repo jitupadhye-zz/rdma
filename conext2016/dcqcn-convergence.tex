@@ -1,0 +1,164 @@
+\subsection{Convergence}
+\label{sec:dcqcn_convergence}
+
+%\begin{figure}[t]
+%\center
+%\includegraphics[width=0.4\textwidth]{figures/dcqcn_convergence.eps}
+%\caption{DCQCN flow rate update.}
+%\label{fig:dcqcn_convergence}
+%\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.33\textwidth]{figures/dcqcn_convergence_time.eps}
+\vspace{-1em}
+\caption{Upper bound on DCQCN convergence time under conservative assumptions}
+\vspace{-1em}
+\label{fig:dcqcn_convergence_time}
+\end{figure}
+
+\begin{figure}[t]
+\center
+\includegraphics[width=0.35\textwidth]{figures/dcqcn_convergence_brief.eps}
+\caption{DCQCN's AIMD-style updates of flow rate.}
+\vspace{-1.5em}
+\label{fig:dcqcn_convergence}
+\end{figure}
+
+In Section~\ref{sec:dcqcn_stability}, we showed that for reasonable parameter
+settings,  DCQCN is stable {\em after} flows converge to the unique fixed point.
+We also showed that at the fixed point, the flows share the bandwidth equally.
+However, two questions remain unanswered: $(i)$ do flows the always converge
+to this fixed point, and $(ii)$ how fast do flows converge? 
+
+We cannot answer these questions using the fluid model, so
+like~\cite{dctcp-analysis}, we construct and analyze a discrete model of the
+rate adjustment at the RP. The default parameter settings given in~\cite{dcqcn}
+set both the Timer $T$ and $\alpha$ update interval $\tau '$ equal to $55\mu s$.
+Thus, we use $\tau '$ as the unit of time.  The process of DCQCN rate update is
+similar to TCP AIMD, as shown in Figure~\ref{fig:dcqcn_convergence}.  The flows
+get the peak rates at $T_k$. For simplicity, we assume all flows are
+synchronized, and peak at the same time.  This is a common assumption, for data
+center environments~\cite{dctcp-analysis}.
+
+\begin{figure*}[t]
+\center
+\subfigure
+{
+\includegraphics[width=0.31\textwidth]{figures/dcqcn_converge_3.pdf}
+\label{fig:dcqcn_convergence_sim_3}
+}
+\subfigure
+{
+\includegraphics[width=0.31\textwidth]{figures/dcqcn_converge_3rai.pdf}
+\label{fig:dcqcn_convergence_sim_3rai}
+}
+\subfigure
+{
+\includegraphics[width=0.31\textwidth]{figures/dcqcn_converge_11.pdf}
+\label{fig:dcqcn_convergence_sim_11}
+}
+\vspace{-1em}
+\caption{DCQCN convergence: simulation results}
+\vspace{-1em}
+\label{fig:dcqcn_convergence_sim}
+\end{figure*}
+
+\begin{thm}[DCQCN convergence]
+Under the control of DCQCN, the rate difference of any two flows decrease exponentially
+overtime. 
+\end{thm}
+\begin{proof}
+Here we provide a brief proof whereas the detailed proof can be found in~\cite{fullpaper}.
+Whenever a flow gets ECN marks at $T_k$, it reduces its
+rate in one unit of time, then starts $\Delta {T_k} -1 $ consecutive additive rate
+increases on $R_T^{(i)}$.\footnote{For simplicity, we omit hyper-increase and set 
+$R_T = R_C$ upon rate decrease. This is a slightly simplified version of DCQCN.}
+Here $\Delta {T_k} \buildrel \Delta \over = {T_{k + 1}} - {T_k}$. According to DCQCN's definition:
+\begin{equation}
+\small
+R_T^{(i)}({T_{k + 1}}) = \left( {1 - \frac{{{\alpha ^{(i)}}({T_k})}}{2}} \right)R_C^{(i)}({T_k}) + \left( {\Delta {T_k} - 1} \right){R_{AI}}
+\label{eq:converge_rc}
+\end{equation}
+\begin{equation}
+\small
+{\alpha ^{(i)}}({T_{k + 1}}) = {(1 - g)^{\Delta {T_k} - 1}}\left( {(1 - g){\alpha ^{(i)}}({T_k}) + g} \right)
+\label{eq:converge_alpha}
+\end{equation}
+For another flow, {\em e.g.,} the $j$th flow, we can simply rewrite Equation~\ref{eq:converge_alpha} by 
+replacing $(i)$ with $(j)$. We subtract the equation of $j$th flow from the equation of $i$th flow:
+\begin{equation}
+\small
+\begin{array}{l}
+{\alpha ^{(i)}}({T_{k + 1}}) - {\alpha ^{(j)}}({T_{k + 1}}) = {(1 - g)^{\Delta {T_k}}}\left( {{\alpha ^{(i)}}({T_k}) - {\alpha ^{(j)}}({T_k})} \right)\\
+ = ... = {(1 - g)^{\sum\nolimits_{l = 0}^k {\Delta {T_l}} }}\left( {{\alpha ^{(i)}}({T_0}) - {\alpha ^{(j)}}({T_0})} \right)
+\end{array}
+\label{eq:converge_alphaarray}
+\end{equation}
+This tells us the difference of $\alpha^{(i)}$ of {\em any} two flows will decrease exponentially. So $\alpha^{(i)}$
+of different flows will converge to the same value. Once the $\alpha$ converged at some $T_{k'}$, we can show 
+the rates $R_C$ converge afterwards. We rewrite the $j$th flow's Equation~\ref{eq:converge_rc}, and subtract it 
+from Equation~\ref{eq:converge_rc}. Combining the analysis of $R_T$ in~\cite{fullpaper}, we get:
+\begin{equation}
+\small
+\begin{array}{l}
+R_C^{(i)}({T_{k + 1}}) - R_C^{(j)}({T_{k + 1}}) = \left( {1 - \frac{{\alpha ({T_k})}}{2}} \right)\left( {R_C^{(i)}({T_k}) - R_C^{(j)}({T_k})} \right)\\
+ = ... = \prod\limits_{l = k'}^k {\left( {1 - \frac{{\alpha ({T_l})}}{2}} \right)} \left( {R_C^{(i)}({T_{k'}}) - R_C^{(j)}({T_{k'}})} \right)
+\end{array}
+\label{eq:converge}
+\end{equation}
+As long as $\alpha ({T_k})$ has a lower bound that is greater than 0, the rates $R_C$ of different flows 
+converge exponentially. In~\cite{fullpaper}, we prove that:
+\begin{equation}
+\small
+\alpha ({T_0}) > ... > \alpha ({T_k}) > \alpha ({T_{k + 1}}) > ... > {\alpha ^*} > 0
+\label{eq:converge_alphastar}
+\end{equation}
+where $\alpha^{*}$ is the fixed point of the Equation~\ref{eq:converge_alpha}.
+Equation~\ref{eq:converge_alphastar} concludes our proof. 
+\end{proof}
+From Equation~\ref{eq:converge}, we see that $R_C$ converges at the rate
+of at least $( {1 - \frac{{{\alpha ^{*}}}}{2}} )^k$, where $k$ is the number of
+AIMD cycles.
+
+\para{Convergence time.} 
+In the above analysis, the convergence has two phases: (1) $\alpha ^{(i)}$
+converge to the same value (not necessarily at $\alpha^*$); (2) $R_C^{(i)}$
+converge along with $\alpha \to \alpha^*$.  In practice, the flows that
+encounter congestion for the first time all have the same initial value of
+$\alpha = 1$.  Therefore, we mainly focus on the second phase. We define the
+system as having ``converged'' when the difference of any two flows is less than
+10\% of expected fair share.
+
+We now derive an upper bound convergence time of under several worst-case
+assumptions. First, we assume that the value of $\alpha ({T_k})$ is $\alpha ^*$.
+In practice, $\alpha ({T_k}) > \alpha ^*$, so the flows will converge faster
+than our estimation, given the term $(1 - \alpha /2)^T$ in
+Equation~\ref{eq:converge}.  Second, we assume that the switch does not mark ECN
+until the queue length hits $K_{max}$, opposed to using RED. 
+
+The maximum possible difference between initial rates of two flows can at most
+be $C$. So, an upper bound on the convergence time is the time required for this
+difference to fall from $C$ to less than $\frac{0.1 \times C}{N}$. This is
+simply the smallest value of $x$ that satisfies the following inequality: 
+\begin{equation} 
+\small 
+{ \left( {1 - \frac{{{\alpha ^*}}}{2}} \right)^{\frac{x}{{\tau '\Delta{T^*}}}}}C \le \frac{0.1 \times C}{N} 
+\end{equation}
+We solve $\alpha^*$ and above equation numerically for different parameter
+settings. The results are shown Figure~\ref{fig:dcqcn_convergence_time}. With
+default parameter settings, DCQCN converges within 100ms, and the convergence
+time decreases quickly as the number of flow increases.  We have also calculated
+convergence time for a range of different values of $R_{AI}$, $K_{max}$ and $g$.
+Sample results are shown in Figure~\ref{fig:dcqcn_convergence_time}. We found
+that convergence time is determined primarily $R_{AI}$, which is not surprising.
+
+We have verified these results with packet simulations. Sample results are shown
+in Figure~\ref{fig:dcqcn_convergence_sim}.
+Figure~\ref{fig:dcqcn_convergence_sim}(left), we start two flows (at 40Gbps), which
+converge to 20Gbps. Then, at time 0.1$s$, we start the third flow, at 40Gbps.  The
+three flows converge to 13Gbps in well within 100ms.
+Figure~\ref{fig:dcqcn_convergence_sim}(middle) repeats the experiment, with a lower
+value of $R_{AI}$. As expected, it takes longer for the flows to converge. In
+Figure~\ref{fig:dcqcn_convergence_sim}(right) we start with 10 flows, and add an
+11th flow at time 0.1$s$. As expected, the flows converge faster.

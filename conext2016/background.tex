@@ -1,0 +1,26 @@
+\section{Background}
+The Remote Direct Memory Access (RDMA) technology offers high throughput (40Gbps
+or more), low latency (few $\mu$s), and low CPU overhead (1-2\%), by bypassing
+the end-host kernels during data transfer. Instead, network interface cards
+(NICs) transfer data in and out of pre-registered memory buffers at the two end
+hosts.
+
+Modern data center networks deploy RDMA using the RDMA over Converged Ethernet
+V2 (RoCEv2)~\cite{rocev2} standard.  RoCEv2 requires a lossless (or, more
+accurately, drop-free) L2 layer. Ethernet can be made drop-free using Priority
+Flow Control (PFC)~\cite{pfc}. PFC prevents buffer overflow on Ethernet switches
+and NICs. The switches and NICs track ingress queues. When the queue exceeds a
+certain threshold, a PAUSE message is sent to the upstream entity. The uplink
+entity then stops sending on that link till it gets an RESUME message.  PFC is a
+blunt mechanism, since it does not operate on a per-flow basis. This leads to
+several well-known problems such as head-of-the-line
+blocking~\cite{dcqcn,tcp-bolt}. 
+
+PFC's problems can be mitigated using per-flow congestion control. Since PFC
+eliminates packet drops due to buffer overflow, either ECN or increase in RTT
+are the only two available ``end-to-end'' congestion signals.  DCQCN relies on
+ECN, while TIMELY relies on RTT changes.
+
+DCQCN and TIMELY are not RDMA-specific, so our analysis makes no reference to RoCEv2
+or RDMA. DCQCN and TIMELY are not designed for wide area traffic, so our
+analysis focuses on intra-DC networks. 

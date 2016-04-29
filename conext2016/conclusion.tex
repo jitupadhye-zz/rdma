@@ -1,0 +1,37 @@
+\vspace{-0.5em}
+\section{Conclusion and future work}
+We analyzed  the behavior of two recently proposed congestion control protocols
+for data center networks; namely DCQCN (ECN based) and TIMELY (delay based).
+Using fluid models and control theoretic analysis we derived stability regions
+for DCQCN, which demonstrated a somewhat odd non-monotonic behavior of stability
+with respect to the number of contending flows. We verified this behavior via
+packet level simulations. We showed that DCQCN converges to a unique
+fixed point and that with the proper choice of parameters the convergence is
+fast. In performing similar analysis for TIMELY, we discovered that as proposed
+the TIMELY protocol has infinite fixed points which could lead to unpredictable
+behavior and unbounded unfairness. We provide a simple fix to TIMELY to remedy
+this problem. The modified protocol is stable, and converges quickly.
+
+However, for both protocols, the operating queue length grows with the number of
+contending flows, which can introduce significant latency. Using a PI controller
+on the switch to mark packets, we can guarantee bounded delay and fairness for
+DCQCN.  However we demonstrate and prove a fundamental uncertainty result for
+delay-based protocols: if you use delay as the only feedback signal for
+congestion control, then you can either guarantee fairness or a bounded delay,
+but not both simultaneously. Based on this reason, and the fact that ECN marking
+process on modern shared-buffer switches effectively excludes queuing delay from
+feedback loop, we conclude that ECN is a better congestion signal in data center
+environment. 
+
+For future work, we are doing a full exploration of PI like controllers for
+congestion control of RDMA in the datacenter, including a hardware
+implementation. Our analysis also suggests that DCQCN can be simplified
+considerably, to remove strange artifacts like the non-monotonic stability
+behavior. We also plan to analyze the impact of PFC-induced PAUSES on the two
+protocols.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

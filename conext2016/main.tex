@@ -1,0 +1,89 @@
+%\documentclass{sig-alternate-10pt-compact}
+\documentclass{sig-alternate-10pt}
+
+\usepackage{amsmath,amssymb}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage[usenames]{color}
+\usepackage{algorithm}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{times}
+\usepackage{balance}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage[tight,footnotesize]{subfigure}
+
+\setlength{\pdfpagewidth}{8.5in}
+\setlength{\pdfpageheight}{11in}
+
+
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+\newtheorem{cor}{Corollary}
+\newtheorem{thm}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lem}{Lemma}
+
+\newcommand\fixme[1]{{\color{red} [#1]}}
+
+\newcommand\hei{{h}}
+\newcommand\dist{{L}}
+\newcommand\beam{{\theta}}
+
+\newcommand{\para}[1]{{\vspace{4pt} \bf \noindent #1 \hspace{2pt}}}
+\newcommand\note[1]{{\color{red}#1}}
+\newcommand\bedit[1]{#1}
+\newcommand\htedit[1]{#1}
+\newcommand\newed[1]{{\color{black}#1}}
+
+
+\newenvironment{packed_itemize}{
+\begin{list}{\labelitemi}{\leftmargin=1.3em}
+  \setlength{\itemsep}{5pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+  \setlength{\headsep}{0pt}
+  \setlength{\topskip}{0pt}
+  \setlength{\topmargin}{0pt}
+  \setlength{\topsep}{0pt}
+  \setlength{\partopsep}{0pt}  
+}{\end{list}}
+
+\hyphenation{DCQCN}
+
+\begin{document}
+
+\clubpenalty=10000 
+\widowpenalty = 10000
+
+\title{ECN or Delay: Lessons Learnt from Analysis of\\DCQCN and TIMELY}
+
+\author{Paper \# 278. Pages 13}
+
+\maketitle
+\input{abstract}
+\input{intro}
+%\input{congestion-control}
+\input{background}
+\input{dcqcn}
+\input{timely}
+\input{discussion}
+%\input{practical}
+\input{related}
+\input{conclusion}
+
+\clearpage
+\bibliographystyle{abbrv}
+\bibliography{lossless}
+
+%\clearpage
+%\input{appendix}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:
