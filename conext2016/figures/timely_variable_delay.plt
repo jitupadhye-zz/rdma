@@ -11,4 +11,6 @@ set ylabel "Queue (KB)"
 set key top right
 
 plot \
-        "timely.fixed.2.15.dat" using ($1):($4) ti "Random [0, 15us] jitter" w lines ls 1 lc rgb "blue"
+        "timely.fixed.2.15.dat" using ($1):($4) ti "[0,15{/Symbol m}s] additional delay" w lines ls 1 lc rgb "blue",\
+        "timely.fixed.2.100.dat" using ($1):($4) ti "[0,100{/Symbol m}s] additional delay" w lines ls 2 lc rgb "red"
+
