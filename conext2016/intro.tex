@@ -30,10 +30,13 @@ data center networks?
 % Methodology.
 
 To this end, we analyze DCQCN and TIMELY using fluid models and NS3~\cite{NS3}
-simulations.\footnote{We will publish our NS3 and MATLAB code.} Fluid models are
-useful for analyzing properties such as stability, and for rapid exploration of
-parameter space.  Simulations are useful for studying packet-level dynamics and
-establishing the fidelity of the fluid model. 
+simulations. Fluid models are useful for analyzing properties such as stability,
+and for rapid exploration of parameter space. However, fluid models cannot
+tractably model all features of complex protocols like DCQCN and TIMELY. Nor can
+fluid models compute measures like flow completion times. Thus, we also study
+the protocols using detailed, packet-level simulations using NS3. Our
+simulations in NS3 implement all known features of the protocols. Our NS3 and
+MATLAB code is available at~\cite{xxx}.
 
 % summary of contributions and findings.
 
@@ -43,8 +46,8 @@ hardware. Protocols that require switches to do
 more~\cite{katabi2002congestion,rcp,pfabric} or use a central
 controller~\cite{deadline,perry2014fastpass} are outside the scope of this
 paper. We also do not consider designing a new congestion control protocol that
-would use both ECN and delay as congestion signals. This is a fascinating topic,
-but outside the scope of this paper. 
+would use both ECN and delay as congestion signals. We plan to explore this
+fascinating topic in near future.
 
 Second, it is not our goal to do a direct comparison of performance of DCQCN and
 TIMELY.  Such comparison makes little sense, since both protocols offer several

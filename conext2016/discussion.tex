@@ -37,24 +37,22 @@ assumption for TIMELY, and  thus we incorporate $\tau'$ and
 Equation~\ref{eq:timely_taup} in the TIMELY fluid model
 (Figure~\ref{fig:timely_model}).
 
-This means that as the queue length increases (e.g. when there are
-more flows), congestion control algorithms that rely on RTT suffer from
-increasing {\em lag} in their control loop, making them more difficult to control. We see this
-happening for TIMELY (Figure~\ref{fig:timely_stability}). DCQCN is
-affected less by  this
-effect (Figure~\ref{fig:dcqcn_stability_default}).
+This means that as the queue length increases (e.g. when there are more flows),
+congestion control algorithms that rely on RTT suffer from increasing {\em lag}
+in their control loop, making them more difficult to control. We see this
+happening for TIMELY (Figure~\ref{fig:timely_stability}). DCQCN is affected less
+by  this effect (Figure~\ref{fig:dcqcn_stability_default}).
 
-This issue has gone unnoticed in the congestion control literature so far,
-because most of it has focused on wide area networks.  In wide area networks,
-queuing delays and propagation delays can be comparable (excluding scenarios
-like buffer bloat~\cite{bufferbloat}). However, in data center networks, queuing
-delays can easily dominate switching and propagation delays.  For example, an
-Arista 7050QX32 has 40Gbps ports, and a total shared buffer of switch has 12MB.
-Even if just 1MB worth of queue builds up at an egress port,\footnote{This
-requires enabling dynamic thresholding, but it is almost always enabled in real
-deployments.} it takes 200 $\mu$s to drain it. In contrast, the one-hop
-propagation delay, with cut-through forwarding, is around 1-2 $\mu$s.  Typical
-DC network diameter is 6 hops, so overall propagation delay is under $25\mu s$.
+Researchers have observed similar ``bufferbloat''~\cite{bufferbloat} problems in
+the wide area networks solutions such as LEDBAT~\cite{ledbat} have been
+proposed. Similarly, in modern data center networks, queuing delays can easily
+dominate switching and propagation delays.  For example, an Arista 7050QX32 has
+40Gbps ports, and a total shared buffer of switch has 12MB.  Even if just 1MB
+worth of queue builds up at an egress port,\footnote{This requires enabling
+dynamic thresholding, but it is almost always enabled in real deployments.} it
+takes 200 $\mu$s to drain it. In contrast, the one-hop propagation delay, with
+cut-through forwarding, is around 1-2 $\mu$s.  Typical DC network diameter is 6
+hops, so overall propagation delay is under $25\mu s$.
 
 The reader may argue that it is easy to fix this issue  -- all we have to do is
 to build a delay-based protocol that strives to keep the  bottleneck queue
@@ -62,8 +60,8 @@ to build a delay-based protocol that strives to keep the  bottleneck queue
 feedback signal is also fixed, albeit a little higher (propagation delay, plus
 fixed queuing delay). 
 
-However, a delay based congestion control protocol that maintains a fixed
-queue, cannot ensure fairness.
+However, a delay based congestion control protocol that maintains a fixed queue,
+cannot ensure fairness.
 
 \para{For delay-based control, fixed queue comes at the cost of fairness:}
 One way to build protocols that guarantee delay to a fixed quantity is to use
