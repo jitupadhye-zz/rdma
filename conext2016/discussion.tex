@@ -177,9 +177,47 @@ Note that the preceding result does not apply to systems with
 limit cycles,\footnote{Some window-based protocols have limit cycles~\cite{dctcp-analysis}.} 
 with which rate-based protocols do not have steady state throughput.
 
+\begin{figure}
+\center
+\subfigure[DCQCN]
+{\includegraphics[width=0.49\columnwidth]{figures/dcqcn_variable_delay.eps}}
+\subfigure[TIMELY]
+{\includegraphics[width=0.49\columnwidth]{figures/timely_variable_delay.eps}}
+\vspace{-1em}
+\caption{DCQCN and TIMELY with variable feedback transmission delay}
+\vspace{-1em}
+\label{fig:variable_delay}
+\end{figure}
+
+\para{ECN marking is resilient to variable feedback transmission delay:}
+Last but not the least, ECN marking is more resilient to the delay jitter during feedback 
+transmission. After generated at the bottleneck in the network, the congestion signal must
+be conveyed back to the sender. For both ECN marking and (queuing) delay feedback, this 
+process includes the time it takes for the data packet to reach the receiver, the receiver
+to generate feedback packets and the feedback packets to reach the sender. This can delay
+the arrival of ECN signal, or interfere round-trip delay measurement, thus affecting
+protocol performance and stability.
+
+Although DCQCN and TIMELY both attempt to mitigate this artifact, {\em e.g.,} by prioritizing
+feedback packets or generating feedback packets using hardware, the delay jitter of
+feedback transmission cannot be totally eliminated. Intuitively, ECN marking is more
+resilient to this problem, because the queue length measurement at the bottleneck remains
+correct and is only delayed. However, the variable delay of feedback directly injects false signal
+to the measurements of TIMELY, causing unpredictable behaviors.
+
+Our model-based simulation results confirm above hypothesis. In Figure~\ref{fig:variable_delay}, we inject 
+uniformed random jitter, with different range, to the feedback delay of DCQCN ($\tau^*$) 
+and TIMELY ($\tau '$) models. In practice, the jitter caused by feedback generation on hardware 
+and queuing delay on the path should be within a few microseconds range. Compared with 
+Figure~\ref{fig:dcqcn_unstable}, DCQCN does not have any major difference when the delay noise is 
+up to 15 microseconds. With the same level of jitter, TIMELY becomes much more unstable compared
+with Figure~\ref{fig:timely_fixed_a}.
+
+
 \para{Summary:}
-Based on these two factors, {\em i.e.,} the faster feedback to the sources, and
-the ability to simultaneously achieve fairness and bounded delay point, we argue
+Based on these three factors, {\em i.e.,} the faster feedback to the sources, 
+the ability to simultaneously achieve fairness and bounded delay point, and the resilience 
+to variable delay of congestion feedback transmission, we argue
 in favor of using ECN instead of delay for congestion control in a data center
 environment. We illustrate this in Figure~\ref{fig:design_choice}.
 
