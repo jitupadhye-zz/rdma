@@ -10,6 +10,15 @@ control?
 We believe that the answer is no, because ECN has two potential advantages, as
 discussed below.
 
+\begin{figure}[t]
+\center
+\includegraphics[width=0.35\textwidth]{figures/dcqcn_bufferbloat.eps}
+\caption{The modeled queue length of marking on enqueuing and dequeuing. 
+Two flows compete for a 40Gbps link with 85$\mu$s feedback delay.}
+\vspace{-1.5em}
+\label{fig:dcqcn_bufferbloat}
+\end{figure}
+
 \para{ECN marking is done on packet egress:}
 Modern shared-buffer switches, especially those that use Broadcom's merchant
 silicon, do ECN marking on {\em packet egress}. When a packet is ready to
