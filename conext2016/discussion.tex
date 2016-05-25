@@ -182,7 +182,15 @@ flows contending. Thus, to make the system consistent $p_i$ has to be
 a function of the common queue length which depends on the number of flows 
 and hence we cannot control the delay to a fixed quantity. 
 \end{proof}
-Note that the preceding result does not apply to systems with
+\para{Remarks:} Note that a unique fixed point can be guaranteed by
+having a \textbf{RED} style AQM scheme that has a fixed point that
+depends on the number of flows. However, given the low delay
+requirements in a data center environment, that would require the RED
+marking profile to have a steep slope (marking probability that goes
+from 0 to 1 over a small buffer space). As shown
+in~\cite{misra:TAC2002}, a steep slope leads to an unstable
+controller creating a separate tradeoff. 
+Also, the preceding result does not apply to systems with
 limit cycles,\footnote{Some window-based protocols have limit cycles~\cite{dctcp-analysis}.} 
 with which rate-based protocols do not have steady state throughput.
 
