@@ -41,6 +41,7 @@ get the peak rates at $T_k$. For simplicity, we assume all flows are
 synchronized, and peak at the same time.  This is a common assumption, for data
 center environments~\cite{dctcp-analysis}.
 
+\if 0
 \begin{figure*}[t]
 \center
 \subfigure
@@ -63,6 +64,7 @@ center environments~\cite{dctcp-analysis}.
 \vspace{-1em}
 \label{fig:dcqcn_convergence_sim}
 \end{figure*}
+\fi
 
 \begin{thm}[DCQCN convergence]
 Under the control of DCQCN, the rate difference of any two flows decrease exponentially
@@ -121,6 +123,7 @@ From Equation~\ref{eq:converge}, we see that $R_C$ converges at the rate
 of at least $( {1 - \frac{{{\alpha ^{*}}}}{2}} )^k$, where $k$ is the number of
 AIMD cycles.
 
+\if 0
 \para{Convergence time.} 
 In the above analysis, the convergence has two phases: (1) $\alpha ^{(i)}$
 converge to the same value (not necessarily at $\alpha^*$); (2) $R_C^{(i)}$
@@ -162,3 +165,4 @@ Figure~\ref{fig:dcqcn_convergence_sim}(middle) repeats the experiment, with a lo
 value of $R_{AI}$. As expected, it takes longer for the flows to converge. In
 Figure~\ref{fig:dcqcn_convergence_sim}(right) we start with 10 flows, and add an
 11th flow at time 0.1$s$. As expected, the flows converge faster.
+\fi
