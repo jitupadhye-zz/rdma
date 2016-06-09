@@ -19,11 +19,11 @@ model was also used in several recent studies, including pFabric~\cite{pfabric}
 and ProjecToR~\cite{projector}. 
 
 Both DCQCN and TIMELY used the default parameter settings recommended
-in~\cite{dcqcn} and ~\cite{timely}, respectively.
+in~\cite{dcqcn} and ~\cite{timely}, respectively. 
 
 The metric of interest is the flow completion time of small flows, which we
-arbitrarily define as flows that send fewer than 100 packets. Results with other
-other thresholds are similar.
+arbitrarily define as flows that send fewer than 10KB. Results with other other
+thresholds are similar.
 
 Figure~\ref{fig:fct_results} shows the median and 90th percentile of FCT and
 DCQCN and TIMELY, as the load is varied.  The X axis shows relative load: load
@@ -60,7 +60,7 @@ can be high, and highly variable.
 \begin{figure}[t]
 \center
 \includegraphics[width=0.3\textwidth]{figures/fct_cdf.pdf}
-\caption{CDF of FCT for load=0.9}
+\caption{CDF of FCT for load=0.8}
 \label{fig:fct_cdf}
 \end{figure}
 
