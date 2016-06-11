@@ -8,6 +8,7 @@
 %\label{fig:dcqcn_convergence}
 %\end{figure}
 
+\if 0
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.33\textwidth]{figures/dcqcn_convergence_time.eps}
@@ -16,14 +17,7 @@
 \vspace{-1em}
 \label{fig:dcqcn_convergence_time}
 \end{figure}
-
-\begin{figure}[t]
-\center
-\includegraphics[width=0.35\textwidth]{figures/dcqcn_convergence_brief.eps}
-\caption{DCQCN's AIMD-style updates of flow rate.}
-\vspace{-1.5em}
-\label{fig:dcqcn_convergence}
-\end{figure}
+\fi
 
 In Section~\ref{sec:dcqcn_stability}, we showed that for reasonable parameter
 settings,  DCQCN is stable {\em after} flows converge to the unique fixed point.
@@ -122,6 +116,16 @@ Equation~\ref{eq:converge_alphastar} concludes our proof.
 From Equation~\ref{eq:converge}, we see that $R_C$ converges at the rate
 of at least $( {1 - \frac{{{\alpha ^{*}}}}{2}} )^k$, where $k$ is the number of
 AIMD cycles.
+
+\if 0
+\begin{figure}[t]
+\center
+\includegraphics[width=0.35\textwidth]{figures/dcqcn_convergence_brief.eps}
+\caption{DCQCN's AIMD-style updates of flow rate.}
+\vspace{-1.5em}
+\label{fig:dcqcn_convergence}
+\end{figure}
+\fi
 
 \if 0
 \para{Convergence time.} 

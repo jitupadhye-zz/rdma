@@ -31,6 +31,30 @@ Figure~\ref{fig:fct_queue}, which shows the queue length at the link between
 SW1 and SW2 for a load factor of 0.8, which shows that queue length under TIMELY
 can be high, and highly variable. Note that TIMELY (fixed) is operating in between the original TIMELY protocol and DCQCN. This is because our fix is ensuring a unique fixed point without changing the dynamics of TIMELY's queue build up. 
 
+\begin{figure*}[t]
+\centering
+\mbox{
+\begin{minipage}{0.36\textwidth}
+\includegraphics[width=0.99\textwidth]{figures/dumbbell.pdf}
+\caption{The dumbbell toplogy. All links are 10Gbps with 1$\mu$s latency.}
+\label{fig:fct_topo}
+\end{minipage}
+\begin{minipage}{0.62\textwidth}
+\subfigure []{ 
+\includegraphics[width=0.48\textwidth]{figures/fct_median.pdf}
+\label{fig:fct_median}
+}
+\subfigure []{ 
+\includegraphics[width=0.48\textwidth]{figures/fct_90.pdf}
+\label{fig:fct_90}
+}
+\caption{Median and 90th percentile of FCT of small flows. Note log scale on Y axis.}
+\label{fig:fct_results}
+\end{minipage}
+}
+\end{figure*}
+
+\if 0
 \begin{figure}[t]
 \center
 \includegraphics[width=0.3\textwidth]{figures/dumbbell.pdf}
@@ -51,7 +75,35 @@ can be high, and highly variable. Note that TIMELY (fixed) is operating in betwe
 \caption{Median and 90th percentile of FCT of small flows. Note log scale on Y axis.}
 \label{fig:fct_results}
 \end{figure}
+\fi
 
+
+\begin{figure*}[t]
+\centering
+\mbox{
+\begin{minipage}{0.32\textwidth}
+\includegraphics[width=0.99\textwidth]{figures/fct_cdf.pdf}
+\caption{CDF of FCT for load=0.8}
+\label{fig:fct_cdf}
+\end{minipage}
+\quad
+\begin{minipage}{0.32\textwidth}
+\includegraphics[width=0.99\textwidth]{figures/fct_queue.pdf}
+\caption{Bottleneck Queue for load=0.8. Note log scale on Y axis.}
+\label{fig:fct_queue}
+\end{minipage}
+\quad
+\begin{minipage}{0.30\textwidth}
+\includegraphics[width=0.99\textwidth]{figures/dcqcn_bufferbloat.eps}
+\caption{DCQCN stability when two flows compete for a 40Gbps 
+bottleneck with 85$\mu$s feedback delay.}
+\vspace{-1.5em}
+\label{fig:dcqcn_bufferbloat}
+\end{minipage}
+}
+\end{figure*}
+
+\if 0
 \begin{figure}[t]
 \center
 \includegraphics[width=0.3\textwidth]{figures/fct_cdf.pdf}
@@ -65,6 +117,7 @@ can be high, and highly variable. Note that TIMELY (fixed) is operating in betwe
 \caption{Bottleneck Queue for load=0.8. Note log scale on Y axis.}
 \label{fig:fct_queue}
 \end{figure}
+\fi
 
 We note that in all cases, the link utilization is roughly the same for DCQCN
 and TIMELY, indicating that the long flows performed similarly with both

@@ -10,14 +10,16 @@ control?
 We believe that the answer is no, because ECN has two potential advantages, as
 discussed below.
 
+\if 0
 \begin{figure}[t]
 \center
 \includegraphics[width=0.35\textwidth]{figures/dcqcn_bufferbloat.eps}
-\caption{The modeled queue length of marking on enqueuing and dequeuing. 
-Two flows compete for a 40Gbps link with 85$\mu$s feedback delay.}
+\caption{The queue length of marking on enqueuing and dequeuing. 
+Two flows compete for a 40Gbps bottleneck with 85$\mu$s feedback delay.}
 \vspace{-1.5em}
 \label{fig:dcqcn_bufferbloat}
 \end{figure}
+\fi
 
 \para{ECN marking is done on packet egress:}
 Modern shared-buffer switches, especially those that use Broadcom's merchant
@@ -50,7 +52,11 @@ This means that as the queue length increases (e.g. when there are more flows),
 congestion control algorithms that rely on RTT suffer from increasing {\em lag}
 in their control loop, making them more difficult to control. We see this
 happening for TIMELY (Figure~\ref{fig:timely_stability}). DCQCN is affected less
-by  this effect (Figure~\ref{fig:dcqcn_stability_default}).
+by this effect (Figure~\ref{fig:dcqcn_stability_default}). 
+To further confirm that ECN marking on egress is important for DCQCN stability,
+we run DCQCN with ECN marking on ingress for comparison.
+Figure~\ref{fig:dcqcn_bufferbloat} shows that marking on ingress leads to 
+queue length fluctuation.
 
 Researchers have observed similar ``bufferbloat''~\cite{bufferbloat} problems in
 the wide area networks solutions such as LEDBAT~\cite{ledbat} have been
@@ -221,7 +227,7 @@ resilient to this problem, because the queue length measurement at the bottlenec
 correct and is only delayed. However, the variable delay of feedback directly injects false signal
 to the measurements of TIMELY, causing unpredictable behaviors.
 
-Our model-based simulation results confirm above hypothesis. In Figure~\ref{fig:variable_delay}, we inject 
+Our simulation confirms above hypothesis. In Figure~\ref{fig:variable_delay}, we inject 
 uniformed random jitter, with different range, to the feedback delay of DCQCN ($\tau^*$) 
 and TIMELY ($\tau '$) models. In practice, the jitter caused by feedback generation on hardware 
 and queuing delay on the path should be within a few microseconds range. Compared with 

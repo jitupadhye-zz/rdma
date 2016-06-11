@@ -96,11 +96,28 @@ $w_i(g_i)=1$ when $g \le 0$, and $w_i(g_i)=0$ when $g<0$. Here we simply use a l
 \end{equation}
 In Equation~\ref{eq:timely_fixed}, $q'$ is a reference queue length. We simply set it as $C*T_{low}$, 
 so that we decrease the rate faster if the queue length exceeds $C*T_{low}$. All
-other TIMELY
-parameters remain the same except we set $\beta=0.008$ and $Seg=16KB$. 
+other TIMELY parameters remain the same except we set $\beta=0.008$ and $Seg=16KB$. 
+We prove that this patched TIMELY protocol has desirable stability and convergence properties
+that original TIMELY does not guarantee:
+
+
 \begin{thm}[Patched TIMELY's fixed point.]
 The system described in Equation~\ref{eq:timely_fixed} has a unique fixed point.
+All flows have the same rate at this fixed point, and the queue length is:
+\begin{equation}
+\small
+{q^*} = \frac{{N{R_{AI}}q'}}{{\beta C}} + q'
+\label{eq:timely_fixed_q}
+\end{equation}
+The system described in Equation~\ref{eq:timely_fixed} always exponentially converges to 
+the unique  fixed point.
 \end{thm}
+
+The detailed proof is omitted and can be found at~\cite{patchedtimelyproof}.
+
+
+
+\if 0
 \begin{proof}
 Let the LHS of Equation~\ref{eq:timely_g} be 0, and $q(t - \tau ') - q(t - \tau ' - \tau *) = 0$ at the fixed 
 point, we know $g_i^*=0$. Thus, $w_i^*=0.5$. Let the LHS of Equation~\ref{eq:timely_fixed} be 0. Because
@@ -117,6 +134,7 @@ In addition, we can easily obtain the fixed point of queue length, which depends
 {q^*} = \frac{{N{R_{AI}}q'}}{{\beta C}} + q'
 \label{eq:timely_fixed_q}
 \end{equation}
+
 \begin{thm}[Patched TIMELY convergence.]
 The system described in Equation~\ref{eq:timely_fixed} always converges to the unique fixed point.
 \end{thm}
@@ -159,7 +177,6 @@ Then we get:
 Once the fastest flow and slowest flow converge to the same rate, all flow rates converge to the unique fixed point.
 \end{proof}
 
-\if 0
 We use the same definition of ``converged'' as in
 \S~\ref{sec:dcqcn_convergence}. Thus, the convergence
 time is the smallest $t$ that satisfies (assuming two flows start with maximum possible rate difference, $C$):
@@ -169,10 +186,11 @@ time is the smallest $t$ that satisfies (assuming two flows start with maximum p
 \label{eq:timely_convergence_time}
 \end{equation}
 With $N=2$ and parameters we choose earlier, we get $t = 76.7ms$. With (\ref{eq:timely_convergence_time}), 
-\fi
 
 It is easy to see that
 with larger $N$,\footnote{Details omitted.} larger $\delta$ or smaller $Seg$, patched TIMELY will converge faster.
+
+\fi
 
 We verify patched TIMELY convergence and stability using simulations.
 Figure~\ref{fig:timely_fixed_a} and~\ref{fig:timely_fixed_b}, shows that flows

@@ -141,11 +141,16 @@ DCQCN, with default parameters, is mostly stable.
 \caption{NS simulations confirm lack of stability}
 \label{fig:dcqcn_unstable_ns}
 
-\includegraphics[width=0.95\columnwidth]{figures/dcqcn_stability_100gbps.eps}
-\vspace{-1em}
-\caption{DCQCN 100Gbps stability}
-\vspace{-0.5em}
-\label{fig:dcqcn_100gbps}
+%\includegraphics[width=0.95\columnwidth]{figures/dcqcn_stability_100gbps.eps}
+%\vspace{-1em}
+%\caption{DCQCN 100Gbps stability}
+%\vspace{-0.5em}
+%\label{fig:dcqcn_100gbps}
+\includegraphics[width=0.95\textwidth]{figures/dcqcn_convergence_brief.eps}
+\caption{DCQCN's AIMD-style updates of flow rate.}
+\vspace{-1.5em}
+\label{fig:dcqcn_convergence}
+
 \end{minipage}
 }
 \end{figure*}
@@ -187,6 +192,7 @@ latency. Smaller $R_{AI}$ leads to slower ramp-up, while larger $K_{max}$ leads
 to larger queue length. In most cases, the default parameters strike a good
 enough balance between stability and latency.
 
+\if 0
 \para{Stability at 100Gbps.}  As the datacenter network fabric is moving towards
 100Gbps bandwidth, we analyze DCQCN stability for $C=100Gbps$.
 Figure~\ref{fig:dcqcn_100gbps} shows DCQCN is stable with default parameter when
@@ -196,3 +202,4 @@ the system is unstable unless $N$ is high. While we can stabilize the system by
 tuning down $R_{AI}$ and tuning up $K_{max}$, it hurts convergence speed and
 queue length significantly. In \S~\ref{sec:discuss} we argue that using a PI
 controller is a more principled approach to enhance stability.
+\fi
