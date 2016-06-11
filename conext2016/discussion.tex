@@ -1,4 +1,4 @@
-\vspace{-1em}
+\vspace{-0.5em}
 \section {ECN versus Delay}
 \label{sec:discuss}
 
@@ -214,20 +214,18 @@ one bottleneck. DCQCN runs on 40Gbps links, while TIMELY runs on 10Gbps links.}
 \para{ECN marking is resilient to variable feedback transmission delay:}
 Last but not the least, ECN marking is more resilient to the delay jitter during feedback 
 transmission. After generated at the bottleneck in the network, the congestion signal must
-be conveyed back to the sender. For both ECN marking and (queuing) delay feedback, this 
-process includes the time it takes for the data packet to reach the receiver, the receiver
-to generate feedback packets and the feedback packets to reach the sender. This can delay
-the arrival of ECN signal, or interfere round-trip delay measurement, thus affecting
-protocol performance and stability.
-
+be conveyed back to the sender. Any hardware jitter or additional congestion in this process 
+can delay the arrival of ECN signal, or interfere round-trip delay measurement, thus affecting
+the protocol performance and stability.
 Although DCQCN and TIMELY both attempt to mitigate this artifact, {\em e.g.,} by prioritizing
-feedback packets or generating feedback packets using hardware, the delay jitter of
-feedback transmission cannot be totally eliminated. Intuitively, ECN marking is more
+feedback packets, the feedback transmission cannot be jitter-free as the hardware jitter or 
+congestion on backward path is unavoidable in certain cases. 
+
+Intuitively, ECN marking is more
 resilient to this problem, because the queue length measurement at the bottleneck remains
 correct and is only delayed. However, the variable delay of feedback directly injects false signal
 to the measurements of TIMELY, causing unpredictable behaviors.
-
-Our simulation confirms above hypothesis. In Figure~\ref{fig:variable_delay}, we inject 
+Our simulation confirms this hypothesis. In Figure~\ref{fig:variable_delay}, we inject 
 uniformed random jitter, with different range, to the feedback delay of DCQCN ($\tau^*$) 
 and TIMELY ($\tau '$) models. In practice, the jitter caused by feedback generation on hardware 
 and queuing delay on the path should be within a few microseconds range. Compared with 

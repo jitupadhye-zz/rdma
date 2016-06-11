@@ -58,19 +58,22 @@ summarized as follows.
 
 \para{DCQCN:} $(i)$ We extend the fluid model proposed in~\cite{dcqcn}, to show
 that DCQCN has a unique fixed point, where flows converge to their fair share.
-Using a discrete model, we also derive an upper  bound on convergence time.
+Using a discrete model, we also derive that the convergence speed is exponential.
 $(ii)$ We show that DCQCN is stable around this fixed point, as long as the
 feedback latency is low. The relationship between stability and the number of
 competing flows is, strangely, non-monotonic, which is very different from TCP's
 behavior~\cite{misra:TAC2002}. DCQCN is stable for both very small, and very
 large number of flows, and tends to be unstable in between; especially if the
-feedback latency is high. \fixme{say something about fct}.
+feedback latency is high.
 
 \para{TIMELY:} $(i)$ We develop a fluid model for TIMELY, and validate it using
 simulations. The model reveals that since TIMELY can have infinite fixed points,
 resulting in arbitrary unfairness.  $(ii)$ We propose a simple remedy, and show
-that the modified version is stable, and converges to a fixed point. We also
-derive an upper bound on convergence time. \fixme{say something about fct}.
+that the modified version is stable, and exponentially converges to a unique fixed 
+point. \fixme{$(iii)$ We compare the flow completion time of TIMELY and 
+DCQCN running the same traffic traces. DCQCN outperforms TIMELY
+due to better fairness and stability. Patched TIMELY closes the gap, but 
+still cannot match DCQCN performance. We shed light on this result with the discussion below.}.
 
 \para{ECN or Delay:} Based on lessons learnt from analysis of DCQCN and TIMELY,
 we conclude that ECN is a better signal for conveying congestion information.
@@ -81,7 +84,8 @@ for a distributed protocol that uses only delay as the feedback signal, you can
 achieve either fairness or a guaranteed delay, but not both simultaneously. For
 an ECN-based protocol you can achieve both by using a
 PI~\cite{hollot2001designing}-like marking scheme. This is not possible with
-delay-based congestion control.
+delay-based congestion control. \fixme{Finally, ECN signal is more resilient to 
+jitters on the backward path.}
 
 %% \para{General results:} $(i)$ We show that for both variants of the protocols
 %% studied, the fixed point of the queue length (and hence feedback delay)

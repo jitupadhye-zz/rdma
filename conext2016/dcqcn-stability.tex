@@ -13,12 +13,12 @@
 \includegraphics[width=0.3\textwidth]{figures/dcqcn_stability_rai.eps}
 \label{fig:dcqcn_stability_rai}
 }
-\subfigure[$R_{AI}=10Mbps$ and $K_{max}=1000KB$.]
+\subfigure[$R_{AI}=10Mbps$, $K_{max}=1000KB$.]
 {
 \includegraphics[width=0.3\textwidth]{figures/dcqcn_stability_rai_kmax.eps}
 \label{fig:dcqcn_stability_rai_kmax}
 }
-\vspace{-1em}
+\vspace{-2em}
 \caption{DCQCN stability}
 \vspace{-1em}
 \label{fig:dcqcn_stability}
@@ -28,7 +28,7 @@ the fixed point. We analyze the linearized model for stability using standard
 frequency domain techniques~\cite{controltheory}.  
 
 \begin{thm}[DCQCN's unique fixed point]
-A unique fixed point of queue length exists for DCQCN. 
+DCQCN has a unique fixed point of queue length and flow rates. 
 \end{thm}
 \begin{proof}
 By setting the left-hand side of Equation~\ref{eq:q} to 0,
@@ -42,6 +42,7 @@ satisfy:
 At any of the fixed points, we assume the value of $p$ is $p^*$, which is shared
 by all flows. The queue length and per-flow $\alpha^{(i)}$ at the fixed points
 are determined by Equation~\ref{eq:mark} and \ref{eq:alpha}:
+
 \begin{equation}
 \small
 {q^*} = \frac{{{p^*}}}{{{p_{max}}}}\left( {{K_{max}} - {K_{min}}} \right) + {K_{min}}
@@ -82,6 +83,13 @@ The LHS of Equation (\ref{eq:p_fixed}) is a monotonic function of $p$ when $p \i
 Furthermore, when $p = 0$, the LHS is smaller than RHS, and vice versa when $p =
 1$. Thus DCQCN has a unique fixed point of marking probability $p^*$, leading to
 a unique fixed point of queue length $q^*$.
+
+In \S~\ref{sec:dcqcn_convergence}, we prove that all flows converge to the same rate, {\em i.e.,}
+\begin{equation}
+\small
+R_C^{(1)*} = R_C^{(2)*} = ... = R_C^{(N)*}
+\end{equation}
+Therefore, at the fixed point, $R_C^{(i)*} = \frac{C}{N}$, $i = 1, 2, ..., N$.
 \end{proof}
 
 Next we approximate the value of $p^*$. Numerical analysis shows that $p^*$ is 
@@ -96,16 +104,23 @@ After omitting the $O(p^4)$ term in the Taylor series, we have:
 {p^*} = \sqrt[3]{{\frac{{{R_{AI}}}}{{{\tau '}(R_C^{(i)*})^2}}{{\left( {\frac{1}{B} + \frac{1}{TR_C^{(i)*}}} \right)}^2}}}
 \label{eq:fixedp}
 \end{equation}
-With this estimation, we see that $p^*$ uniquely determine $R_C^{(i)*}$. 
-Since $p^*$ is shared by all flows $i$, $i = 1, 2, ..., N$, we have:\footnote{In 
-\S~\ref{sec:dcqcn_convergence}, we prove that all flows
-converge to the same rate.}
-\begin{equation}
-\small
-R_C^{(1)*} = R_C^{(2)*} = ... = R_C^{(N)*}
-\end{equation}
-Combining this with Equation~\ref{eq:fixedrc}, proves that at the fixed point, $R_C^{(i)*} = \frac{C}{N}$, 
-$i = 1, 2, ..., N$.
+
+\fixme{We point out that $p^*$ uniquely determines the fixed queue length $q^*$ and depends on 
+the number of flows $N$. This is not ideal, since we hope the queue length 
+stays the same regardless of the number of flows. With ECN as the signal, we may achieve this
+by using a PI-like control mechanism. See more discussion in Section~\ref{sec:discuss}.}
+
+
+% With this estimation, we see that $p^*$ uniquely determine $R_C^{(i)*}$. 
+% Since $p^*$ is shared by all flows $i$, $i = 1, 2, ..., N$, we have:\footnote{In 
+% \S~\ref{sec:dcqcn_convergence}, we prove that all flows
+% converge to the same rate.}
+% \begin{equation}
+% \small
+% R_C^{(1)*} = R_C^{(2)*} = ... = R_C^{(N)*}
+% \end{equation}
+% Combining this with Equation~\ref{eq:fixedrc}, proves that at the fixed point, $R_C^{(i)*} = \frac{C}{N}$, 
+% $i = 1, 2, ..., N$.
 
 \para{Stability analysis.} 
 We test the system against {\em Bode Stability Criteria}~\cite{controltheory}. 
