@@ -1,11 +1,11 @@
 \subsection {Impact on flow completion time}
+\label{sec:fct}
 
 While stability and fairness are important performance metrics for any
 congestion control protocol, the end users often care about flow completion
-times, especially for short flows~\cite{rcp}. The fact that TIMELY cannot
-maintain a stable queue length has a detrimental impact on flow completion
-times, especially at higher percentiles. We illustrate this with a simple
-simulation, using the classic dumbbell topology shown in
+times, especially for short flows~\cite{rcp}. We compare the flow completion 
+times of DCQCN and TIMELY with 
+a simple simulation, using the classic dumbbell topology shown in
 Figure~\ref{fig:fct_topo}. The topology consists of 20 nodes -- 10 senders and
 10 receivers. All traffic flows across the bottleneck link between the two
 switches, SW1 and SW2. All links are 10Gbps with 1$\mu$s latency.
@@ -34,21 +34,26 @@ can be high, and highly variable. Note that TIMELY (fixed) is operating in betwe
 \begin{figure*}[t]
 \centering
 \mbox{
-\begin{minipage}{0.36\textwidth}
+\begin{minipage}{0.32\textwidth}
 \includegraphics[width=0.99\textwidth]{figures/dumbbell.pdf}
+\vspace{-1em}
 \caption{The dumbbell toplogy. All links are 10Gbps with 1$\mu$s latency.}
+\vspace{-1em}
 \label{fig:fct_topo}
 \end{minipage}
+\quad
 \begin{minipage}{0.62\textwidth}
-\subfigure []{ 
+\subfigure{ 
 \includegraphics[width=0.48\textwidth]{figures/fct_median.pdf}
 \label{fig:fct_median}
 }
-\subfigure []{ 
+\subfigure{ 
 \includegraphics[width=0.48\textwidth]{figures/fct_90.pdf}
 \label{fig:fct_90}
 }
+\vspace{-1em}
 \caption{Median and 90th percentile of FCT of small flows. Note log scale on Y axis.}
+\vspace{-1em}
 \label{fig:fct_results}
 \end{minipage}
 }
@@ -95,7 +100,8 @@ can be high, and highly variable. Note that TIMELY (fixed) is operating in betwe
 \quad
 \begin{minipage}{0.30\textwidth}
 \includegraphics[width=0.99\textwidth]{figures/dcqcn_bufferbloat.eps}
-\caption{DCQCN stability when two flows compete for a 40Gbps 
+\vspace{-1.5em}
+\caption{DCQCN stability when two flows compete for a 
 bottleneck with 85$\mu$s feedback delay.}
 \vspace{-1.5em}
 \label{fig:dcqcn_bufferbloat}

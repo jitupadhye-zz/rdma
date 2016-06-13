@@ -70,12 +70,13 @@ feedback latency is high.
 simulations. The model reveals that since TIMELY can have infinite fixed points,
 resulting in arbitrary unfairness.  $(ii)$ We propose a simple remedy, and show
 that the modified version is stable, and exponentially converges to a unique fixed 
-point. \fixme{$(iii)$ We compare the flow completion time of TIMELY and 
+point. 
+
+\para{ECN or Delay:} \fixme{$(i)$ We compare the flow completion time of TIMELY and 
 DCQCN running the same traffic traces. DCQCN outperforms TIMELY
 due to better fairness and stability. Patched TIMELY closes the gap, but 
-still cannot match DCQCN performance. We shed light on this result with the discussion below.}.
-
-\para{ECN or Delay:} Based on lessons learnt from analysis of DCQCN and TIMELY,
+still cannot match DCQCN performance.}
+$(ii)$ Based on lessons learnt from analysis of DCQCN and TIMELY,
 we conclude that ECN is a better signal for conveying congestion information.
 One reason for this is that modern shared buffer switches mark packets with ECN
 {\em at egress}, effectively decoupling the queuing delay from feedback delay.

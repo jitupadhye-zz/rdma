@@ -60,11 +60,11 @@ the term involving $g_i$, we get:
 \includegraphics[width=0.3\textwidth]{figures/timely_stability_2ftime.pdf}
 \label{fig:ts2f55time}
 }
-\subfigure[Both start at time 0, one at 7Gbps, other at 3Gbps] { 
+\subfigure[One starts at 7Gbps, the other at 3Gbps] { 
 \includegraphics[width=0.3\textwidth]{figures/timely_stability_2f73.pdf}
 \label{fig:ts2f73}
 }
-\vspace{-0.5em}
+\vspace{-1em}
 \caption{Performance of two TIMELY flows under different starting conditions}
 \label{fig:timely_unstable}
 \vspace{-1em}
@@ -134,7 +134,13 @@ parameters depend not just on the link speed, but also on the number of
 competing flows, which is unknown at the time of configuration. 
 
 In summary, while burst pacing can lead to a fixed point by introducing noise,
-it can lead to other problems. Rather than rely on ``noise'' to ensure
+it can lead to other problems. The fact that TIMELY cannot
+maintain a stable queue length has a detrimental impact on the flow level
+performance ({\em e.g.,} flow completion times), especially at higher percentiles.
+We illustrate this in Section~\ref{sec:fct}.
+
+
+Rather than rely on ``noise'' to ensure
 convergence and stability, we propose a simple fix to the TIMELY algorithm.
 
 \begin{figure*}[t]

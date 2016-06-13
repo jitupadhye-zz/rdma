@@ -2,13 +2,21 @@
 \section {ECN versus Delay}
 \label{sec:discuss}
 
-We have now seen that DCQCN and TIMELY (with a small modification) perform
-generally well, if properly tuned for a given scenario. Can we thus conclude
+We have now seen that both DCQCN and TIMELY (with a small modification) can achieve
+desirable properties like fairness, stability and exponential convergence, if 
+properly tuned for a given scenario. Can we thus conclude
 that ECN and delay are both "equivalent" signals, when it comes to congestion
 control? 
 
-We believe that the answer is no, because ECN has two potential advantages, as
-discussed below.
+We believe that the answer is no. As an example, we compare the performance of 
+DCQCN (ECN-based) and TIMELY (delay-based), and find that DCQCN outperforms TIMELY. 
+The fundamental reasons that ECN-based protocols may be better than delay-based 
+protocols are then discussed. 
+
+% because ECN has two potential advantages, as discussed below.
+
+\input{timely-fct}
+
 
 \if 0
 \begin{figure}[t]
@@ -20,6 +28,8 @@ Two flows compete for a 40Gbps bottleneck with 85$\mu$s feedback delay.}
 \label{fig:dcqcn_bufferbloat}
 \end{figure}
 \fi
+
+\subsection{ECN Advantages}
 
 \para{ECN marking is done on packet egress:}
 Modern shared-buffer switches, especially those that use Broadcom's merchant
@@ -234,8 +244,8 @@ no more than 100 microseconds. With the same level of jitter, TIMELY is much mor
 with Figure~\ref{fig:timely_fixed_a}.
 
 
-\para{Summary:}
-Based on these three factors, {\em i.e.,} the faster feedback to the sources, 
+\subsection{Summary}
+Based on the above three factors, {\em i.e.,} the faster feedback to the sources, 
 the ability to simultaneously achieve fairness and bounded delay point, and the resilience 
 to variable delay of congestion feedback transmission, we argue
 in favor of using ECN instead of delay for congestion control in a data center
