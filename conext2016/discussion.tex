@@ -10,8 +10,8 @@ control?
 
 We believe that the answer is no. As an example, we compare the performance of 
 DCQCN (ECN-based) and TIMELY (delay-based), and find that DCQCN outperforms TIMELY. 
-The fundamental reasons that ECN-based protocols may be better than delay-based 
-protocols are then discussed. 
+We then discuss the fundamental reasons why ECN-based protocols are better than delay-based 
+protocols. 
 
 % because ECN has two potential advantages, as discussed below.
 
@@ -29,9 +29,14 @@ Two flows compete for a 40Gbps bottleneck with 85$\mu$s feedback delay.}
 \end{figure}
 \fi
 
-\subsection{ECN Advantages}
+\subsection{ECN advantages}
+\label{sec:ecn_advantages}
 
-\para{ECN marking is done on packet egress:}
+As shown above, despite that both protocols are fair and stable, TIMELY has larger
+queue dynamics than DCQCN, which leads to worse short flow completion time. 
+We believe this is due to below reasons.
+
+\para{ECN marking is done on packet egress, thus has faster response:}
 Modern shared-buffer switches, especially those that use Broadcom's merchant
 silicon, do ECN marking on {\em packet egress}. When a packet is ready to
 depart, the controller checks the egress queue for that port {\em at that
@@ -42,9 +47,7 @@ state of the queue at the time the packet {\em departure}.
 RTT measurements are different: If the egress queue discipline is FIFO within a
 priority class (which it typically is), the delay experienced by a packet
 reflects the state of the queue at the time the packet {\em arrives} at the
-queue. 
-
-This means that the control signal carried by the ECN mark is delayed only by
+queue. This means that the control signal carried by the ECN mark is delayed only by
 the propagation delay, but the control signal carried by the RTT signal is
 delayed both by the queuing delay as well as the propagation delay. 
 
@@ -63,7 +66,7 @@ congestion control algorithms that rely on RTT suffer from increasing {\em lag}
 in their control loop, making them more difficult to control. We see this
 happening for TIMELY (Figure~\ref{fig:timely_stability}). DCQCN is affected less
 by this effect (Figure~\ref{fig:dcqcn_stability_default}). 
-To further confirm that ECN marking on egress is important for DCQCN stability,
+To further confirm that ECN marking on egress is important for stability,
 we run DCQCN with ECN marking on ingress for comparison.
 Figure~\ref{fig:dcqcn_bufferbloat} shows that marking on ingress leads to 
 queue length fluctuation.
@@ -196,7 +199,8 @@ flows contending. Thus, to make the system consistent $p_i$ has to be
 a function of the common queue length which depends on the number of flows 
 and hence we cannot control the delay to a fixed quantity. 
 \end{proof}
-\para{Remarks:} Note that a unique fixed point can be guaranteed by
+\para{Remarks:} 
+Note that a unique fixed point can be guaranteed by
 having a \textbf{RED} style AQM scheme that has a fixed point that
 depends on the number of flows. However, given the low delay
 requirements in a data center environment, that would require the RED
@@ -206,7 +210,7 @@ in~\cite{misra:TAC2002}, a steep slope leads to an unstable
 controller creating a separate tradeoff. 
 Also, the preceding result does not apply to systems with
 limit cycles,\footnote{Some window-based protocols have limit cycles~\cite{dctcp-analysis}.} 
-with which rate-based protocols do not have steady state throughput.
+with which rate-based protocols do not have steady throughput.
 
 \begin{figure}
 \center
@@ -225,20 +229,16 @@ one bottleneck. DCQCN runs on 40Gbps links, while TIMELY runs on 10Gbps links.}
 Last but not the least, ECN marking is more resilient to the delay jitter during feedback 
 transmission. After generated at the bottleneck in the network, the congestion signal must
 be conveyed back to the sender. Any hardware jitter or additional congestion in this process 
-can delay the arrival of ECN signal, or interfere round-trip delay measurement, thus affecting
-the protocol performance and stability.
+can delay the arrival of ECN signal, or interfere round-trip delay measurement.
 Although DCQCN and TIMELY both attempt to mitigate this artifact, {\em e.g.,} by prioritizing
-feedback packets, the feedback transmission cannot be jitter-free as the hardware jitter or 
-congestion on backward path is unavoidable in certain cases. 
+feedback packets, the hardware jitter or feedback congestion on backward path cannot be eliminated. 
 
-Intuitively, ECN marking is more
-resilient to this problem, because the queue length measurement at the bottleneck remains
-correct and is only delayed. However, the variable delay of feedback directly injects false signal
-to the measurements of TIMELY, causing unpredictable behaviors.
+ECN marking is more resilient to this problem, because the queue length measurement at the 
+bottleneck is not affected, just delays. However, the variable delay of feedback directly injects false signal
+to the measurements of TIMELY.
 Our simulation confirms this hypothesis. In Figure~\ref{fig:variable_delay}, we inject 
 uniformed random jitter, with different range, to the feedback delay of DCQCN ($\tau^*$) 
-and TIMELY ($\tau '$) models. In practice, the jitter caused by feedback generation on hardware 
-and queuing delay on the path should be within a few microseconds range. Compared with 
+and TIMELY ($\tau '$) models. Compared with 
 Figure~\ref{fig:dcqcn_unstable}, DCQCN does not have any major difference when the delay noise is 
 no more than 100 microseconds. With the same level of jitter, TIMELY is much more unstable compared
 with Figure~\ref{fig:timely_fixed_a}.
@@ -254,10 +254,12 @@ environment. We illustrate this in Figure~\ref{fig:design_choice}.
 \para{Practical concerns:}
 ECN can require creating per-flow state on the receiver, if ECN marks must be
 aggregated. DCQCN~\cite{dcqcn} does this, since RoCEv2 does not send per-packet
-ACKs for efficiency reasons. Maintaining per-flow state may not be scalable since
-RoCEv2 is implemented on the NIC.  DCQCN's use of hardware rate limiters on the
-sender can also lead to scalability issues.  Detailed discussion of these issues
-is outside the scope of this paper.
+ACKs for efficiency reasons. No matter which signal is used, the sender also needs
+to maintain per-flow state. This may not be scalable since
+RoCEv2 is implemented on the NIC.  
+%DCQCN's use of hardware rate limiters on the
+%sender can also lead to scalability issues.  
+Detailed discussion of these issues is outside the scope of this paper.
 
 While PI is not implemented in today's commodity switches, as shown
 in~\cite{hollot2001designing}~it is a lightweight mechanism that requires less

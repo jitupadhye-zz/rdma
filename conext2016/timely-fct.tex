@@ -1,8 +1,10 @@
-\subsection {Impact on flow completion time}
+\subsection {Case study: DCQCN versus TIMELY on flow completion time}
 \label{sec:fct}
 
-While stability and fairness are important performance metrics for any
-congestion control protocol, the end users often care about flow completion
+While we show that both ECN-based DCQCN and delay-based TIMELY can be 
+stable and fair if properly tuned (see Section~\ref{sec:dcqcn} and 
+Section~\ref{sec:timely}), they may differ on other important performance
+metrics. For example, the end users often care about flow completion
 times, especially for short flows~\cite{rcp}. We compare the flow completion 
 times of DCQCN and TIMELY with 
 a simple simulation, using the classic dumbbell topology shown in
@@ -20,16 +22,28 @@ and ProjecToR~\cite{projector}.
 
 Both DCQCN and TIMELY used the default parameter settings recommended
 in~\cite{dcqcn} and ~\cite{timely}, respectively. 
-
-The metric of interest is the flow completion time of small flows. Following pFabric~\cite{pfabric}, we define small flows as flows that send fewer than 100KB. Results with other other
-thresholds are similar.
+The metric of interest is the flow completion time of small flows. Following 
+pFabric~\cite{pfabric}, we define small flows as flows that send fewer than 100KB. 
+\fixme{We also tune and test different protocol parameter and small flow threshold settings. 
+The results are similar.}
 
 Figure~\ref{fig:fct_results} shows the median and 90th percentile of FCT and
-DCQCN, TIMELY original and TIMELY (fixed) as the load is varied. TIMELY (fixed) is our modification to TIMELY's protocol to ensure a unique fixed point~\S\ref{sec:timely_fixed}. The X axis shows relative load: load factor of 1 corresponds to an average of 8Gbps of traffic on the bottleneck link. The scaling is linear. We see that at higher loads, FCT for both TIMELY and TIMELY (fixed) is high, and highly variable. The reason is illustrated in detail in Figure~\ref{fig:fct_cdf}, which shows the CDF of the flow completion time for
-load factor of 0.8. The reason for TIMELY's poor performance is evident from
+DCQCN, TIMELY original and patched TIMELY as the load is varied. Patched TIMELY is our 
+modification to TIMELY's protocol to ensure a unique fixed point~\S\ref{sec:timely_fixed}. 
+The X axis shows relative load: load factor of 1 corresponds to an average of 8Gbps of traffic 
+on the bottleneck link. The scaling is linear. We see that at higher loads, FCT for both TIMELY 
+and patched TIMELY is high, and highly variable. The reason is illustrated in detail in 
+Figure~\ref{fig:fct_cdf}, which shows the CDF of the flow completion time for
+load factor of 0.8. 
+
+The reason for TIMELY's poor performance is evident from
 Figure~\ref{fig:fct_queue}, which shows the queue length at the link between
 SW1 and SW2 for a load factor of 0.8, which shows that queue length under TIMELY
-can be high, and highly variable. Note that TIMELY (fixed) is operating in between the original TIMELY protocol and DCQCN. This is because our fix is ensuring a unique fixed point without changing the dynamics of TIMELY's queue build up. 
+can be high, and highly variable. Note that patched TIMELY is operating in between the original 
+TIMELY protocol and DCQCN. This is because our fix is ensuring a unique fixed point without 
+changing the dynamics of TIMELY's queue build up. \fixme{We argue that this is due
+to fundamental limits of using delay as the congestion signal, as discussed in 
+Section~\ref{sec:ecn_advantages}.}
 
 \begin{figure*}[t]
 \centering
