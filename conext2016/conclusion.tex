@@ -18,9 +18,10 @@ DCQCN.  However we demonstrate and prove a fundamental uncertainty result for
 delay-based protocols: if you use delay as the only feedback signal for
 congestion control, then you can either guarantee fairness or a fixed,
 bounded delay,
-but not both simultaneously. Based on this reason, and the fact that ECN marking
+but not both simultaneously. Based on this reason, the fact that ECN marking
 process on modern shared-buffer switches effectively excludes queuing delay from
-feedback loop, we conclude that ECN is a better congestion signal in data center
+feedback loop, and that ECN is more robust to jitter in the feedback,
+we conclude that ECN is a better congestion signal in data center 
 environment. 
 
 For future work, we are doing a full exploration of PI like controllers for
