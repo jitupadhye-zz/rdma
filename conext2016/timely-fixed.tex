@@ -1,4 +1,4 @@
-\vspace{-0.7em}
+\vspace{-0.5em}
 \subsection {Patched TIMELY}
 \label{sec:timely_fixed}
 %\begin{figure}[t]
@@ -34,26 +34,6 @@
 \label{fig:timely_fixed_algo}
 \end{algorithm}
 
-\begin{figure*}[t]
-\center
-\subfigure[Two flows, 7Gbps and 3Gbps] { 
-\includegraphics[width=0.3\textwidth]{figures/timely_stability_2f73_fixed.pdf}
-\label{fig:timely_fixed_a}
-}
-\subfigure[Two flows, 7Gbps and 3Gbps] { 
-\includegraphics[width=0.3\textwidth]{figures/timely_stability_q_2f73_fixed.pdf}
-\label{fig:timely_fixed_b}
-}
-\subfigure[40 flows, starting at 0.25Gbps] { 
-\includegraphics[width=0.3\textwidth]{figures/timely_stability_q_40f_fixed.pdf}
-\label{fig:timely_fixed_c}
-}
-\vspace{-0.5em}
-\caption{Performance of patched TIMELY}
-\vspace{-0.5em}
-\label{fig:timely_fixed}
-\end{figure*}
-
 In order to ensure there is a unique fixed point, and all flows get fair
 share and are stable at the fixed point, we make two minor modifications over
 TIMELY, as shown in Algorithm~\ref{fig:timely_fixed_algo}. We only modify the
@@ -88,6 +68,8 @@ where $w_i$, the weight of rate decreasing, is a function of $g_i$, and must sat
 Intuitively, $w_i(g_i)$ is monotonically increasing with $g_i$, because larger RTT gradient should lead to larger 
 rate decrease. In original TIMELY protocol, $w_i(g_i)$ is an indicator function of $g_i$, {\em i.e.,} 
 $w_i(g_i)=1$ when $g \le 0$, and $w_i(g_i)=0$ when $g<0$. Here we simply use a linear function of $g_i$ for $w_i$:
+
+\vspace{-1em}
 \begin{equation}
 \small
 {w_i} = \left\{ \begin{array}{ll}
@@ -117,6 +99,25 @@ the unique  fixed point.
 
 The detailed proof is omitted and can be found at~\cite{fullpaper}.
 
+\begin{figure*}[t]
+\center
+\subfigure[Two flows, 7Gbps and 3Gbps] { 
+\includegraphics[width=0.3\textwidth]{figures/timely_stability_2f73_fixed.pdf}
+\label{fig:timely_fixed_a}
+}
+\subfigure[Two flows, 7Gbps and 3Gbps] { 
+\includegraphics[width=0.3\textwidth]{figures/timely_stability_q_2f73_fixed.pdf}
+\label{fig:timely_fixed_b}
+}
+\subfigure[40 flows, starting at 0.25Gbps] { 
+\includegraphics[width=0.3\textwidth]{figures/timely_stability_q_40f_fixed.pdf}
+\label{fig:timely_fixed_c}
+}
+\vspace{-0.5em}
+\caption{Performance of patched TIMELY}
+\vspace{-1em}
+\label{fig:timely_fixed}
+\end{figure*}
 
 
 \if 0
