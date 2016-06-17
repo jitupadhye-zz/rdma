@@ -1,3 +1,4 @@
+\vspace{-0.7em}
 \subsection {Patched TIMELY}
 \label{sec:timely_fixed}
 %\begin{figure}[t]
@@ -7,30 +8,6 @@
 %\label{fig:timely_stability}
 %\end{figure}
 
-\begin{figure*}[t]
-\center
-\subfigure[Two flows, 7Gbps and 3Gbps] { 
-\includegraphics[width=0.3\textwidth]{figures/timely_stability_2f73_fixed.pdf}
-\label{fig:timely_fixed_a}
-}
-\subfigure[Two flows, 7Gbps and 3Gbps] { 
-\includegraphics[width=0.3\textwidth]{figures/timely_stability_q_2f73_fixed.pdf}
-\label{fig:timely_fixed_b}
-}
-\subfigure[40 flows, starting at 0.25Gbps] { 
-\includegraphics[width=0.3\textwidth]{figures/timely_stability_q_40f_fixed.pdf}
-\label{fig:timely_fixed_c}
-}
-\vspace{-0.5em}
-\caption{Performance of patched TIMELY}
-\vspace{-0.5em}
-\label{fig:timely_fixed}
-\end{figure*}
-
-In order to ensure there is a unique fixed point, and all flows get fair
-share and are stable at the fixed point, we make two minor modifications over
-TIMELY, as shown in Algorithm~\ref{fig:timely_fixed_algo}. We only modify the
-last four lines of Algorithm~\ref{fig:timely_algo}.
 
 \begin{algorithm}[t]
 \footnotesize
@@ -56,6 +33,31 @@ last four lines of Algorithm~\ref{fig:timely_algo}.
 \caption{Patched TIMELY rate calculation}
 \label{fig:timely_fixed_algo}
 \end{algorithm}
+
+\begin{figure*}[t]
+\center
+\subfigure[Two flows, 7Gbps and 3Gbps] { 
+\includegraphics[width=0.3\textwidth]{figures/timely_stability_2f73_fixed.pdf}
+\label{fig:timely_fixed_a}
+}
+\subfigure[Two flows, 7Gbps and 3Gbps] { 
+\includegraphics[width=0.3\textwidth]{figures/timely_stability_q_2f73_fixed.pdf}
+\label{fig:timely_fixed_b}
+}
+\subfigure[40 flows, starting at 0.25Gbps] { 
+\includegraphics[width=0.3\textwidth]{figures/timely_stability_q_40f_fixed.pdf}
+\label{fig:timely_fixed_c}
+}
+\vspace{-0.5em}
+\caption{Performance of patched TIMELY}
+\vspace{-0.5em}
+\label{fig:timely_fixed}
+\end{figure*}
+
+In order to ensure there is a unique fixed point, and all flows get fair
+share and are stable at the fixed point, we make two minor modifications over
+TIMELY, as shown in Algorithm~\ref{fig:timely_fixed_algo}. We only modify the
+last four lines of Algorithm~\ref{fig:timely_algo}.
 
 First, we make the step of rate decrease rely on absolute RTT, instead of the
 gradient of RTT. In effect, this means that all flows have the knowledge of the

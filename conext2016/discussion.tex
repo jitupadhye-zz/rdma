@@ -202,9 +202,8 @@ and hence we cannot control the delay to a fixed quantity.
 \end{proof}
 \vspace{-0.5em}
 \para{Remarks:} 
-Note that a unique fixed point can be guaranteed by
-having a \textbf{RED} style AQM scheme that has a fixed point that
-depends on the number of flows. However, given the low delay
+Note that a \textbf{RED} style AQM scheme can guarantee a unique fixed point
+that depends on the number of flows. However, given the low delay
 requirements in a data center environment, that would require the RED
 marking profile to have a steep slope (marking probability that goes
 from 0 to 1 over a small buffer space). As shown
@@ -212,16 +211,18 @@ in~\cite{misra:TAC2002}, a steep slope leads to an unstable
 controller creating a different design problem. 
 Also, the preceding result does not apply to systems with
 limit cycles,\footnote{Some window-based protocols have limit cycles~\cite{dctcp-analysis}.} 
-with which rate-based protocols do not have steady throughput.
+with which rate-based protocols do not have steady state throughput.
 
 \begin{figure}
 \center
-\subfigure[DCQCN]
-{\includegraphics[width=0.49\columnwidth]{figures/dcqcn_variable_delay.eps}}
-\subfigure[TIMELY]
-{\includegraphics[width=0.49\columnwidth]{figures/timely_variable_delay.eps}}
+\includegraphics[width=0.7\columnwidth]{figures/variable_delay.eps}
+%\subfigure[DCQCN]
+%{\includegraphics[width=0.49\columnwidth]{figures/dcqcn_variable_delay.eps}}
+%\subfigure[TIMELY]
+%{\includegraphics[width=0.49\columnwidth]{figures/timely_variable_delay.eps}}
 \vspace{-1em}
-\caption{DCQCN is more resilient to variable feedback transmission delay than TIMELY.}
+\caption{Protocol stability with random feedback delay up to 100 microseconds. 
+DCQCN is more resilient to jitters than TIMELY.}
 \vspace{-1em}
 \label{fig:variable_delay}
 \end{figure}
@@ -241,14 +242,11 @@ compounds the problem of congestion or variable delay on the reverse
 path: for delay based schemes you have
 delayed \emph{and} noisy feedback, whereas for ECN based schemes you only have delayed feedback.
 Our simulation confirms this hypothesis. In Figure~\ref{fig:variable_delay}, we inject 
-uniformed random jitter, with different range, to the feedback delay of DCQCN ($\tau^*$) 
-and TIMELY ($\tau '$) models. When we add jitter in the $[0,100]$
-range to TIMELY, it becomes extremely unstable compared to the same
-scenario without the additional jitter shown in
-Figure~\ref{fig:timely_fixed_a}. In contrast, the same level of
-additional jitter makes no difference to DCQCN, only when the jitter
-increases to the $[0,200]$ range does DCQCN exhibit similar
-oscillatory behavior.
+uniformed random jitters to the feedback delay of DCQCN ($\tau^*$) 
+and TIMELY ($\tau '$) models. With jitters of [0,100$\mu s$],
+TIMELY becomes unstable compared to the same scenario without the jitters
+(Figure~\ref{fig:timely_fixed_a}). In contrast, the same level of
+jitters does not impact DCQCN stability.
 \vspace{-0.5em}
 \subsection{Summary}
 Based on the above three factors, {\em i.e.,} the faster feedback to the sources, 

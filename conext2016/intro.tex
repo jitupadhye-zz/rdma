@@ -35,8 +35,8 @@ and for rapid exploration of parameter space. However, fluid models cannot
 tractably model all features of complex protocols like DCQCN and TIMELY. Nor can
 fluid models compute measures like flow completion times. Thus, we also study
 the protocols using detailed, packet-level simulations using NS3. Our
-simulations in NS3 implement all known features of the protocols. Our NS3 and
-MATLAB code is available at~\cite{xxx}.
+simulations in NS3 implement all known features of the protocols. We will publish
+our NS3 and MATLAB code.
 
 % summary of contributions and findings.
 
@@ -72,11 +72,11 @@ resulting in arbitrary unfairness.  $(ii)$ We propose a simple remedy, called Pa
 that the modified version is stable and exponentially converges to a unique fixed 
 point. 
 
-\para{ECN or Delay:} \fixme{$(i)$ We compare the flow completion time of TIMELY and 
+\para{ECN or Delay:} $(i)$ We compare the flow completion time of TIMELY and 
 DCQCN running the same traffic traces. DCQCN outperforms TIMELY
 due to better fairness, stability and fundamentally it is able to
 control the queue length better than TIMELY. Patched TIMELY closes the gap, but 
-still cannot match DCQCN performance.}
+still cannot match DCQCN performance.
 $(ii)$ Based on lessons learnt from analysis of DCQCN and TIMELY,
 we conclude that ECN is a better signal for conveying congestion information.
 One reason for this is that modern shared buffer switches mark packets with ECN
