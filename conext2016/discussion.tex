@@ -235,8 +235,10 @@ Although DCQCN and TIMELY both attempt to mitigate this artifact, {\em e.g.,} by
 feedback packets, the hardware jitter or feedback congestion on backward path cannot be eliminated. 
 
 ECN marking is more resilient to this problem, because the queue length measurement at the 
-bottleneck is not affected, just delays. However, the variable delay
-of feedback directly injects noise in the TIMELY feedback. This
+bottleneck, and hence the feedback signal is not is not affected, it
+is just delayed (more). However, the variable delay
+of feedback directly injects noise in the TIMELY \emph{feedback'}
+signal itself. This
 compounds the problem of congestion or variable delay on the reverse
 path: for delay based schemes you have
 delayed \emph{and} noisy feedback, whereas for ECN based schemes you only have delayed feedback.
