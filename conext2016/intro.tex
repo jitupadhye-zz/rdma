@@ -74,7 +74,8 @@ point.
 
 \para{ECN or Delay:} \fixme{$(i)$ We compare the flow completion time of TIMELY and 
 DCQCN running the same traffic traces. DCQCN outperforms TIMELY
-due to better fairness and stability. Patched TIMELY closes the gap, but 
+due to better fairness, stability and fundamentally it is able to
+control the queue length better than TIMELY. Patched TIMELY closes the gap, but 
 still cannot match DCQCN performance.}
 $(ii)$ Based on lessons learnt from analysis of DCQCN and TIMELY,
 we conclude that ECN is a better signal for conveying congestion information.
@@ -85,8 +86,10 @@ for a distributed protocol that uses only delay as the feedback signal, you can
 achieve either fairness or a guaranteed delay, but not both simultaneously. For
 an ECN-based protocol you can achieve both by using a
 PI~\cite{hollot2001designing}-like marking scheme. This is not possible with
-delay-based congestion control. \fixme{Finally, ECN signal is more resilient to 
-jitters on the backward path.}
+delay-based congestion control. Finally, ECN signal is more resilient to 
+jitter on the backward path as it only introduces delay in the
+feedback, whereas for delay based protocols jitter introduces delay
+\emph{and} noise in the feedback signal.
 
 %% \para{General results:} $(i)$ We show that for both variants of the protocols
 %% studied, the fixed point of the queue length (and hence feedback delay)

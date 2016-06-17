@@ -209,7 +209,7 @@ requirements in a data center environment, that would require the RED
 marking profile to have a steep slope (marking probability that goes
 from 0 to 1 over a small buffer space). As shown
 in~\cite{misra:TAC2002}, a steep slope leads to an unstable
-controller creating a separate tradeoff. 
+controller creating a different design problem. 
 Also, the preceding result does not apply to systems with
 limit cycles,\footnote{Some window-based protocols have limit cycles~\cite{dctcp-analysis}.} 
 with which rate-based protocols do not have steady throughput.
@@ -228,22 +228,27 @@ with which rate-based protocols do not have steady throughput.
 
 \para{ECN marking is resilient to variable feedback transmission delay:}
 Last but not the least, ECN marking is more resilient to the delay jitter during feedback 
-transmission. After generated at the bottleneck in the network, the congestion signal must
+transmission. After being generated at the bottleneck in the network, the congestion signal must
 be conveyed back to the sender. Any hardware jitter or additional congestion in this process 
 can delay the arrival of ECN signal, or interfere round-trip delay measurement.
 Although DCQCN and TIMELY both attempt to mitigate this artifact, {\em e.g.,} by prioritizing
 feedback packets, the hardware jitter or feedback congestion on backward path cannot be eliminated. 
 
 ECN marking is more resilient to this problem, because the queue length measurement at the 
-bottleneck is not affected, just delays. However, the variable delay of feedback directly injects false signal
-to the measurements of TIMELY.
+bottleneck is not affected, just delays. However, the variable delay
+of feedback directly injects noise in the TIMELY feedback. This
+compounds the problem of congestion or variable delay on the reverse
+path: for delay based schemes you have
+delayed \emph{and} noisy feedback, whereas for ECN based schemes you only have delayed feedback.
 Our simulation confirms this hypothesis. In Figure~\ref{fig:variable_delay}, we inject 
 uniformed random jitter, with different range, to the feedback delay of DCQCN ($\tau^*$) 
-and TIMELY ($\tau '$) models. Compared with 
-Figure~\ref{fig:dcqcn_unstable}, DCQCN does not have any major difference when the delay noise is 
-no more than 100 microseconds. With the same level of jitter, TIMELY is much more unstable compared
-with Figure~\ref{fig:timely_fixed_a}.
-
+and TIMELY ($\tau '$) models. When we add jitter in the $[0,100]$
+range to TIMELY, it becomes extremely unstable compared to the same
+scenario without the additional jitter shown in
+Figure~\ref{fig:timely_fixed_a}. In contrast, the same level of
+additional jitter makes no difference to DCQCN, only when the jitter
+increases to the $[0,200]$ range does DCQCN exhibit similar
+oscillatory behavior.
 \vspace{-0.5em}
 \subsection{Summary}
 Based on the above three factors, {\em i.e.,} the faster feedback to the sources, 
