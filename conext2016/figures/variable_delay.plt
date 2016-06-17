@@ -3,7 +3,7 @@ load 'style.gnu'
 set output "variable_delay.eps"
 
 set xrange [0:0.2]
-set yrange [1:140]
+set yrange [0:140]
 
 set xlabel "Time(s)"
 set ylabel "Queue(KB)"

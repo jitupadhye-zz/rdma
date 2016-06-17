@@ -45,6 +45,7 @@ are determined by Equation~\ref{eq:mark} and \ref{eq:alpha}:
 \begin{equation}
 \small
 {q^*} = \frac{{{p^*}}}{{{p_{max}}}}\left( {{K_{max}} - {K_{min}}} \right) + {K_{min}}
+\label{eq:fixedq}
 \end{equation}
 \begin{equation}
 \small
@@ -92,22 +93,23 @@ Therefore, at the fixed point, $R_C^{(i)*} = \frac{C}{N}$, $i = 1, 2, ..., N$.
 \end{proof}
 
 Next we approximate the value of $p^*$. Numerical analysis shows that $p^*$ is 
-typically very close to 0. Therefore, we approximate the LHS using Taylor series around $p=0$.
+typically very close to 0. Therefore, we approximate the LHS of Equation~\ref{eq:p_fixed} 
+using Taylor series around $p=0$.
 %\begin{equation}
 %\small
 %\frac{{{a^2}\alpha }}{{(b + d)(c + e)}} = \frac{{(R_C^{(i)*})^3{\tau ^2}\tau '}}{{{{\left( {\frac{1}{B} + \frac{1}{{TR_C^{(i)*}}}} \right)}^2}}}{p^3} + O\left( {{p^4}} \right)
 %\end{equation}
-After omitting the $O(p^4)$ term in the Taylor series, we have:
+After omitting the $O(p^4)$ term, we have:
 \begin{equation}
 \small
-{p^*} = \sqrt[3]{{\frac{{{R_{AI}}}}{{{\tau '}(R_C^{(i)*})^2}}{{\left( {\frac{1}{B} + \frac{1}{TR_C^{(i)*}}} \right)}^2}}}
+{p^*} = \sqrt[3]{{\frac{{{R_{AI}N^2}}}{{{\tau '}C^2}}{{\left( {\frac{1}{B} + \frac{N}{TC}} \right)}^2}}}
 \label{eq:fixedp}
 \end{equation}
 
-\fixme{We point out that $p^*$ uniquely determines the fixed queue length $q^*$ and depends on 
-the number of flows $N$. This is not ideal, since we want the queue length 
-controlled independent of the number of flows. With ECN as the signal, we may achieve this
-by using a PI-like control mechanism. See more discussion in Section~\ref{sec:discuss}.}
+Therefore, the queue length $q^*$ is determined by $p^*$ (Equation~\ref{eq:fixedq}), which depends on 
+the number of flows $N$. A potential improvement is to make $q^*$ independent of 
+$N$. With ECN as the signal, we may achieve this
+by using a PI-like control mechanism. See more discussion in Section~\ref{sec:discuss}.
 
 
 % With this estimation, we see that $p^*$ uniquely determine $R_C^{(i)*}$. 
