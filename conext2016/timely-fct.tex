@@ -32,14 +32,16 @@ DCQCN, TIMELY original and patched TIMELY as the load is varied. Patched TIMELY 
 modification to TIMELY's protocol to ensure a unique fixed point (\S\ref{sec:timely_fixed}). 
 The X axis shows relative load: load factor of 1 corresponds to an average of 8Gbps of traffic 
 on the bottleneck link. The scaling is linear. We see that at higher loads, FCT for both TIMELY 
-and patched TIMELY is high, and highly variable. The reason is illustrated in detail in 
+and patched TIMELY is high, and highly variable. This illustrated in detail in 
 Figure~\ref{fig:fct_cdf}, which shows the CDF of the flow completion time for
 load factor of 0.8. 
 
 The reason for TIMELY's poor performance is evident from
 Figure~\ref{fig:fct_queue}, which shows the queue length at the link between
 SW1 and SW2 for a load factor of 0.8. As shown, the queue length under TIMELY
-can be high, and highly variable. Note that patched TIMELY is operating in between the original 
+can grow to a very high value, and is highly variable. In contrast the DCQCN queue has a
+fixed point between the RED thresholds and even in the transient state
+the queue stays within the bounds. Note that patched TIMELY is operating in between the original 
 TIMELY protocol and DCQCN. This is because our fix is ensuring a
 unique fixed point (and thus fairness), without 
 changing the dynamics of TIMELY's queue build up. 
