@@ -56,9 +56,8 @@ This is a subtle difference: the claim is not that ECN carries more information;
 it that the delay of the control loop is decoupled from the queuing delay.
 
 This is why the DCQCN fluid model (Figure~\ref{fig:dcqcn_model}) assumes that
-the control loop delay is constant.\footnote{DCTCP fluid model
-in~\cite{dctcp-analysis} makes the same assumption.} We cannot make the same
-assumption for TIMELY, and  thus we incorporate $\tau'$ and
+the control loop delay is constant. DCTCP fluid model makes the same assumption~\cite{dctcp-analysis}. 
+We cannot make the same assumption for TIMELY, and  thus we incorporate $\tau'$ and
 Equation~\ref{eq:timely_taup} in the TIMELY fluid model
 (Figure~\ref{fig:timely_model}).
 
@@ -155,7 +154,7 @@ achieving fairness.
 \subfigure[Ten flows] {\includegraphics[width=0.49\columnwidth]{figures/timely_withpit_10_4_queue.pdf}}
 \vspace{-1em}
 \caption{PI controller to stabilize TIMELY}
-\vspace{-1em}
+%\vspace{-1em}
 \label{fig:timely_pi}
 \end{figure}
 
@@ -169,7 +168,7 @@ probability or some internal variable $p$ computed by the patched
 TIMELY+PI mechanism we described above. Thus,
 $R = f(d,p)$ for steady state throughput $R$ and some function $f(d,p)$. Then the
 following theorem formalizes the fairness/delay tradeoff in such systems.
-\vspace{-0.5em}
+%\vspace{-0.5em}
 \begin{thm}[Fairness/Delay tradeoff]
 \label{thm:fairness-delay}
 For congestion control mechanisms that have steady state throughput of
@@ -223,7 +222,7 @@ with which rate-based protocols do not have steady state throughput.
 \vspace{-1em}
 \caption{Protocol stability with random feedback delay up to 100 microseconds. 
 DCQCN is more resilient to jitter than TIMELY.}
-\vspace{-1em}
+%\vspace{-1em}
 \label{fig:variable_delay}
 \end{figure}
 
@@ -277,7 +276,7 @@ standard.
 \includegraphics[width=0.45\textwidth]{figures/design_choice.eps}
 \vspace{-0.5em}
  \caption{The design choices and desirable properties.}
-\vspace{-1.5em}
+%\vspace{-1.5em}
 \label{fig:design_choice}
 \end{figure}
 

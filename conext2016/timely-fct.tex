@@ -1,3 +1,4 @@
+\vspace{-0.3em}
 \subsection {Case study: DCQCN versus TIMELY on flow completion time}
 \label{sec:fct}
 
@@ -24,8 +25,8 @@ Both DCQCN and TIMELY used the default parameter settings recommended
 in~\cite{dcqcn} and ~\cite{timely}, respectively. 
 The metric of interest is the flow completion time of small flows. Following 
 pFabric~\cite{pfabric}, we define small flows as flows that send fewer than 100KB. 
-\fixme{We also tune and test different protocol parameter and small flow threshold settings. 
-The results are similar.}
+We also tune and test different protocol parameter and small flow threshold settings. 
+The results are similar.
 
 Figure~\ref{fig:fct_results} shows the median and 90th percentile of FCT and
 DCQCN, TIMELY original and patched TIMELY as the load is varied. Patched TIMELY is our 
@@ -55,7 +56,7 @@ changing the dynamics of TIMELY's queue build up.
 \begin{minipage}{0.32\textwidth}
 \includegraphics[width=0.99\textwidth]{figures/dumbbell.pdf}
 \vspace{-1em}
-\caption{The dumbbell toplogy. All links are 10Gbps with 1$\mu$s latency.}
+\caption{The dumbbell topology. All links are 10Gbps with 1$\mu$s latency.}
 \vspace{-1em}
 \label{fig:fct_topo}
 \end{minipage}
@@ -107,21 +108,23 @@ changing the dynamics of TIMELY's queue build up.
 \begin{minipage}{0.32\textwidth}
 \includegraphics[width=0.99\textwidth]{figures/fct_cdf.eps}
 \caption{CDF of FCT for load=0.8}
+\vspace{-1.5em}
 \label{fig:fct_cdf}
 \end{minipage}
 \quad
-\begin{minipage}{0.32\textwidth}
+\begin{minipage}{0.34\textwidth}
 \includegraphics[width=0.99\textwidth]{figures/fct_queue.eps}
 \caption{Bottleneck Queue for load=0.8. Note log scale on Y axis.}
+\vspace{-1em}
 \label{fig:fct_queue}
 \end{minipage}
 \quad
-\begin{minipage}{0.30\textwidth}
+\begin{minipage}{0.29\textwidth}
 \includegraphics[width=0.99\textwidth]{figures/dcqcn_bufferbloat.eps}
-\vspace{-1.5em}
+\vspace{-2em}
 \caption{DCQCN stability when two flows compete for a 
 bottleneck with 85$\mu$s feedback delay.}
-\vspace{-1.5em}
+\vspace{-2em}
 \label{fig:dcqcn_bufferbloat}
 \end{minipage}
 }
