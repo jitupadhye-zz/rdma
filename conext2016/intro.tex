@@ -1,9 +1,9 @@
 \section{Introduction}
 
 Large cloud service providers are turning to Remote DMA (RDMA) technology to
-support their most demanding applications~\cite{dcqcn,timely,tcp-bolt}.  RDMA
+support their most demanding applications~\cite{timely,tcp-bolt,dcqcn}.  RDMA
 offers significantly higher bandwidth and lower latency than the traditional
-TCP/IP stack, while minimizing CPU overhead~\cite{dcqcn,farm,timely}. 
+TCP/IP stack, while minimizing CPU overhead~\cite{farm,timely,dcqcn}. 
 
 Today, RDMA is deployed using the RoCEv2 standard~\cite{rocev2}. To ensure
 efficient operation, RoCEv2 uses Priority Flow Control (PFC)~\cite{pfc} to
@@ -43,8 +43,8 @@ our NS3 and MATLAB code.
 Before we proceed, we want to stress two things.  First, we limit our discussion
 to ECN and delay as congestion signals, since they are supported by current
 hardware. Protocols that require switches to do
-more~\cite{katabi2002congestion,rcp,pfabric} or use a central
-controller~\cite{deadline,perry2014fastpass} are outside the scope of this
+more~\cite{pfabric,rcp,katabi2002congestion} or use a central
+controller~\cite{perry2014fastpass,deadline} are outside the scope of this
 paper. We also do not consider designing a new congestion control protocol that
 would use both ECN and delay as congestion signals. We plan to explore this
 fascinating topic in near future.
