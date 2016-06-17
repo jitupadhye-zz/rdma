@@ -232,10 +232,11 @@ transmission. After being generated at the bottleneck in the network, the conges
 be conveyed back to the sender. Any hardware jitter or additional congestion in this process 
 can delay the arrival of ECN signal, or interfere round-trip delay measurement.
 Although DCQCN and TIMELY both attempt to mitigate this artifact, {\em e.g.,} by prioritizing
-feedback packets, the hardware jitter or feedback congestion on backward path cannot be eliminated. 
+feedback packets, the hardware jitter or feedback congestion on backward path cannot be 
+completely eliminated in practice. 
 
 ECN marking is more resilient to this problem, because the queue length measurement at the 
-bottleneck, and hence the feedback signal is not is not affected, it
+bottleneck, and hence the feedback signal is not affected, it
 is just delayed (more). However, the variable delay
 of feedback directly injects noise in the TIMELY \emph{feedback'}
 signal itself. This

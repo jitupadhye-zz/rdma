@@ -68,8 +68,6 @@ where $w_i$, the weight of rate decreasing, is a function of $g_i$, and must sat
 Intuitively, $w_i(g_i)$ is monotonically increasing with $g_i$, because larger RTT gradient should lead to larger 
 rate decrease. In original TIMELY protocol, $w_i(g_i)$ is an indicator function of $g_i$, {\em i.e.,} 
 $w_i(g_i)=1$ when $g \le 0$, and $w_i(g_i)=0$ when $g<0$. Here we simply use a linear function of $g_i$ for $w_i$:
-
-\vspace{-1em}
 \begin{equation}
 \small
 {w_i} = \left\{ \begin{array}{ll}
