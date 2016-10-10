@@ -9,10 +9,14 @@ Today, RDMA is deployed using the RoCEv2 standard~\cite{rocev2}. To ensure
 efficient operation, RoCEv2 uses Priority Flow Control (PFC)~\cite{pfc} to
 prevent packet drops due to buffer overflow.  Since there are no packet drops,
 any end-to-end congestion control protocol for RoCEv2 networks must use either
-ECN markings, or delay as the congestion signal.  Last year, two protocols were
-proposed for this purpose, namely DCQCN~\cite{dcqcn} and TIMELY~\cite{timely}.
-DCQCN uses ECN marking as a congestion signal, while TIMELY measures changes to
-end-to-end delay.
+ECN markings, or delay as the congestion signal.  
+
+Last year, two protocols were proposed for this purpose, namely DCQCN~\cite{dcqcn} 
+and TIMELY~\cite{timely}. \note{Though they are designed for enabling RoCEv2 in large data 
+centers, their same assumptions are not RDMA-specific: data centers based on 
+commodity Ethernet hardware, and no packet drops due to congestion. The difference is 
+that DCQCN uses ECN marking as a congestion signal, while TIMELY measures changes to
+end-to-end delay.}
 
 % what we do.
 
@@ -35,15 +39,15 @@ and for rapid exploration of parameter space. However, fluid models cannot
 tractably model all features of complex protocols like DCQCN and TIMELY. Nor can
 fluid models compute measures like flow completion times. Thus, we also study
 the protocols using detailed, packet-level simulations using NS3. Our
-simulations in NS3 implement all known features of the protocols. We will publish
-our NS3 and MATLAB code.
+simulations in NS3 implement all known features of the protocols. \note{We release
+our NS3 source code at~\cite{ns3rdma}.}
 
 % summary of contributions and findings.
 
 Before we proceed, we want to stress two things.  First, we limit our discussion
-to ECN and delay as congestion signals, since they are supported by current
-hardware. Protocols that require switches to do
-more~\cite{pfabric,rcp,katabi2002congestion} or use a central
+to ECN and delay as congestion signals \note{and end host rate-based control, since 
+they are supported by commodity Ethernet switch and NIC hardware~\cite{timely,dcqcn}.} Protocols 
+that require hardware to do more~\cite{pfabric,rcp,katabi2002congestion} or use a central
 controller~\cite{perry2014fastpass,deadline} are outside the scope of this
 paper. We also do not consider designing a new congestion control protocol that
 would use both ECN and delay as congestion signals. We plan to explore this
@@ -76,15 +80,19 @@ point.
 DCQCN running the same traffic traces. DCQCN outperforms TIMELY
 due to better fairness, stability and fundamentally it is able to
 control the queue length better than TIMELY. Patched TIMELY closes the gap, but 
-still cannot match DCQCN performance.
+still cannot match DCQCN performance. \note{We sweep the values of all DCQCN
+and TIMELY parameters and present the best combinations. Therefore, the performance
+difference is less about parameter tuning, but more likely due to the fundamental
+signal they use.}
+
 $(ii)$ Based on lessons learnt from analysis of DCQCN and TIMELY,
-we conclude that ECN is a better signal for conveying congestion information.
+we explain why ECN is a better signal for conveying congestion information.
 One reason for this is that modern shared buffer switches mark packets with ECN
 {\em at egress}, effectively decoupling the queuing delay from feedback delay.
 This improves system stability. Second, we present a \emph{fundamental} result:
 for a distributed protocol that uses only delay as the feedback signal, you can
-achieve either fairness or a guaranteed delay, but not both simultaneously. For
-an ECN-based protocol you can achieve both by using a
+achieve either fairness or a guaranteed \note{steady-state} delay, but not both 
+simultaneously. For an ECN-based protocol you can achieve both by using a
 PI~\cite{hollot2001designing}-like marking scheme. This is not possible with
 delay-based congestion control. Finally, ECN signal is more resilient to 
 jitter on the backward path as it only introduces delay in the

@@ -7,9 +7,10 @@ different rates and states.  Instead of having variables that are shared by all
 flows, we model each flow individually. The model is shown in
 Figure~\ref{fig:dcqcn_model} and Table~\ref{tab:dcqcn_varparam}.
 
-We assume that DCQCN is triggered before PFC, and hence ignore the
-impact of PFC. Equation~\ref{eq:mark} calculates the probability of a packet
-getting marked.  Equation~\ref{eq:q} describes the queue behavior.
+\note{We assume that ECN marking is triggered before PFC~\cite{dcqcn} and does not delay
+due to PFC at current congestion point (see Section~\ref{sec:discuss}, ECN is marked on egress).}
+Hence, we ignore the impact of PFC. Equation~\ref{eq:mark} calculates the probability of a 
+packet getting marked.  Equation~\ref{eq:q} describes the queue behavior.
 Equation~\ref{eq:alpha} captures the evolution of alpha.  Equations~\ref{eq:rt}
 and \ref{eq:rc} describe the calculation of target and sending rate,
 respectively. 

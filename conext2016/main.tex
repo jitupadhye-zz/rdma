@@ -1,5 +1,5 @@
 %\documentclass{sig-alternate-10pt-compact}
-\documentclass{sig-alternate-10pt}
+\documentclass[10pt]{sig-alternate-05-2015}
 
 \usepackage{amsmath,amssymb}
 \usepackage{url}
@@ -33,11 +33,10 @@
 \newcommand\beam{{\theta}}
 
 \newcommand{\para}[1]{{\vspace{4pt} \bf \noindent #1 \hspace{2pt}}}
-\newcommand\note[1]{{\color{red}#1}}
+\newcommand\note[1]{{\color{blue}#1}}
 \newcommand\bedit[1]{#1}
 \newcommand\htedit[1]{#1}
 \newcommand\newed[1]{{\color{black}#1}}
-
 
 \newenvironment{packed_itemize}{
 \begin{list}{\labelitemi}{\leftmargin=1.3em}
@@ -55,9 +54,15 @@
 
 \begin{document}
 
-\setlength{\textfloatsep}{0.5em}
-%\clubpenalty=10000 
-%\widowpenalty = 10000
+\CopyrightYear{2016}
+\setcopyright{acmcopyright}
+\conferenceinfo{CoNEXT '16,}{December 12-15, 2016, Irvine, CA, USA}
+\isbn{978-1-4503-4292-6/16/12}\acmPrice{\$15.00}
+\doi{http://dx.doi.org/10.1145/2999572.2999593}
+
+%\setlength{\textfloatsep}{0.5em}
+\clubpenalty=10000 
+\widowpenalty = 10000
 
 \title{ECN or Delay: Lessons Learnt from Analysis of\\DCQCN and TIMELY}
 
@@ -66,6 +71,9 @@
 }
 \maketitle
 \input{abstract}
+
+\keywords{Datacenter transport; RDMA; ECN; RTT; congestion control}
+
 \input{intro}
 %\input{congestion-control}
 \input{background}
@@ -76,12 +84,11 @@
 \input{related}
 \input{conclusion}
 
-\clearpage
 \bibliographystyle{abbrv}
 \bibliography{lossless}
 
-%\clearpage
-%\input{appendix}
+\newpage
+\input{appendix}
 
 \end{document}
 

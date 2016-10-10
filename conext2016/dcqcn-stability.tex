@@ -84,12 +84,15 @@ Furthermore, when $p = 0$, the LHS is smaller than RHS, and vice versa when $p =
 1$. Thus DCQCN has a unique fixed point of marking probability $p^*$, leading to
 a unique fixed point of queue length $q^*$.
 
-In \S~\ref{sec:dcqcn_convergence}, we prove that all flows converge to the same rate, {\em i.e.,}
+In \S~\ref{sec:dcqcn_convergence}, we prove that \note{flow rates do not reach a steady state 
+until} they converge to the same rate, {\em i.e.,}
 \begin{equation}
 \small
 R_C^{(1)*} = R_C^{(2)*} = ... = R_C^{(N)*}
 \end{equation}
-Therefore, at the fixed point, $R_C^{(i)*} = \frac{C}{N}$, $i = 1, 2, ..., N$.
+ 
+\note{The fixed point, where by definition the flow rates are steady, must satisfy this equation.} 
+Therefore, at the fixed point,  $R_C^{(i)*} = \frac{C}{N}$, $i = 1, 2, ..., N$.
 \end{proof}
 
 Next we approximate the value of $p^*$. Numerical analysis shows that $p^*$ is 
@@ -102,7 +105,7 @@ using Taylor series around $p=0$.
 After omitting the $O(p^4)$ term, we have:
 \begin{equation}
 \small
-{p^*} = \sqrt[3]{{\frac{{{R_{AI}N^2}}}{{{\tau '}C^2}}{{\left( {\frac{1}{B} + \frac{N}{TC}} \right)}^2}}}
+{p^*} \approx \sqrt[3]{{\frac{{{R_{AI}N^2}}}{{{\tau '}C^2}}{{\left( {\frac{1}{B} + \frac{N}{TC}} \right)}^2}}}
 \label{eq:fixedp}
 \end{equation}
 
@@ -124,18 +127,28 @@ by using a PI-like control mechanism. See more discussion in Section~\ref{sec:di
 % $i = 1, 2, ..., N$.
 
 \para{Stability analysis.} 
-We test the system against {\em Bode Stability Criteria}~\cite{controltheory}. 
-Results are shown in Figure~\ref{fig:dcqcn_stability}. See~\cite{fullpaper} for
-details of the derivation of the characteristic equation for $R_C$.
-The degree of stability is shown as {\em
-Phase Margin}. The system is stable when its {\em Phase Margin} is larger than
-0, and the larger {\em Phase Margin} means the system is more stable.
+We test the system against {\em Bode Stability Criteria}~\cite{controltheory}.
+The degree of stability is shown as {\em Phase Margin}.
+\note{A stable system must have minus {\em Gain} (in dB) when there is a small 
+oscillation aruond the fixed point, so that it converges back to the fixed point. 
+{\em Phase Margin} is defined as how far the system
+is from the 0dB {\em Gain} state. The system is stable when its {\em Phase Margin} 
+is larger than 0, and the larger {\em Phase Margin} means the system is more stable.
+{\em Phase Margin} is computed from the characteristic equation of a system. See 
+Appendix~\ref{sec:dcqcn_stability_analysis} for details of the derivation of the
+characteristic equation for $R_C$.}
+The numerical results are shown in Figure~\ref{fig:dcqcn_stability}. 
 
 We analyze DCQCN stability in different conditions, particularly with different
-control signal delays (propagation delay plus queuing delay in practice), and
-different number of flows. An ideal protocol should be tolerant with large delay
-and scalable to any number of flows. As Figure~\ref{fig:dcqcn_stability} shows,
-DCQCN, with default parameters, is mostly stable. 
+control signal delays $\tau *$, and different number of flows. 
+An ideal protocol should be tolerant with control signal delays
+and scalable to any number of flows. 
+\note{In practice, $\tau *$ is dominated by propagation delay since ECN marking is not 
+affected by the queuing delay at the congestion point (see Section~\ref{sec:discuss}). In 
+data center environment, propagation delay is usually well below 100$\mu$s. There could be
+tens of flows competing for a single bottleneck.}
+As Figure~\ref{fig:dcqcn_stability} shows, DCQCN, with default parameters, is mostly stable
+in such environment. 
 
 \begin{figure*}[t]
 \centering
@@ -202,7 +215,7 @@ probability.  We show these trends in Figures \ref{fig:dcqcn_stability_rai} and
 \ref{fig:dcqcn_stability_rai_kmax}.  With small $R_{AI}$ and large $K_{max}$,
 DCQCN can be always stable even when the control signal delay reaches 100$\mu
 s$, which equals to the propagation delay of a $30KM$ cable, or $500KB$ queuing
-delay. Such large delays are rare in modern datacenter networks. 
+delay. Such large delays are rare in modern data center networks. 
 
 Note that tuning $R_{AI}$ and $K_{max}$ is a trade-off between stability and
 latency. Smaller $R_{AI}$ leads to slower ramp-up, while larger $K_{max}$ leads
@@ -210,7 +223,7 @@ to larger queue length. In most cases, the default parameters strike a good
 enough balance between stability and latency.
 
 \if 0
-\para{Stability at 100Gbps.}  As the datacenter network fabric is moving towards
+\para{Stability at 100Gbps.}  As the data center network fabric is moving towards
 100Gbps bandwidth, we analyze DCQCN stability for $C=100Gbps$.
 Figure~\ref{fig:dcqcn_100gbps} shows DCQCN is stable with default parameter when
 the delay is small, {\em e.g.,} close to $0\mu s$. However, at higher delays

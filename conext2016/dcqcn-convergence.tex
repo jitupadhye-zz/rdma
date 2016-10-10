@@ -31,10 +31,14 @@ like~\cite{dctcp-analysis}, we construct and analyze a discrete model of the
 rate adjustment at the RP. The default parameter settings given in~\cite{dcqcn}
 set both the Timer $T$ and $\alpha$ update interval $\tau '$ equal to $55\mu s$.
 Thus, we use $\tau '$ as the unit of time.  The process of DCQCN rate update is
-similar to TCP AIMD, as shown in Figure~\ref{fig:dcqcn_convergence}.  The flows
+similar to TCP AIMD, as shown in Figure~\ref{fig:dcqcn_convergence}\footnote{\note{
+Fast recovery does not change the nature of AIMD, since it can be combined with 
+corresponding rate decrease as a multiplicative decrease event. As a common practice, 
+like ~\cite{qcn-analysis} does, we omit it in the following analysis.}}.  The flows
 get the peak rates at $T_k$. For simplicity, we assume all flows are
 synchronized, and peak at the same time.  This is a common assumption, for data
-center environments~\cite{dctcp-analysis}.
+center environments~\cite{dctcp-analysis}, \note{especially for workloads like distributed
+storage system and MapReduce-like frameworks.}
 
 \if 0
 \begin{figure*}[t]
@@ -68,7 +72,7 @@ Under the control of DCQCN, the rate difference of any two flows decrease expone
 over time. 
 \end{thm}
 \begin{proof}
-Here we provide a brief proof whereas the detailed proof can be found in~\cite{fullpaper}.
+Here we provide a brief proof whereas \note{more details can be found in Appendix~\ref{sec:alpha_proof}}.
 Whenever a flow gets ECN marks at $T_k$, it reduces its
 rate in one unit of time, then starts $\Delta {T_k} -1 $ consecutive additive rate
 increases on $R_T^{(i)}$.\footnote{For simplicity, we omit hyper-increase and set 
@@ -97,7 +101,7 @@ replacing $(i)$ with $(j)$. We subtract the equation of $j$th flow from the equa
 This tells us the difference of $\alpha^{(i)}$ of {\em any} two flows will decrease exponentially. So $\alpha^{(i)}$
 of different flows will converge to the same value. Once the $\alpha$ converged at some $T_{k'}$, we can show 
 the rates $R_C$ converge afterwards. We rewrite the $j$th flow's Equation~\ref{eq:converge_rc}, and subtract it 
-from Equation~\ref{eq:converge_rc}. Combining the analysis of $R_T$ in~\cite{fullpaper}, we get:
+from Equation~\ref{eq:converge_rc}. Combining the analysis of $R_T$ in \note{Appendix~\ref{sec:alpha_proof}}, we get:
 \begin{equation}
 \small
 \begin{array}{l}
@@ -107,7 +111,7 @@ R_C^{(i)}({T_{k + 1}}) - R_C^{(j)}({T_{k + 1}}) = \left( {1 - \frac{{\alpha ({T_
 \label{eq:converge}
 \end{equation}
 As long as $\alpha ({T_k})$ has a lower bound that is greater than 0, the rates $R_C$ of different flows 
-converge exponentially. In~\cite{fullpaper}, we prove that:
+converge exponentially. In Appendix~\ref{sec:alpha_proof}, we prove that:
 \begin{equation}
 \small
 \alpha ({T_0}) > ... > \alpha ({T_k}) > \alpha ({T_{k + 1}}) > ... > {\alpha ^*} > 0
