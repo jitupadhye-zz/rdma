@@ -238,13 +238,16 @@ and hence we cannot control the delay to a fixed quantity.
 \end{proof}
 \vspace{-0.5em}
 \para{Remarks:} 
-Note that a \textbf{RED} style AQM scheme can guarantee a unique fixed point
+\note{The results of this theorem are generic to congestion control
+  protocols that use delay or ECN as feedback and are not RDMA or
+  TIMELY/DCQCN specific}. Note that a \textbf{RED} style AQM scheme can guarantee a unique fixed point
 that depends on the number of flows. However, given the low delay
 requirements in a data center environment, that would require the RED
 marking profile to have a steep slope (marking probability that goes
 from 0 to 1 over a small buffer space). As shown
 in~\cite{misra:TAC2002}, a steep slope leads to an unstable
-controller creating a different design problem. 
+controller leading \note{to oscillations in the flow rates, increased jitter
+and loss of utilization. }
 Also, the preceding result does not apply to systems with
 limit cycles,\footnote{Some window-based protocols have limit cycles~\cite{dctcp-analysis}.} 
 with which rate-based protocols do not have steady state throughput.
