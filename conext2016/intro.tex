@@ -13,7 +13,7 @@ ECN markings, or delay as the congestion signal.
 
 Last year, two protocols were proposed for this purpose, namely DCQCN~\cite{dcqcn} 
 and TIMELY~\cite{timely}. \note{Though they are designed for enabling RoCEv2 in large data 
-centers, their key assumptions not RDMA-specific: data centers based on 
+centers, their key assumptions are not RDMA-specific: data centers based on 
 commodity Ethernet hardware, and no packet drops due to congestion. The difference is 
 that DCQCN uses ECN marking as a congestion signal, while TIMELY measures changes to
 end-to-end delay.}
@@ -49,7 +49,7 @@ to ECN and delay as congestion signals \note{and end-host rate-based control, si
 they are supported by commodity Ethernet switch and NIC hardware~\cite{timely,dcqcn}.} Protocols 
 that require hardware to do more~\cite{pfabric,rcp,katabi2002congestion} or use a central
 controller~\cite{perry2014fastpass,deadline} are outside the scope of this
-paper. We also do not consider designing a new congestion control protocol that
+paper. We also do not consider designing a new protocol that
 would use both ECN and delay as congestion signals. 
 
 Second, it is not our goal to do a direct comparison of performance of DCQCN and

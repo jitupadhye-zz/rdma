@@ -33,7 +33,7 @@
 \newcommand\beam{{\theta}}
 
 \newcommand{\para}[1]{{\vspace{4pt} \bf \noindent #1 \hspace{2pt}}}
-\newcommand\note[1]{{\color{blue}#1}}
+\newcommand\note[1]{{\color{black}#1}}
 \newcommand\bedit[1]{#1}
 \newcommand\htedit[1]{#1}
 \newcommand\newed[1]{{\color{black}#1}}
@@ -72,7 +72,7 @@
 \maketitle
 \input{abstract}
 
-\keywords{Datacenter transport; RDMA; ECN; RTT; congestion control}
+\keywords{Data center transport; RDMA; ECN; delay-based; congestion control}
 
 \input{intro}
 %\input{congestion-control}
@@ -83,11 +83,12 @@
 %\input{practical}
 \input{related}
 \input{conclusion}
+\input{acknowledge}
 
 \bibliographystyle{abbrv}
 \bibliography{lossless}
 
-\newpage
+%\newpage
 \input{appendix}
 
 \end{document}
